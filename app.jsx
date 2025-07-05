@@ -30,7 +30,7 @@ const WushuNanduCalculator = () => {
     if (comboMovement.id === 'COMBO_PAO_QIANG_JIE') {
       const throwMovement = movements.find(m => m.id === 'THROW');
       const forwardDiveRoll = movements.find(m => m.id === '445A');
-      const catchMovement = movements.find(m => m.id === '9');
+      const catchMovement = movements.find(m => m.id === 'CATCH');
       
       const newCombo = {
         id: Date.now(),
@@ -44,7 +44,7 @@ const WushuNanduCalculator = () => {
     } else if (comboMovement.id === 'COMBO_PAO_TENG_JIE') {
       const throwMovement = movements.find(m => m.id === 'THROW');
       const tengKongFeiJiao = movements.find(m => m.id === '312A');
-      const catchMovement = movements.find(m => m.id === '9');
+      const catchMovement = movements.find(m => m.id === 'CATCH');
       
       const newCombo = {
         id: Date.now(),
@@ -53,6 +53,34 @@ const WushuNanduCalculator = () => {
         expanded: true,
         isThrowCatchCombo: true,
         fixedScore: 0.1
+      };
+      return newCombo;
+    } else if (comboMovement.id === 'COMBO_PAO_XUAN_JIE') {
+      const throwMovement = movements.find(m => m.id === 'THROW');
+      const xuanFengJiao = movements.find(m => m.id === '323A');
+      const catchMovement = movements.find(m => m.id === 'CATCH');
+      
+      const newCombo = {
+        id: Date.now(),
+        movements: [throwMovement, xuanFengJiao, catchMovement],
+        connections: [], // No connections - score is fixed at 0.15 connection bonus
+        expanded: true,
+        isThrowCatchCombo: true,
+        fixedScore: 0.15
+      };
+      return newCombo;
+    } else if (comboMovement.id === 'COMBO_PAO_LIAN_JIE') {
+      const throwMovement = movements.find(m => m.id === 'THROW');
+      const tengKongBaiLian = movements.find(m => m.id === '324A');
+      const catchMovement = movements.find(m => m.id === 'CATCH');
+      
+      const newCombo = {
+        id: Date.now(),
+        movements: [throwMovement, tengKongBaiLian, catchMovement],
+        connections: [], // No connections - score is fixed at 0.15 connection bonus
+        expanded: true,
+        isThrowCatchCombo: true,
+        fixedScore: 0.15
       };
       return newCombo;
     }
@@ -262,7 +290,7 @@ const WushuNanduCalculator = () => {
         // For throw/catch combos, only count the difficulty points (not the fixed combo score)
         return sum + combo.movements.reduce((movSum, mov) => {
           // Only count actual difficulty points, not the throw/catch mechanics
-          if (mov.id === 'THROW' || mov.id === '9' || mov.id === '445A') {
+          if (mov.id === 'THROW' || mov.id === 'CATCH' || mov.id === '445A') {
             return movSum; // These don't contribute to movement score
           }
           return movSum + mov.points;
@@ -467,7 +495,7 @@ const WushuNanduCalculator = () => {
             {combos.length === 0 ? (
               <div 
                 className={`text-center text-gray-500 py-8 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer ${
-                  draggedMovement 
+                  dragOverCombo === 'empty' 
                     ? 'border-orange-400 bg-orange-50 text-orange-600' 
                     : 'border-gray-300 hover:border-orange-300 hover:bg-orange-50/50'
                 }`}
@@ -478,6 +506,14 @@ const WushuNanduCalculator = () => {
                 }}
                 onDragOver={(e) => {
                   e.preventDefault();
+                  if (draggedMovement) {
+                    setDragOverCombo('empty');
+                  }
+                }}
+                onDragLeave={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setDragOverCombo(null);
+                  }
                 }}
                 onDrop={(e) => {
                   e.preventDefault();
@@ -613,11 +649,11 @@ const WushuNanduCalculator = () => {
                               
                               {/* Show throw/catch combo bonus after the last movement */}
                               {combo.isThrowCatchCombo && movIndex === combo.movements.length - 1 && (
-                                <div className="ml-4 mt-2 p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-l-4 border-orange-400 shadow-sm">
-                                  <div className="text-xs text-orange-800 font-medium">
+                                <div className="ml-4 mt-2 p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-l-4 border-emerald-400 shadow-sm">
+                                  <div className="text-xs text-green-800 font-medium">
                                     Throw/Catch Combo Bonus: +{combo.fixedScore}pts
                                   </div>
-                                  <div className="text-xs text-orange-600">
+                                  <div className="text-xs text-green-600">
                                     Complete sequence bonus for toss-movement-catch combination
                                   </div>
                                 </div>
@@ -636,7 +672,7 @@ const WushuNanduCalculator = () => {
             {combos.length > 0 && (
               <div 
                 className={`text-center py-6 border-2 border-dashed rounded-2xl transition-all duration-200 mt-4 cursor-pointer ${
-                  draggedMovement 
+                  dragOverCombo === 'new' 
                     ? 'border-orange-400 bg-orange-50 text-orange-600' 
                     : 'border-gray-300 text-gray-400 hover:border-orange-300 hover:bg-orange-50/50'
                 }`}
@@ -647,6 +683,14 @@ const WushuNanduCalculator = () => {
                 }}
                 onDragOver={(e) => {
                   e.preventDefault();
+                  if (draggedMovement) {
+                    setDragOverCombo('new');
+                  }
+                }}
+                onDragLeave={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setDragOverCombo(null);
+                  }
                 }}
                 onDrop={(e) => {
                   e.preventDefault();

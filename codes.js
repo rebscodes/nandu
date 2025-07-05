@@ -3,10 +3,10 @@ export const movements = [
   // Balance Techniques
   { id: '111A', name: 'Bān Tuǐ Cháo Tiān Zhí Lì', english: 'Grasp the foot and bring it to head level', category: 'Balance', grade: 'A', points: 0.2 },
   { id: '112A', name: 'Cè Tī Bào Jiǎo Zhí Lì', english: 'Side kick up to catch the foot at head level', category: 'Balance', grade: 'A', points: 0.2 },
-  { id: '133B', name: 'Shí Zì Píng Héng', english: 'Forward Leaning Balance with Arms Outspread', category: 'Balance', grade: 'B', points: 0.3 },
   { id: '123A', name: 'Yǎng Shēn Píng Héng', english: 'Backward Leaning Balance', category: 'Balance', grade: 'A', points: 0.2 },
   { id: '153A', name: 'Tàn Hǎi Píng Héng', english: 'Exploring the Ocean Balance', category: 'Balance', grade: 'A', points: 0.2 },
   { id: '163A', name: 'Wàng Yuè Píng Héng', english: 'Gazing at the Moon Balance', category: 'Balance', grade: 'A', points: 0.2 },
+  { id: '133B', name: 'Shí Zì Píng Héng', english: 'Forward Leaning Balance with Arms Outspread', category: 'Balance', grade: 'B', points: 0.3 },
   
   // Leg Techniques
   { id: '244A', name: 'Qián Sǎo Tuǐ 540°', english: 'Front Sweep 540°', category: 'Leg', grade: 'A', points: 0.2 },
@@ -28,19 +28,21 @@ export const movements = [
   { id: '355B', name: 'Cè Kōng Fān Zhuǎn Tǐ 360°', english: 'Aerial Cartwheel Twist 360°', category: 'Jumping', grade: 'B', points: 0.3 },
   
   // Stances for connections
+  { id: '0', name: 'Pū Bù', english: 'Crouching Stance', category: 'Stance', grade: '-', points: 0 },
   { id: '1', name: 'Mǎ Bù', english: 'Horse Stance', category: 'Stance', grade: '-', points: 0 },
   { id: '3', name: 'Tí Xī Dú Lì', english: 'Single Raised-Knee Stance', category: 'Stance', grade: '-', points: 0 },
   { id: '4', name: 'Diē Shù Chà', english: 'Falling Front Split', category: 'Stance', grade: '-', points: 0 },
   { id: '6', name: 'Zuò Pán', english: 'Cross-Legged Sitting', category: 'Stance', grade: '-', points: 0 },
-  { id: '0', name: 'Pū Bù', english: 'Crouching Stance', category: 'Stance', grade: '-', points: 0 },
   { id: '7', name: 'Gōng Bù', english: 'Bow Stance', category: 'Stance', grade: '-', points: 0 },
-  { id: '9', name: 'Jiē', english: 'Catch', category: 'Hidden', grade: '-', points: 0 },
   
   // Throw/Catch combo sequences
   { id: 'COMBO_PAO_QIANG_JIE', name: 'Pāo + Qiǎng Bèi + Jiē', english: 'Toss + Forward Dive Roll + Catch', category: 'Throw/Catch', grade: 'A', points: 0.1, isCombo: true },
   { id: 'COMBO_PAO_TENG_JIE', name: 'Pāo + Téng Kōng Fēi Jiǎo + Jiē', english: 'Toss + Jumping Front Slap Kick + Catch', category: 'Throw/Catch', grade: 'A', points: 0.3, isCombo: true },
+  { id: 'COMBO_PAO_XUAN_JIE', name: 'Pāo + Xuàn Fēng Jiǎo 360° + Jiē', english: 'Toss + Tornado Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
+  { id: 'COMBO_PAO_LIAN_JIE', name: 'Pāo + Téng Kōng Bǎi Lián 360° + Jiē', english: 'Toss + Jumping Lotus Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
   
   // Individual movements for connections (hidden from display)
+  { id: 'CATCH', name: 'Jiē', english: 'Catch', category: 'Hidden', grade: '-', points: 0 },
   { id: '445A', name: 'Qiǎng Bèi', english: 'Forward Dive Roll', category: 'Hidden', grade: 'A', points: 0 },
   { id: 'THROW', name: 'Pāo', english: 'Toss', category: 'Hidden', grade: '-', points: 0 }
 ];
@@ -71,9 +73,9 @@ export const connections = [
   { from: '324A', to: '7', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Bow Stance' },
   { from: '333A', to: '353B', points: 0.1, grade: 'A', description: 'Butterfly Kick + Butterfly Twist 360° (within 1 step)' },
   { from: 'THROW', to: '312A', points: 0.1, grade: 'A', description: 'Toss + Jumping Front Slap Kick' },
-  { from: '312A', to: '9', points: 0.1, grade: 'A', description: 'Jumping Front Slap Kick + Catch' },
+  { from: '312A', to: 'CATCH', points: 0.1, grade: 'A', description: 'Jumping Front Slap Kick + Catch' },
   { from: 'THROW', to: '445A', points: 0.1, grade: 'A', description: 'Toss + Forward Dive Roll' },
-  { from: '445A', to: '9', points: 0.1, grade: 'A', description: 'Forward Dive Roll + Catch' },
+  { from: '445A', to: 'CATCH', points: 0.1, grade: 'A', description: 'Forward Dive Roll + Catch' },
   
   // B Grade Connections (0.15 points)
   { from: '312A', to: '335A', points: 0.15, grade: 'B', description: 'Jumping Front Slap Kick + Aerial Cartwheel (within 1 step)' },
