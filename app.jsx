@@ -9,13 +9,13 @@ const WushuNanduCalculator = () => {
   const [draggedMovement, setDraggedMovement] = useState(null);
   const [dragOverCombo, setDragOverCombo] = useState(null);
 
-  const categories = ['All', 'Balance', 'Leg', 'Jumping', 'Stance'];
+  const categories = ['All', 'Balance', 'Sweeps', 'Jumping', 'Stance'];
 
   const filteredMovements = movements.filter(movement => {
     const matchesSearch = movement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movement.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movement.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || movement.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'All' || movement.category === selectedCategory || (selectedCategory === 'Sweeps' && movement.category === 'Leg');
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
     // Sort by points (ascending), then by grade (A, B, C, D), then by name
@@ -173,13 +173,13 @@ const WushuNanduCalculator = () => {
           <Calculator className="h-8 w-8 text-orange-600" />
           <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Wushu Taolu Nandu Calculator</h1>
         </div>
-        <p className="text-gray-600 text-lg">✨ Build combos by adding movements in sequence - connections are detected automatically! ✨</p>
+        <p className="text-gray-600 text-lg">✨ Build combos using 2024 IWUF rules - connections are detected automatically! ✨</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Movement Selection Panel */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">🥋 Movement Library</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">📚 Movement Library</h2>
           
           {/* Search and Filter */}
           <div className="mb-4">
@@ -252,7 +252,7 @@ const WushuNanduCalculator = () => {
         {/* Routine Builder Panel */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">🎯 Your Routine</h2>
+            <h2 className="text-xl font-semibold text-gray-800">🤸 Your Routine</h2>
             <div className="flex gap-2">
               <button
                 onClick={createNewCombo}
@@ -303,11 +303,16 @@ const WushuNanduCalculator = () => {
           <div className="max-h-96 overflow-y-auto">
             {combos.length === 0 ? (
               <div 
-                className={`text-center text-gray-500 py-8 border-2 border-dashed rounded-2xl transition-all duration-200 ${
+                className={`text-center text-gray-500 py-8 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer ${
                   draggedMovement 
                     ? 'border-orange-400 bg-orange-50 text-orange-600' 
-                    : 'border-gray-300'
+                    : 'border-gray-300 hover:border-orange-300 hover:bg-orange-50/50'
                 }`}
+                onClick={() => {
+                  if (!draggedMovement) {
+                    createNewCombo();
+                  }
+                }}
                 onDragOver={(e) => {
                   e.preventDefault();
                 }}
@@ -330,7 +335,7 @@ const WushuNanduCalculator = () => {
                 <p>
                   {draggedMovement 
                     ? '📦 Drop here to create a new combo!' 
-                    : '🚀 Create your first combo to start building your routine!'
+                    : 'Drag a movement here to create your first combo!'
                   }
                 </p>
               </div>
@@ -442,6 +447,47 @@ const WushuNanduCalculator = () => {
                   )}
                 </div>
               ))
+            )}
+            
+            {/* Drop zone for creating new combo at the bottom */}
+            {combos.length > 0 && (
+              <div 
+                className={`text-center py-6 border-2 border-dashed rounded-2xl transition-all duration-200 mt-4 cursor-pointer ${
+                  draggedMovement 
+                    ? 'border-orange-400 bg-orange-50 text-orange-600' 
+                    : 'border-gray-300 text-gray-400 hover:border-orange-300 hover:bg-orange-50/50'
+                }`}
+                onClick={() => {
+                  if (!draggedMovement) {
+                    createNewCombo();
+                  }
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (draggedMovement) {
+                    // Create new combo and add movement
+                    const newCombo = {
+                      id: Date.now(),
+                      movements: [draggedMovement],
+                      connections: [],
+                      expanded: true
+                    };
+                    setCombos([...combos, newCombo]);
+                  }
+                  setDraggedMovement(null);
+                }}
+              >
+                <Plus className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                <p className="text-sm">
+                  {draggedMovement 
+                    ? '📦 Drop here to create another combo!' 
+                    : '➕ Drag a movement here to create a new combo'
+                  }
+                </p>
+              </div>
             )}
           </div>
         </div>
