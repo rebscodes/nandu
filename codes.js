@@ -33,10 +33,18 @@ export const movements = [
   { id: '4', name: 'Diē Shù Chà', english: 'Falling Front Split', category: 'Stance', grade: '-', points: 0 },
   { id: '6', name: 'Zuò Pán', english: 'Cross-Legged Sitting', category: 'Stance', grade: '-', points: 0 },
   { id: '0', name: 'Pū Bù', english: 'Crouching Stance', category: 'Stance', grade: '-', points: 0 },
-  { id: '7', name: 'Gōng Bù', english: 'Bow Stance', category: 'Stance', grade: '-', points: 0 }
+  { id: '7', name: 'Gōng Bù', english: 'Bow Stance', category: 'Stance', grade: '-', points: 0 },
+  { id: '9', name: 'Jiē', english: 'Catch', category: 'Hidden', grade: '-', points: 0 },
+  
+  // Throw/Catch combo sequences
+  { id: 'COMBO_PAO_QIANG_JIE', name: 'Pāo + Qiǎng Bèi + Jiē', english: 'Toss + Forward Dive Roll + Catch', category: 'Throw/Catch', grade: 'A', points: 0.1, isCombo: true },
+  { id: 'COMBO_PAO_TENG_JIE', name: 'Pāo + Téng Kōng Fēi Jiǎo + Jiē', english: 'Toss + Jumping Front Slap Kick + Catch', category: 'Throw/Catch', grade: 'A', points: 0.3, isCombo: true },
+  
+  // Individual movements for connections (hidden from display)
+  { id: '445A', name: 'Qiǎng Bèi', english: 'Forward Dive Roll', category: 'Hidden', grade: 'A', points: 0 },
+  { id: 'THROW', name: 'Pāo', english: 'Toss', category: 'Hidden', grade: '-', points: 0 }
 ];
 
-// Connection database based on the provided tables (CORRECTED VERSION)
 export const connections = [
   // A Grade Connections (0.1 points)
   { from: '244A', to: '6', points: 0.1, grade: 'A', description: 'Front Sweep 540° + Cross-Legged Sitting' },
@@ -60,6 +68,12 @@ export const connections = [
   { from: '324A', to: '1', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Horse Stance' },
   { from: '324A', to: '4', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Falling Front Split' },
   { from: '324A', to: '6', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Cross-Legged Sitting' },
+  { from: '324A', to: '7', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Bow Stance' },
+  { from: '333A', to: '353B', points: 0.1, grade: 'A', description: 'Butterfly Kick + Butterfly Twist 360° (within 1 step)' },
+  { from: 'THROW', to: '312A', points: 0.1, grade: 'A', description: 'Toss + Jumping Front Slap Kick' },
+  { from: '312A', to: '9', points: 0.1, grade: 'A', description: 'Jumping Front Slap Kick + Catch' },
+  { from: 'THROW', to: '445A', points: 0.1, grade: 'A', description: 'Toss + Forward Dive Roll' },
+  { from: '445A', to: '9', points: 0.1, grade: 'A', description: 'Forward Dive Roll + Catch' },
   
   // B Grade Connections (0.15 points)
   { from: '312A', to: '335A', points: 0.15, grade: 'B', description: 'Jumping Front Slap Kick + Aerial Cartwheel (within 1 step)' },
@@ -67,6 +81,33 @@ export const connections = [
   { from: '312A', to: '324B', points: 0.15, grade: 'B', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 540°' },
   { from: '323A', to: '324B', points: 0.15, grade: 'B', description: 'Tornado Kick 360° + Jumping Lotus Kick 540°' },
   { from: '323A', to: '353B', points: 0.15, grade: 'B', description: 'Tornado Kick 360° + Butterfly Twist 360° (within 4 steps)' },
+  { from: '324A', to: '3', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 360° + Single Raised-Knee Stance' },
+  { from: '324B', to: '0', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Crouching Stance' },
+  { from: '324B', to: '1', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Horse Stance' },
+  { from: '324B', to: '3', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Single Raised-Knee Stance' },
+  { from: '324B', to: '6', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Cross-Legged Sitting' },
+  { from: '324C', to: '6', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 630°(F)/720° + Cross-Legged Sitting' },
+  { from: '353B', to: '323C', points: 0.15, grade: 'B', description: 'Butterfly Twist 360° + Tornado Kick 630°(F)/720° (within 4 steps)' },
+  { from: '353B', to: '323B', points: 0.15, grade: 'B', description: 'Butterfly Twist 360° + Tornado Kick 540° (within 4 steps)' },
+  { from: '335A', to: '323C', points: 0.15, grade: 'B', description: 'Aerial Cartwheel + Tornado Kick 630°(F)/720° (within 4 steps)' },
+  { from: '335A', to: '323B', points: 0.15, grade: 'B', description: 'Aerial Cartwheel + Tornado Kick 540° (within 4 steps)' },
+  { from: '335A', to: '353C', points: 0.15, grade: 'B', description: 'Aerial Cartwheel + Butterfly Twist 720° (within 4 steps)' },
+  
+  // C Grade Connections (0.2 points)
+  { from: '312A', to: '323C', points: 0.2, grade: 'C', description: 'Jumping Front Slap Kick + Tornado Kick 630°(F)/720° (within 4 steps)' },
+  { from: '312A', to: '324C', points: 0.2, grade: 'C', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 630°(F)/720°' },
+  { from: '312A', to: '353C', points: 0.2, grade: 'C', description: 'Jumping Front Slap Kick + Butterfly Twist 720° (within 4 steps)' },
+  { from: '323A', to: '353C', points: 0.2, grade: 'C', description: 'Tornado Kick 360° + Butterfly Twist 720° (within 4 steps)' },
+  { from: '333A', to: '244A', points: 0.2, grade: 'C', description: 'Butterfly Kick + Front Sweep 540°' },
+  { from: '333A', to: '353C', points: 0.2, grade: 'C', description: 'Butterfly Kick + Butterfly Twist 720° (within 4 steps)' },
+  { from: '335A', to: '4', points: 0.2, grade: 'C', description: 'Aerial Cartwheel + Falling Front Split' },
+  { from: '335A', to: '353B', points: 0.2, grade: 'C', description: 'Aerial Cartwheel + Butterfly Twist 360° (within 4 steps)' },
+  
+  // D Grade Connections (0.25 points)
+  { from: '323B', to: '324C', points: 0.25, grade: 'D', description: 'Tornado Kick 540° + Jumping Lotus Kick 630°(F)/720°' },
+  { from: '323C', to: '4', points: 0.25, grade: 'D', description: 'Tornado Kick 630°(F)/720° + Falling Front Split' },
+  { from: '324C', to: '1', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 630°(F)/720° + Horse Stance' },
+  { from: '353C', to: '4', points: 0.25, grade: 'D', description: 'Butterfly Twist 720° + Falling Front Split' },
   { from: '324A', to: '3', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 360° + Single Raised-Knee Stance' },
   { from: '324B', to: '0', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Crouching Stance' },
   { from: '324B', to: '1', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Horse Stance' },

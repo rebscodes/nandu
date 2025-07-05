@@ -5,17 +5,18 @@ import { movements, connections } from './codes.js';
 const WushuNanduCalculator = () => {
   const [combos, setCombos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('Balance');
   const [draggedMovement, setDraggedMovement] = useState(null);
   const [dragOverCombo, setDragOverCombo] = useState(null);
+  const [hasCreatedThrowCatchCombos, setHasCreatedThrowCatchCombos] = useState(false);
 
-  const categories = ['All', 'Balance', 'Sweeps', 'Jumping', 'Stance'];
+  const categories = ['Balance', 'Sweeps', 'Jumping', 'Stance', 'Throw/Catch'];
 
   const filteredMovements = movements.filter(movement => {
     const matchesSearch = movement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movement.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          movement.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || movement.category === selectedCategory || (selectedCategory === 'Sweeps' && movement.category === 'Leg');
+    const matchesCategory = movement.category === selectedCategory || (selectedCategory === 'Sweeps' && movement.category === 'Leg');
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
     // Sort by points (ascending), then by grade (A, B, C, D), then by name
@@ -23,6 +24,40 @@ const WushuNanduCalculator = () => {
     if (a.grade !== b.grade) return a.grade.localeCompare(b.grade);
     return a.name.localeCompare(b.name);
   });
+
+  // Handle combo movements (special drag behavior for throw/catch combos)
+  const handleComboMovementDrag = (comboMovement) => {
+    if (comboMovement.id === 'COMBO_PAO_QIANG_JIE') {
+      const throwMovement = movements.find(m => m.id === 'THROW');
+      const forwardDiveRoll = movements.find(m => m.id === '445A');
+      const catchMovement = movements.find(m => m.id === '9');
+      
+      const newCombo = {
+        id: Date.now(),
+        movements: [throwMovement, forwardDiveRoll, catchMovement],
+        connections: [], // No connections - score is fixed at 0.1 total
+        expanded: true,
+        isThrowCatchCombo: true,
+        fixedScore: 0.1
+      };
+      return newCombo;
+    } else if (comboMovement.id === 'COMBO_PAO_TENG_JIE') {
+      const throwMovement = movements.find(m => m.id === 'THROW');
+      const tengKongFeiJiao = movements.find(m => m.id === '312A');
+      const catchMovement = movements.find(m => m.id === '9');
+      
+      const newCombo = {
+        id: Date.now(),
+        movements: [throwMovement, tengKongFeiJiao, catchMovement],
+        connections: [], // No connections - score is fixed at 0.1 connection bonus
+        expanded: true,
+        isThrowCatchCombo: true,
+        fixedScore: 0.1
+      };
+      return newCombo;
+    }
+    return null;
+  };
 
   const createNewCombo = () => {
     const newCombo = {
@@ -129,29 +164,122 @@ const WushuNanduCalculator = () => {
   const handleDrop = (e, comboId) => {
     e.preventDefault();
     if (draggedMovement) {
-      addMovementToCombo(comboId, draggedMovement);
+      if (draggedMovement.isCombo) {
+        // Handle combo movements - replace the target combo
+        const newCombo = handleComboMovementDrag(draggedMovement);
+        if (newCombo) {
+          setCombos(combos.map(combo => combo.id === comboId ? newCombo : combo));
+        }
+      } else {
+        addMovementToCombo(comboId, draggedMovement);
+      }
     }
     setDraggedMovement(null);
     setDragOverCombo(null);
   };
 
   const getComboScore = (combo) => {
+    if (combo.isThrowCatchCombo && combo.fixedScore !== undefined) {
+      // For throw/catch combos, return difficulty points + fixed connection score
+      const difficultyPoints = combo.movements.reduce((sum, mov) => {
+        // Only count actual difficulty points, not the throw/catch mechanics
+        if (mov.id === 'THROW' || mov.id === '9' || mov.id === '445A') {
+          return sum; // These don't contribute to movement score
+        }
+        return sum + mov.points;
+      }, 0);
+      return difficultyPoints + combo.fixedScore;
+    }
     const movementPoints = combo.movements.reduce((sum, mov) => sum + mov.points, 0);
     const connectionPoints = combo.connections.reduce((sum, conn) => sum + conn.points, 0);
     return movementPoints + connectionPoints;
   };
 
+  // Check for duplicate movements across all combos
+  const getDuplicateMovementWarnings = () => {
+    const warnings = [];
+    const movementUsage = new Map(); // movement.id -> array of {comboIndex, connections}
+    
+    // Track all movements and their connections
+    combos.forEach((combo, comboIndex) => {
+      combo.movements.forEach((movement, movIndex) => {
+        // Only check scoring movements (not stances)
+        if (movement.points > 0) {
+          const key = movement.id;
+          if (!movementUsage.has(key)) {
+            movementUsage.set(key, []);
+          }
+          
+          // Get the connection after this movement (if any)
+          const connection = combo.connections[movIndex];
+          
+          movementUsage.get(key).push({
+            comboIndex,
+            connection: connection ? connection.to : null
+          });
+        }
+      });
+    });
+    
+    // Check for duplicates with same connections
+    movementUsage.forEach((usages, movementId) => {
+      if (usages.length > 1) {
+        // Group by connection to find identical movement+connection pairs
+        const connectionGroups = new Map();
+        usages.forEach(usage => {
+          const connectionKey = usage.connection || 'no-connection';
+          if (!connectionGroups.has(connectionKey)) {
+            connectionGroups.set(connectionKey, []);
+          }
+          connectionGroups.get(connectionKey).push(usage);
+        });
+        
+        // Check if any connection appears more than once (excluding no-connection cases)
+        connectionGroups.forEach((group, connectionKey) => {
+          if (group.length > 1 && connectionKey !== 'no-connection') {
+            const movement = movements.find(m => m.id === movementId);
+            const comboNumbers = group.map(u => u.comboIndex + 1);
+            const connectionName = movements.find(m => m.id === connectionKey)?.name || connectionKey;
+            
+            warnings.push({
+              movement,
+              combos: comboNumbers,
+              connection: connectionName,
+              message: `"${movement.name}" (${movement.id}) with connection to "${connectionName}" appears in multiple combos`
+            });
+          }
+        });
+      }
+    });
+    
+    return warnings;
+  };
+
   // Calculate total scores
   const totalMovementScore = Math.min(
-    combos.reduce((sum, combo) => 
-      sum + combo.movements.reduce((movSum, mov) => movSum + mov.points, 0), 0
-    ), 1.4
+    combos.reduce((sum, combo) => {
+      if (combo.isThrowCatchCombo) {
+        // For throw/catch combos, only count the difficulty points (not the fixed combo score)
+        return sum + combo.movements.reduce((movSum, mov) => {
+          // Only count actual difficulty points, not the throw/catch mechanics
+          if (mov.id === 'THROW' || mov.id === '9' || mov.id === '445A') {
+            return movSum; // These don't contribute to movement score
+          }
+          return movSum + mov.points;
+        }, 0);
+      }
+      return sum + combo.movements.reduce((movSum, mov) => movSum + mov.points, 0);
+    }, 0), 1.4
   );
 
   const totalConnectionScore = Math.min(
-    combos.reduce((sum, combo) => 
-      sum + combo.connections.reduce((connSum, conn) => connSum + conn.points, 0), 0
-    ), 0.6
+    combos.reduce((sum, combo) => {
+      if (combo.isThrowCatchCombo) {
+        // For throw/catch combos, use the fixed score as connection bonus
+        return sum + combo.fixedScore;
+      }
+      return sum + combo.connections.reduce((connSum, conn) => connSum + conn.points, 0);
+    }, 0), 0.6
   );
 
   const totalScore = Math.min(totalMovementScore + totalConnectionScore, 2.0);
@@ -173,7 +301,18 @@ const WushuNanduCalculator = () => {
           <Calculator className="h-8 w-8 text-orange-600" />
           <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Wushu Taolu Nandu Calculator</h1>
         </div>
-        <p className="text-gray-600 text-lg">✨ Build combos using 2024 IWUF rules - connections are detected automatically! ✨</p>
+        <p className="text-gray-600 text-lg">
+          ✨ Build combos using{' '}
+          <a 
+            href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-orange-600 hover:text-orange-800 underline font-medium"
+          >
+            2024 IWUF Competition Rules
+          </a>
+          ✨
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -277,19 +416,19 @@ const WushuNanduCalculator = () => {
               <div>
                 <div className="text-sm text-gray-600">Movements</div>
                 <div className={`text-lg font-bold ${
-                  combos.reduce((sum, combo) => sum + combo.movements.reduce((movSum, mov) => movSum + mov.points, 0), 0) > 1.4 
+                  totalMovementScore > 1.4 
                     ? 'text-orange-500' : 'text-gray-800'
                 }`}>
-                  {combos.reduce((sum, combo) => sum + combo.movements.reduce((movSum, mov) => movSum + mov.points, 0), 0).toFixed(2)}/1.40
+                  {totalMovementScore.toFixed(2)}/1.40
                 </div>
               </div>
               <div>
                 <div className="text-sm text-gray-600">Connections</div>
                 <div className={`text-lg font-bold ${
-                  combos.reduce((sum, combo) => sum + combo.connections.reduce((connSum, conn) => connSum + conn.points, 0), 0) > 0.6 
+                  totalConnectionScore > 0.6 
                     ? 'text-orange-500' : 'text-gray-800'
                 }`}>
-                  {combos.reduce((sum, combo) => sum + combo.connections.reduce((connSum, conn) => connSum + conn.points, 0), 0).toFixed(2)}/0.60
+                  {totalConnectionScore.toFixed(2)}/0.60
                 </div>
               </div>
               <div>
@@ -298,6 +437,30 @@ const WushuNanduCalculator = () => {
               </div>
             </div>
           </div>
+
+          {/* Warnings */}
+          {(() => {
+            const warnings = getDuplicateMovementWarnings();
+            return warnings.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <X className="h-5 w-5 text-red-600" />
+                  <h3 className="text-sm font-semibold text-red-800">Rule Violations</h3>
+                </div>
+                <div className="space-y-2">
+                  {warnings.map((warning, index) => (
+                    <div key={index} className="text-sm text-red-700">
+                      <span className="font-medium">⚠️ {warning.message}</span>
+                      <span className="text-red-600 ml-1">(Combos: {warning.combos.join(', ')})</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-xs text-red-600 mt-2">
+                  Each movement can only be used once unless it has different connections each time.
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Combos */}
           <div className="max-h-96 overflow-y-auto">
@@ -319,14 +482,22 @@ const WushuNanduCalculator = () => {
                 onDrop={(e) => {
                   e.preventDefault();
                   if (draggedMovement) {
-                    // Create new combo and add movement
-                    const newCombo = {
-                      id: Date.now(),
-                      movements: [draggedMovement],
-                      connections: [],
-                      expanded: true
-                    };
-                    setCombos([newCombo]);
+                    if (draggedMovement.isCombo) {
+                      // Handle combo movements
+                      const newCombo = handleComboMovementDrag(draggedMovement);
+                      if (newCombo) {
+                        setCombos([newCombo]);
+                      }
+                    } else {
+                      // Create new combo and add movement
+                      const newCombo = {
+                        id: Date.now(),
+                        movements: [draggedMovement],
+                        connections: [],
+                        expanded: true
+                      };
+                      setCombos([newCombo]);
+                    }
                   }
                   setDraggedMovement(null);
                 }}
@@ -439,6 +610,18 @@ const WushuNanduCalculator = () => {
                                   </div>
                                 </div>
                               )}
+                              
+                              {/* Show throw/catch combo bonus after the last movement */}
+                              {combo.isThrowCatchCombo && movIndex === combo.movements.length - 1 && (
+                                <div className="ml-4 mt-2 p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl border-l-4 border-orange-400 shadow-sm">
+                                  <div className="text-xs text-orange-800 font-medium">
+                                    Throw/Catch Combo Bonus: +{combo.fixedScore}pts
+                                  </div>
+                                  <div className="text-xs text-orange-600">
+                                    Complete sequence bonus for toss-movement-catch combination
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -468,14 +651,22 @@ const WushuNanduCalculator = () => {
                 onDrop={(e) => {
                   e.preventDefault();
                   if (draggedMovement) {
-                    // Create new combo and add movement
-                    const newCombo = {
-                      id: Date.now(),
-                      movements: [draggedMovement],
-                      connections: [],
-                      expanded: true
-                    };
-                    setCombos([...combos, newCombo]);
+                    if (draggedMovement.isCombo) {
+                      // Handle combo movements
+                      const newCombo = handleComboMovementDrag(draggedMovement);
+                      if (newCombo) {
+                        setCombos([...combos, newCombo]);
+                      }
+                    } else {
+                      // Create new combo and add movement
+                      const newCombo = {
+                        id: Date.now(),
+                        movements: [draggedMovement],
+                        connections: [],
+                        expanded: true
+                      };
+                      setCombos([...combos, newCombo]);
+                    }
                   }
                   setDraggedMovement(null);
                 }}
