@@ -1,0 +1,493 @@
+import React, { useState } from 'react';
+import { CheckCircle, Circle, BookOpen, Users, Target, Clock, ChevronDown, ChevronRight, Check } from 'lucide-react';
+import { changquanRequirements } from './changquan-requirements.js';
+
+const ChangquanPlanner = () => {
+  const [selectedTechniques, setSelectedTechniques] = useState({});
+  const [expandedTechniques, setExpandedTechniques] = useState({});
+  const [expandedSections, setExpandedSections] = useState({
+    hand_forms: false,
+    fist_techniques: false,
+    palm_techniques: false,
+    elbow_techniques: false,
+    stances: false,
+    leg_techniques: false,
+    balance_techniques: false
+  });
+
+  const toggleTechnique = (category, index) => {
+    const key = `${category}-${index}`;
+    setSelectedTechniques(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const toggleTechniqueExpansion = (e, categoryKey, index) => {
+    e.stopPropagation(); // Prevent triggering selection when clicking to expand
+    const key = `${categoryKey}-${index}`;
+    setExpandedTechniques(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const getSelectedCount = (category) => {
+    const categoryTechniques = changquanRequirements[category];
+    if (!categoryTechniques || !categoryTechniques.movements) return 0;
+    
+    return categoryTechniques.movements.filter((_, index) => 
+      selectedTechniques[`${category}-${index}`]
+    ).length;
+  };
+
+  const getSelectedCountForLegCategory = (categoryType) => {
+    const legCategory = changquanRequirements.leg_techniques.categories.find(
+      cat => cat.type === categoryType
+    );
+    if (!legCategory) return 0;
+
+    return legCategory.movements.filter((_, index) => 
+      selectedTechniques[`${categoryType}-${index}`]
+    ).length;
+  };
+
+  const getTotalLegTechniques = () => {
+    let total = 0;
+    changquanRequirements.leg_techniques.categories.forEach(category => {
+      total += getSelectedCountForLegCategory(category.type);
+    });
+    return total;
+  };
+
+  const renderCompactTechniques = (category, techniques, categoryKey) => {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {techniques.map((technique, index) => {
+          const techniqueKey = `${categoryKey}-${index}`;
+          const isSelected = selectedTechniques[techniqueKey];
+          const isExpanded = expandedTechniques[techniqueKey];
+          
+          return (
+            <div 
+              key={index}
+              className={`border rounded-lg overflow-hidden transition-all duration-200 ${
+                isSelected
+                  ? 'border-orange-400 bg-gradient-to-r from-orange-50 to-amber-50 shadow-md'
+                  : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50/30'
+              } ${isExpanded ? 'md:col-span-2 lg:col-span-3' : ''}`}
+            >
+              {/* Compact Header - Always Visible */}
+              <div 
+                className="p-3 cursor-pointer"
+                onClick={() => toggleTechnique(categoryKey, index)}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  {isSelected ? (
+                    <CheckCircle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                  ) : (
+                    <Circle className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-800 truncate">{technique.chinese}</div>
+                  </div>
+                  <button
+                    onClick={(e) => toggleTechniqueExpansion(e, categoryKey, index)}
+                    className="p-0.5 rounded hover:bg-white/50 transition-colors"
+                    title="Show details"
+                  >
+                    {isExpanded ? (
+                      <ChevronDown className="h-3 w-3 text-gray-500" />
+                    ) : (
+                      <ChevronRight className="h-3 w-3 text-gray-500" />
+                    )}
+                  </button>
+                </div>
+                <div className="text-xs text-gray-600 mb-1">({technique.pinyin})</div>
+                <div className="text-xs font-medium text-orange-600">{technique.english}</div>
+              </div>
+              
+              {/* Expanded Details */}
+              {isExpanded && (
+                <div className="px-3 pb-2 border-t border-gray-100 bg-gray-50/50">
+                  <div className="pt-2">
+                    <p className="text-xs text-gray-700 leading-snug">
+                      {technique.description}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const getSelectedTechniquesPreview = (category, categoryKey) => {
+    const categoryTechniques = changquanRequirements[category];
+    if (!categoryTechniques || !categoryTechniques.movements) return '';
+    
+    const selected = categoryTechniques.movements
+      .filter((_, index) => selectedTechniques[`${categoryKey}-${index}`])
+      .map(technique => technique.chinese)
+      .slice(0, 3);
+    
+    if (selected.length === 0) return 'None selected';
+    return selected.join(', ') + (selected.length < getSelectedCount(category) ? '...' : '');
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto p-6">
+      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <BookOpen className="h-8 w-8 text-orange-600" />
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+            Changquan Competition Planner
+          </h1>
+        </div>
+        <p className="text-gray-600 text-lg">
+          📋 Plan your Changquan routine by selecting required techniques from each category
+        </p>
+      </div>
+
+      {/* Accordion Sections */}
+      <div className="space-y-4">
+        {/* Hand Forms */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('hand_forms')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.hand_forms ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Hand Forms</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getSelectedCount('hand_forms') >= changquanRequirements.hand_forms.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getSelectedCount('hand_forms')}/{changquanRequirements.hand_forms.required_count}</span>
+                  {getSelectedCount('hand_forms') >= changquanRequirements.hand_forms.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+              {!expandedSections.hand_forms && (
+                <div className="text-sm text-gray-500 max-w-md truncate">
+                  {getSelectedTechniquesPreview('hand_forms', 'hand_forms')}
+                </div>
+              )}
+            </div>
+          </div>
+          {expandedSections.hand_forms && (
+            <div className="p-6 pt-4">
+              {renderCompactTechniques('hand_forms', changquanRequirements.hand_forms.movements, 'hand_forms')}
+            </div>
+          )}
+        </div>
+
+        {/* Fist Techniques */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('fist_techniques')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.fist_techniques ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Fist Techniques</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getSelectedCount('fist_techniques') >= changquanRequirements.fist_techniques.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getSelectedCount('fist_techniques')}/{changquanRequirements.fist_techniques.required_count}</span>
+                  {getSelectedCount('fist_techniques') >= changquanRequirements.fist_techniques.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+              {!expandedSections.fist_techniques && (
+                <div className="text-sm text-gray-500 max-w-md truncate">
+                  {getSelectedTechniquesPreview('fist_techniques', 'fist_techniques')}
+                </div>
+              )}
+            </div>
+          </div>
+          {expandedSections.fist_techniques && (
+            <div className="p-6 pt-4">
+              {renderCompactTechniques('fist_techniques', changquanRequirements.fist_techniques.movements, 'fist_techniques')}
+            </div>
+          )}
+        </div>
+
+        {/* Palm Techniques */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('palm_techniques')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.palm_techniques ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Palm Techniques</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getSelectedCount('palm_techniques') >= changquanRequirements.palm_techniques.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getSelectedCount('palm_techniques')}/{changquanRequirements.palm_techniques.required_count}</span>
+                  {getSelectedCount('palm_techniques') >= changquanRequirements.palm_techniques.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+              {!expandedSections.palm_techniques && (
+                <div className="text-sm text-gray-500 max-w-md truncate">
+                  {getSelectedTechniquesPreview('palm_techniques', 'palm_techniques')}
+                </div>
+              )}
+            </div>
+          </div>
+          {expandedSections.palm_techniques && (
+            <div className="p-6 pt-4">
+              {renderCompactTechniques('palm_techniques', changquanRequirements.palm_techniques.movements, 'palm_techniques')}
+            </div>
+          )}
+        </div>
+
+        {/* Elbow Techniques */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('elbow_techniques')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.elbow_techniques ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Elbow Techniques</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getSelectedCount('elbow_techniques') >= changquanRequirements.elbow_techniques.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getSelectedCount('elbow_techniques')}/{changquanRequirements.elbow_techniques.required_count}</span>
+                  {getSelectedCount('elbow_techniques') >= changquanRequirements.elbow_techniques.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+              {!expandedSections.elbow_techniques && (
+                <div className="text-sm text-gray-500 max-w-md truncate">
+                  {getSelectedTechniquesPreview('elbow_techniques', 'elbow_techniques')}
+                </div>
+              )}
+            </div>
+          </div>
+          {expandedSections.elbow_techniques && (
+            <div className="p-6 pt-4">
+              {renderCompactTechniques('elbow_techniques', changquanRequirements.elbow_techniques.movements, 'elbow_techniques')}
+            </div>
+          )}
+        </div>
+
+        {/* Stances */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('stances')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.stances ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Stances</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getSelectedCount('stances') >= changquanRequirements.stances.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getSelectedCount('stances')}/{changquanRequirements.stances.required_count}</span>
+                  {getSelectedCount('stances') >= changquanRequirements.stances.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+              {!expandedSections.stances && (
+                <div className="text-sm text-gray-500 max-w-md truncate">
+                  {getSelectedTechniquesPreview('stances', 'stances')}
+                </div>
+              )}
+            </div>
+          </div>
+          {expandedSections.stances && (
+            <div className="p-6 pt-4">
+              {renderCompactTechniques('stances', changquanRequirements.stances.movements, 'stances')}
+            </div>
+          )}
+        </div>
+
+        {/* Leg Techniques */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('leg_techniques')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.leg_techniques ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Leg Techniques</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getTotalLegTechniques() >= changquanRequirements.leg_techniques.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getTotalLegTechniques()}/{changquanRequirements.leg_techniques.required_count}</span>
+                  {getTotalLegTechniques() >= changquanRequirements.leg_techniques.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          {expandedSections.leg_techniques && (
+            <div className="p-6 pt-4">
+              {changquanRequirements.leg_techniques.categories.map((category, categoryIndex) => (
+                <div key={categoryIndex} className="mb-6 last:mb-0">
+                  <h4 className="text-md font-medium mb-3 text-gray-700 flex items-center gap-2">
+                    <Users className="h-4 w-4 text-orange-600" />
+                    {category.chinese} - {category.description}
+                    <span className="text-sm text-gray-500">
+                      ({getSelectedCountForLegCategory(category.type)} selected)
+                    </span>
+                  </h4>
+                  {renderCompactTechniques(`leg_${category.type}`, category.movements, category.type)}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Balance Techniques */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
+          <div 
+            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
+            onClick={() => toggleSection('balance_techniques')}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  {expandedSections.balance_techniques ? (
+                    <ChevronDown className="h-5 w-5 text-gray-600" />
+                  ) : (
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  )}
+                  <h3 className="text-lg font-semibold text-gray-800">Balance Techniques</h3>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                  getSelectedCount('balance_techniques') >= changquanRequirements.balance_techniques.required_count
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-orange-100 text-orange-800'
+                }`}>
+                  <span>{getSelectedCount('balance_techniques')}/{changquanRequirements.balance_techniques.required_count}</span>
+                  {getSelectedCount('balance_techniques') >= changquanRequirements.balance_techniques.required_count && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </div>
+              </div>
+              {!expandedSections.balance_techniques && (
+                <div className="text-sm text-gray-500 max-w-md truncate">
+                  {getSelectedTechniquesPreview('balance_techniques', 'balance_techniques')}
+                </div>
+              )}
+            </div>
+          </div>
+          {expandedSections.balance_techniques && (
+            <div className="p-6 pt-4">
+              <div className="text-sm text-gray-600 mb-4 p-3 bg-blue-50 rounded-lg">
+                <strong>Note:</strong> {changquanRequirements.balance_techniques.description}
+              </div>
+              {renderCompactTechniques('balance_techniques', changquanRequirements.balance_techniques.movements, 'balance_techniques')}
+            </div>
+          )}
+        </div>
+
+        {/* Additional Requirements */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
+          <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+            <Clock className="h-5 w-5 text-orange-600" />
+            Additional Competition Requirements
+          </h3>
+          <div className="space-y-3 text-sm text-gray-700">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span><strong>Duration:</strong> 1 minute 20 seconds (±5 seconds)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span><strong>Required Stances:</strong> Must include Mǎ Bù, Gōng Bù, Pū Bù, Xū Bù, Xiē Bù</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span><strong>Rhythm Changes:</strong> Must demonstrate speed and rhythm variations</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span><strong>Eye Focus:</strong> Must demonstrate Shén (spirit) through eye movements and focus</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span><strong>Overall Balance:</strong> Routine must demonstrate balance of hand, leg, balance, jumping, and flexibility techniques</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChangquanPlanner;

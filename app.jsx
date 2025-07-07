@@ -323,7 +323,7 @@ const WushuNanduCalculator = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 min-h-screen">
+    <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <Calculator className="h-8 w-8 text-orange-600" />
