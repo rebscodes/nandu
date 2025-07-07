@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Eye, CheckCircle, Circle, Info } from 'lucide-react';
 import { judgingCriteria } from './judging-criteria.js';
 import { changquanRequirements } from './changquan-requirements.js';
+import { movements } from './codes.js';
 
 const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = {} }) => {
   const [expandedSections, setExpandedSections] = useState({});
@@ -39,6 +40,7 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
   };
 
   const selectedMovements = getAllSelectedMovements();
+  
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -111,8 +113,94 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
             });
           }
         }
+      } else if (selectedMovement.source === 'nandu') {
+        // Handle nandu movements from the calculator
+        const nanduMovement = selectedMovement.movement;
+        
+        // Map nandu movements to judging criteria categories
+        let criteriaCategory = null;
+        let searchMovement = nanduMovement;
+        
+        if (nanduMovement.category === 'Balance') {
+          criteriaCategory = 'balance_techniques';
+        } else if (nanduMovement.category === 'Jumping') {
+          criteriaCategory = 'jumping_techniques';
+        } else if (nanduMovement.category === 'Leg' || nanduMovement.category === 'Sweeps') {
+          criteriaCategory = 'leg_techniques';
+        } else if (nanduMovement.category === 'Stance') {
+          criteriaCategory = 'stances';
+        }
+        
+        if (criteriaCategory && judgingCriteria[criteriaCategory]) {
+          let foundMatch = false;
+          let exactMatch = null;
+          const partialMatches = [];
+          
+          // First, check for exact matches
+          Object.keys(judgingCriteria[criteriaCategory]).forEach(techniqueKey => {
+            const technique = judgingCriteria[criteriaCategory][techniqueKey];
+            
+            const exactEnglishMatch = technique.english === searchMovement.english;
+            const exactChineseMatch = technique.chinese === searchMovement.name;
+            const exactPinyinMatch = technique.pinyin === searchMovement.name;
+            
+            if (exactEnglishMatch || exactChineseMatch || exactPinyinMatch) {
+              exactMatch = { techniqueKey, technique };
+            } else {
+              // For partial matches, be more strict to avoid conflicts
+              // Only consider it a match if the shorter string matches the longer one completely
+              const techniqueEnglishLower = technique.english.toLowerCase();
+              const searchEnglishLower = searchMovement.english.toLowerCase();
+              
+              // Only allow partial matches if one string is clearly a subset of another
+              // and the difference in length suggests they're related (not accidental matches)
+              const isSubset = (short, long) => long.includes(short) && Math.abs(long.length - short.length) > 3;
+              
+              if (isSubset(searchEnglishLower, techniqueEnglishLower) || 
+                  isSubset(techniqueEnglishLower, searchEnglishLower)) {
+                partialMatches.push({ techniqueKey, technique });
+              }
+            }
+          });
+          
+          // Use exact match if found, otherwise use the first partial match
+          const matchToUse = exactMatch || (partialMatches.length > 0 ? partialMatches[0] : null);
+          
+          if (matchToUse) {
+            foundMatch = true;
+            const { techniqueKey, technique } = matchToUse;
+            
+            if (!relevantCriteria.has(techniqueKey)) {
+              relevantCriteria.set(techniqueKey, {
+                ...technique,
+                category: criteriaCategory,
+                sources: []
+              });
+            }
+            relevantCriteria.get(techniqueKey).sources.push({
+              ...selectedMovement,
+              movementData: searchMovement,
+              actualCategory: criteriaCategory
+            });
+          }
+          
+          // If no exact match found, add to movements without criteria
+          if (!foundMatch) {
+            movementsWithoutCriteria.push({
+              ...selectedMovement,
+              movementData: searchMovement,
+              actualCategory: criteriaCategory
+            });
+          }
+        } else {
+          // Category not in judging criteria, add to movements without criteria
+          movementsWithoutCriteria.push({
+            ...selectedMovement,
+            movementData: searchMovement,
+            actualCategory: nanduMovement.category
+          });
+        }
       }
-      // Handle nandu movements if needed - for now we'll skip since judging criteria doesn't have nandu-specific data
     });
 
     return { relevantCriteria, movementsWithoutCriteria };
@@ -270,7 +358,10 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
                     <CheckCircle className="h-6 w-6 text-green-600" />
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">
-                        {movement.movementData.chinese} ({movement.movementData.pinyin}) - {movement.movementData.english}
+                        {movement.movementData.chinese ? 
+                          `${movement.movementData.chinese} (${movement.movementData.pinyin}) - ${movement.movementData.english}` :
+                          `${movement.movementData.name} - ${movement.movementData.english}`
+                        }
                       </h3>
                       <p className="text-sm text-gray-600">No specific deduction criteria available</p>
                     </div>

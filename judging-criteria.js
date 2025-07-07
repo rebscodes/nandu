@@ -148,6 +148,12 @@ export const judgingCriteria = {
           "chinese": "躯干低于水平",
           "english": "The torso is below horizontal level"
         }
+      ],
+      "non_conformity": [
+        {
+          "chinese": "上举腿未达垂直",
+          "english": "Raised leg not completely vertical"
+        }
       ]
     },
     "扣腿平衡": {
