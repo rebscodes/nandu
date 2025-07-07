@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckCircle, Circle, BookOpen, Users, Target, Clock, ChevronDown, ChevronRight, Check } from 'lucide-react';
 import { changquanRequirements } from './changquan-requirements.js';
 
-const ChangquanPlanner = () => {
-  const [selectedTechniques, setSelectedTechniques] = useState({});
-  const [expandedTechniques, setExpandedTechniques] = useState({});
+const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
+  const [selectedTechniques, setSelectedTechniques] = useState(sharedSelections);
+
+  // Sync with shared state
+  useEffect(() => {
+    if (setSharedSelections) {
+      setSharedSelections(selectedTechniques);
+    }
+  }, [selectedTechniques, setSharedSelections]);
+
+  // Initialize from shared state when component mounts
+  useEffect(() => {
+    if (Object.keys(sharedSelections).length > 0) {
+      setSelectedTechniques(sharedSelections);
+    }
+  }, []);
+
   const [expandedSections, setExpandedSections] = useState({
     hand_forms: false,
     fist_techniques: false,
@@ -27,15 +41,6 @@ const ChangquanPlanner = () => {
     setExpandedSections(prev => ({
       ...prev,
       [section]: !prev[section]
-    }));
-  };
-
-  const toggleTechniqueExpansion = (e, categoryKey, index) => {
-    e.stopPropagation(); // Prevent triggering selection when clicking to expand
-    const key = `${categoryKey}-${index}`;
-    setExpandedTechniques(prev => ({
-      ...prev,
-      [key]: !prev[key]
     }));
   };
 
@@ -69,61 +74,36 @@ const ChangquanPlanner = () => {
 
   const renderCompactTechniques = (category, techniques, categoryKey) => {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {techniques.map((technique, index) => {
           const techniqueKey = `${categoryKey}-${index}`;
           const isSelected = selectedTechniques[techniqueKey];
-          const isExpanded = expandedTechniques[techniqueKey];
           
           return (
             <div 
               key={index}
-              className={`border rounded-lg overflow-hidden transition-all duration-200 ${
+              className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
                 isSelected
                   ? 'border-orange-400 bg-gradient-to-r from-orange-50 to-amber-50 shadow-md'
                   : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50/30'
-              } ${isExpanded ? 'md:col-span-2 lg:col-span-3' : ''}`}
+              }`}
+              onClick={() => toggleTechnique(categoryKey, index)}
             >
-              {/* Compact Header - Always Visible */}
-              <div 
-                className="p-3 cursor-pointer"
-                onClick={() => toggleTechnique(categoryKey, index)}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  {isSelected ? (
-                    <CheckCircle className="h-4 w-4 text-orange-600 flex-shrink-0" />
-                  ) : (
-                    <Circle className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-800 truncate">{technique.chinese}</div>
+              <div className="flex items-start gap-2 mb-3">
+                {isSelected ? (
+                  <CheckCircle className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
+                ) : (
+                  <Circle className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-gray-800 mb-1">
+                    {technique.chinese} ({technique.pinyin}) - {technique.english}
                   </div>
-                  <button
-                    onClick={(e) => toggleTechniqueExpansion(e, categoryKey, index)}
-                    className="p-0.5 rounded hover:bg-white/50 transition-colors"
-                    title="Show details"
-                  >
-                    {isExpanded ? (
-                      <ChevronDown className="h-3 w-3 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="h-3 w-3 text-gray-500" />
-                    )}
-                  </button>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    {technique.description}
+                  </p>
                 </div>
-                <div className="text-xs text-gray-600 mb-1">({technique.pinyin})</div>
-                <div className="text-xs font-medium text-orange-600">{technique.english}</div>
               </div>
-              
-              {/* Expanded Details */}
-              {isExpanded && (
-                <div className="px-3 pb-2 border-t border-gray-100 bg-gray-50/50">
-                  <div className="pt-2">
-                    <p className="text-xs text-gray-700 leading-snug">
-                      {technique.description}
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
           );
         })}
@@ -150,7 +130,7 @@ const ChangquanPlanner = () => {
         <div className="flex items-center gap-3 mb-4">
           <BookOpen className="h-8 w-8 text-orange-600" />
           <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-            Changquan Competition Planner
+            Required Movements
           </h1>
         </div>
         <p className="text-gray-600 text-lg">

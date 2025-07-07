@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Calculator, BookOpen, Home } from 'lucide-react';
+import { Calculator, BookOpen, Home, AlertTriangle } from 'lucide-react';
 import WushuNanduCalculator from './app.jsx';
 import ChangquanPlanner from './ChangquanPlanner.jsx';
+import Deductions from './Deductions.jsx';
 
 const Navigation = () => {
   const location = useLocation();
@@ -14,7 +15,7 @@ const Navigation = () => {
           <div className="flex items-center gap-3">
             <Home className="h-6 w-6 text-orange-600" />
             <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-              Wushu Training Hub
+              Wushu Taolu Builder
             </span>
           </div>
           
@@ -40,7 +41,19 @@ const Navigation = () => {
               }`}
             >
               <BookOpen className="h-4 w-4" />
-              Changquan Planner
+              Required Movements
+            </Link>
+            
+            <Link
+              to="/deductions"
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+                location.pathname === '/deductions'
+                  ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg'
+                  : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
+              }`}
+            >
+              <AlertTriangle className="h-4 w-4" />
+              Deductions
             </Link>
           </div>
         </div>
@@ -50,13 +63,42 @@ const Navigation = () => {
 };
 
 const App = () => {
+  // Shared state for cross-page data
+  const [nanduCombos, setNanduCombos] = useState([]);
+  const [changquanSelections, setChangquanSelections] = useState({});
+
   return (
     <Router>
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
         <Navigation />
         <Routes>
-          <Route path="/" element={<WushuNanduCalculator />} />
-          <Route path="/changquan" element={<ChangquanPlanner />} />
+          <Route 
+            path="/" 
+            element={
+              <WushuNanduCalculator 
+                sharedCombos={nanduCombos} 
+                setSharedCombos={setNanduCombos} 
+              />
+            } 
+          />
+          <Route 
+            path="/changquan" 
+            element={
+              <ChangquanPlanner 
+                sharedSelections={changquanSelections} 
+                setSharedSelections={setChangquanSelections} 
+              />
+            } 
+          />
+          <Route 
+            path="/deductions" 
+            element={
+              <Deductions 
+                selectedNanduMovements={nanduCombos} 
+                selectedChangquanMovements={changquanSelections} 
+              />
+            } 
+          />
         </Routes>
       </div>
     </Router>
