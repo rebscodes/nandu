@@ -121,7 +121,10 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
         let criteriaCategory = null;
         let searchMovement = nanduMovement;
         
-        if (nanduMovement.category === 'Balance') {
+        // Special case: Falling Front Split is categorized as "Stance" in nandu but exists under leg_techniques in judging criteria
+        if (searchMovement.english === 'Falling Front Split' || searchMovement.name === 'Diē Shù Chà') {
+          criteriaCategory = 'leg_techniques';
+        } else if (nanduMovement.category === 'Balance') {
           criteriaCategory = 'balance_techniques';
         } else if (nanduMovement.category === 'Jumping') {
           criteriaCategory = 'jumping_techniques';
@@ -252,17 +255,22 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
                   <Circle className="h-4 w-4 text-red-600" />
                   Potential Deductions
                 </h4>
-                <div className="space-y-2">
-                  {technique.deductions.map((deduction, index) => (
-                    <div key={index} className="bg-red-50 border border-red-200 rounded-lg p-3">
-                      <div className="text-sm font-medium text-red-800 mb-1">
-                        {deduction.chinese}
-                      </div>
-                      <div className="text-sm text-red-700">
-                        {deduction.english}
-                      </div>
-                    </div>
-                  ))}
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <ul className="space-y-2">
+                    {technique.deductions.map((deduction, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-red-600 mt-1 text-sm">•</span>
+                        <div>
+                          <div className="text-sm font-medium text-red-800">
+                            {deduction.chinese}
+                          </div>
+                          <div className="text-sm text-red-700">
+                            {deduction.english}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             )}
@@ -274,17 +282,22 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
                   <CheckCircle className="h-4 w-4 text-yellow-600" />
                   Non-Conformity Standards
                 </h4>
-                <div className="space-y-2">
-                  {technique.non_conformity.map((standard, index) => (
-                    <div key={index} className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                      <div className="text-sm font-medium text-yellow-800 mb-1">
-                        {standard.chinese}
-                      </div>
-                      <div className="text-sm text-yellow-700">
-                        {standard.english}
-                      </div>
-                    </div>
-                  ))}
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <ul className="space-y-2">
+                    {technique.non_conformity.map((standard, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-yellow-600 mt-1 text-sm">•</span>
+                        <div>
+                          <div className="text-sm font-medium text-yellow-800">
+                            {standard.chinese}
+                          </div>
+                          <div className="text-sm text-yellow-700">
+                            {standard.english}
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             )}
@@ -353,8 +366,8 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
             {/* Movements without deduction criteria */}
             {movementsWithoutCriteria.map((movement, index) => (
               <div key={`no-criteria-${index}`} className="bg-white rounded-2xl shadow-xl shadow-green-100/50 overflow-hidden">
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
+                <div className="p-4">
+                  <div className="flex items-center gap-3">
                     <CheckCircle className="h-6 w-6 text-green-600" />
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">
@@ -365,17 +378,6 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
                       </h3>
                       <p className="text-sm text-gray-600">No specific deduction criteria available</p>
                     </div>
-                  </div>
-                  
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <h4 className="text-sm font-semibold text-green-800">No Specific Deductions</h4>
-                    </div>
-                    <p className="text-sm text-green-700">
-                      This movement does not have specific judging criteria or deduction standards defined in the current ruleset. 
-                      General execution and technique quality standards still apply.
-                    </p>
                   </div>
                 </div>
               </div>

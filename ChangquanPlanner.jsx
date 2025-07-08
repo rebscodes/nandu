@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, Circle, BookOpen, Users, Target, Clock, ChevronDown, ChevronRight, Check } from 'lucide-react';
+import { CheckCircle, Circle, BookOpen, Users, Target, Clock, ChevronDown, ChevronRight, Check, RotateCcw, X } from 'lucide-react';
 import { changquanRequirements } from './changquan-requirements.js';
 
 const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
@@ -44,6 +44,38 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
     }));
   };
 
+  const clearAllSelections = () => {
+    setSelectedTechniques({});
+  };
+
+  const clearCategorySelections = (category) => {
+    if (category === 'leg_techniques') {
+      // Special handling for leg techniques with subcategories
+      setSelectedTechniques(prev => {
+        const newState = { ...prev };
+        changquanRequirements.leg_techniques.categories.forEach(subCategory => {
+          subCategory.movements.forEach((_, index) => {
+            const key = `${subCategory.type}-${index}`;
+            delete newState[key];
+          });
+        });
+        return newState;
+      });
+    } else {
+      const categoryTechniques = changquanRequirements[category];
+      if (!categoryTechniques || !categoryTechniques.movements) return;
+      
+      setSelectedTechniques(prev => {
+        const newState = { ...prev };
+        categoryTechniques.movements.forEach((_, index) => {
+          const key = `${category}-${index}`;
+          delete newState[key];
+        });
+        return newState;
+      });
+    }
+  };
+
   const getSelectedCount = (category) => {
     const categoryTechniques = changquanRequirements[category];
     if (!categoryTechniques || !categoryTechniques.movements) return 0;
@@ -70,6 +102,16 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
       total += getSelectedCountForLegCategory(category.type);
     });
     return total;
+  };
+
+  const getLegCategoriesWithSelections = () => {
+    let categoriesWithSelections = 0;
+    changquanRequirements.leg_techniques.categories.forEach(category => {
+      if (getSelectedCountForLegCategory(category.type) > 0) {
+        categoriesWithSelections++;
+      }
+    });
+    return categoriesWithSelections;
   };
 
   const renderCompactTechniques = (category, techniques, categoryKey) => {
@@ -120,18 +162,28 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
       .map(technique => technique.chinese)
       .slice(0, 3);
     
-    if (selected.length === 0) return 'None selected';
     return selected.join(', ') + (selected.length < getSelectedCount(category) ? '...' : '');
   };
 
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
-        <div className="flex items-center gap-3 mb-4">
-          <BookOpen className="h-8 w-8 text-orange-600" />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-            Required Movements
-          </h1>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <BookOpen className="h-8 w-8 text-orange-600" />
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+              Required Movements
+            </h1>
+          </div>
+          {Object.keys(selectedTechniques).length > 0 && (
+            <button
+              onClick={clearAllSelections}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium rounded-xl transition-colors"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Clear All
+            </button>
+          )}
         </div>
         <p className="text-gray-600 text-lg">
           📋 Plan your Changquan routine by selecting required techniques from each category
@@ -142,12 +194,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
       <div className="space-y-4">
         {/* Hand Forms */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('hand_forms')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('hand_forms')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.hand_forms ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -167,11 +219,25 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   )}
                 </div>
               </div>
-              {!expandedSections.hand_forms && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
-                  {getSelectedTechniquesPreview('hand_forms', 'hand_forms')}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!expandedSections.hand_forms && (
+                  <div className="text-sm text-gray-500 max-w-md truncate">
+                    {getSelectedTechniquesPreview('hand_forms', 'hand_forms')}
+                  </div>
+                )}
+                {getSelectedCount('hand_forms') > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('hand_forms');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {expandedSections.hand_forms && (
@@ -183,12 +249,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
 
         {/* Fist Techniques */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('fist_techniques')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('fist_techniques')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.fist_techniques ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -208,11 +274,25 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   )}
                 </div>
               </div>
-              {!expandedSections.fist_techniques && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
-                  {getSelectedTechniquesPreview('fist_techniques', 'fist_techniques')}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!expandedSections.fist_techniques && (
+                  <div className="text-sm text-gray-500 max-w-md truncate">
+                    {getSelectedTechniquesPreview('fist_techniques', 'fist_techniques')}
+                  </div>
+                )}
+                {getSelectedCount('fist_techniques') > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('fist_techniques');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {expandedSections.fist_techniques && (
@@ -224,12 +304,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
 
         {/* Palm Techniques */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('palm_techniques')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('palm_techniques')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.palm_techniques ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -249,11 +329,25 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   )}
                 </div>
               </div>
-              {!expandedSections.palm_techniques && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
-                  {getSelectedTechniquesPreview('palm_techniques', 'palm_techniques')}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!expandedSections.palm_techniques && (
+                  <div className="text-sm text-gray-500 max-w-md truncate">
+                    {getSelectedTechniquesPreview('palm_techniques', 'palm_techniques')}
+                  </div>
+                )}
+                {getSelectedCount('palm_techniques') > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('palm_techniques');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {expandedSections.palm_techniques && (
@@ -265,12 +359,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
 
         {/* Elbow Techniques */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('elbow_techniques')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('elbow_techniques')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.elbow_techniques ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -290,11 +384,25 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   )}
                 </div>
               </div>
-              {!expandedSections.elbow_techniques && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
-                  {getSelectedTechniquesPreview('elbow_techniques', 'elbow_techniques')}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!expandedSections.elbow_techniques && (
+                  <div className="text-sm text-gray-500 max-w-md truncate">
+                    {getSelectedTechniquesPreview('elbow_techniques', 'elbow_techniques')}
+                  </div>
+                )}
+                {getSelectedCount('elbow_techniques') > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('elbow_techniques');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {expandedSections.elbow_techniques && (
@@ -306,12 +414,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
 
         {/* Stances */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('stances')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('stances')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.stances ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -331,11 +439,25 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   )}
                 </div>
               </div>
-              {!expandedSections.stances && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
-                  {getSelectedTechniquesPreview('stances', 'stances')}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!expandedSections.stances && (
+                  <div className="text-sm text-gray-500 max-w-md truncate">
+                    {getSelectedTechniquesPreview('stances', 'stances')}
+                  </div>
+                )}
+                {getSelectedCount('stances') > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('stances');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {expandedSections.stances && (
@@ -347,12 +469,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
 
         {/* Leg Techniques */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('leg_techniques')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('leg_techniques')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.leg_techniques ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -362,15 +484,29 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   <h3 className="text-lg font-semibold text-gray-800">Leg Techniques</h3>
                 </div>
                 <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-                  getTotalLegTechniques() >= changquanRequirements.leg_techniques.required_count
+                  getLegCategoriesWithSelections() >= changquanRequirements.leg_techniques.required_count
                     ? 'bg-green-100 text-green-800'
                     : 'bg-orange-100 text-orange-800'
                 }`}>
-                  <span>{getTotalLegTechniques()}/{changquanRequirements.leg_techniques.required_count}</span>
-                  {getTotalLegTechniques() >= changquanRequirements.leg_techniques.required_count && (
+                  <span>{getLegCategoriesWithSelections()}/{changquanRequirements.leg_techniques.required_count}</span>
+                  {getLegCategoriesWithSelections() >= changquanRequirements.leg_techniques.required_count && (
                     <Check className="h-4 w-4" />
                   )}
                 </div>
+              </div>
+              <div className="flex items-center gap-3">
+                {getTotalLegTechniques() > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('leg_techniques');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -394,12 +530,12 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
 
         {/* Balance Techniques */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-          <div 
-            className="p-4 cursor-pointer hover:bg-orange-50/50 transition-colors border-b border-gray-100"
-            onClick={() => toggleSection('balance_techniques')}
-          >
+          <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+              <div 
+                className="flex items-center gap-3 cursor-pointer flex-1"
+                onClick={() => toggleSection('balance_techniques')}
+              >
                 <div className="flex items-center gap-2">
                   {expandedSections.balance_techniques ? (
                     <ChevronDown className="h-5 w-5 text-gray-600" />
@@ -419,11 +555,25 @@ const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
                   )}
                 </div>
               </div>
-              {!expandedSections.balance_techniques && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
-                  {getSelectedTechniquesPreview('balance_techniques', 'balance_techniques')}
-                </div>
-              )}
+              <div className="flex items-center gap-3">
+                {!expandedSections.balance_techniques && (
+                  <div className="text-sm text-gray-500 max-w-md truncate">
+                    {getSelectedTechniquesPreview('balance_techniques', 'balance_techniques')}
+                  </div>
+                )}
+                {getSelectedCount('balance_techniques') > 0 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearCategorySelections('balance_techniques');
+                    }}
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {expandedSections.balance_techniques && (

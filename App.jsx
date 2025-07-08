@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Calculator, BookOpen, Home, AlertTriangle } from 'lucide-react';
-import WushuNanduCalculator from './app.jsx';
+import WushuNanduCalculator from './NanduCalculator.jsx';
 import ChangquanPlanner from './ChangquanPlanner.jsx';
 import Deductions from './Deductions.jsx';
 
@@ -100,6 +100,42 @@ const App = () => {
             } 
           />
         </Routes>
+        
+        {/* Footer */}
+        <footer className="mt-12 py-8">
+          <div className="max-w-6xl mx-auto px-6 text-center">
+            <p className="text-gray-600">
+              made with 💖 by{' '}
+              <a 
+                href="http://instagram.com/rebswushu" 
+                className="text-orange-600 hover:text-orange-700 transition-colors"
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                @rebswushu
+              </a>
+              .&nbsp;
+              <a 
+                href="https://www.admonymous.co/rebecca-chinn" 
+                className="text-orange-600 hover:text-orange-700 transition-colors"
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                got thoughts?💭
+              </a>
+              &nbsp;
+              <a 
+                href="https://coff.ee/rebscodes" 
+                className="text-orange-600 hover:text-orange-700 transition-colors"
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                say thanks!☕
+              </a>
+              &nbsp;
+            </p>
+          </div>
+        </footer>
       </div>
     </Router>
   );
