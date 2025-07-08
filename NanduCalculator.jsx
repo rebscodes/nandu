@@ -24,7 +24,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [dragOverCombo, setDragOverCombo] = useState(null);
   const [hasCreatedThrowCatchCombos, setHasCreatedThrowCatchCombos] = useState(false);
 
-  const categories = ['Balance', 'Sweeps', 'Jumping', 'Stance', 'Throw/Catch'];
+  const categories = ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
 
   const filteredMovements = movements.filter(movement => {
     const matchesSearch = movement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,11 +48,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [comboMovement, throwMovement, forwardDiveRoll, catchMovement], // Include the combo movement first
+        movements: [throwMovement, forwardDiveRoll, catchMovement], // Only individual movements
         connections: [], // No connections - score is fixed at 0.1 total
         expanded: true,
         isThrowCatchCombo: true,
-        fixedScore: 0.1
+        fixedScore: 0.1,
+        comboMovement: comboMovement // Store combo movement separately for deductions detection
       };
       return newCombo;
     } else if (comboMovement.id === 'COMBO_PAO_TENG_JIE') {
@@ -62,11 +63,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [comboMovement, throwMovement, tengKongFeiJiao, catchMovement], // Include the combo movement first
+        movements: [throwMovement, tengKongFeiJiao, catchMovement], // Only individual movements
         connections: [], // No connections - score is fixed at 0.1 connection bonus
         expanded: true,
         isThrowCatchCombo: true,
-        fixedScore: 0.1
+        fixedScore: 0.1,
+        comboMovement: comboMovement // Store combo movement separately for deductions detection
       };
       return newCombo;
     } else if (comboMovement.id === 'COMBO_PAO_XUAN_JIE') {
@@ -76,11 +78,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [comboMovement, throwMovement, xuanFengJiao, catchMovement], // Include the combo movement first
+        movements: [throwMovement, xuanFengJiao, catchMovement], // Only individual movements
         connections: [], // No connections - score is fixed at 0.15 connection bonus
         expanded: true,
         isThrowCatchCombo: true,
-        fixedScore: 0.15
+        fixedScore: 0.15,
+        comboMovement: comboMovement // Store combo movement separately for deductions detection
       };
       return newCombo;
     } else if (comboMovement.id === 'COMBO_PAO_LIAN_JIE') {
@@ -90,11 +93,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [comboMovement, throwMovement, tengKongBaiLian, catchMovement], // Include the combo movement first
+        movements: [throwMovement, tengKongBaiLian, catchMovement], // Only individual movements
         connections: [], // No connections - score is fixed at 0.15 connection bonus
         expanded: true,
         isThrowCatchCombo: true,
-        fixedScore: 0.15
+        fixedScore: 0.15,
+        comboMovement: comboMovement // Store combo movement separately for deductions detection
       };
       return newCombo;
     }

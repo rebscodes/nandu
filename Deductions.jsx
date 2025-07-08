@@ -13,6 +13,7 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
     
     // Add selected movements from Nandu Calculator
     selectedNanduMovements.forEach(combo => {
+      // Add individual movements
       combo.movements.forEach(movement => {
         movements.push({
           source: 'nandu',
@@ -20,6 +21,15 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
           combo: combo.id
         });
       });
+      
+      // Add combo movement if it's a throw/catch combo (for deductions detection)
+      if (combo.isThrowCatchCombo && combo.comboMovement) {
+        movements.push({
+          source: 'nandu',
+          movement: combo.comboMovement,
+          combo: combo.id
+        });
+      }
     });
 
     // Add selected movements from Changquan Planner
