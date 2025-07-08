@@ -126,9 +126,16 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
             foundMatch = true;
             const technique = judgingCriteria.combo_criteria[comboId];
             
+            // Add general weapon throwing & catching deductions to combo criteria
+            const generalThrowCatch = judgingCriteria.weapon_techniques?.["器械抛接"];
+            const combinedTechnique = {
+              ...technique,
+              deductions: generalThrowCatch?.deductions || []
+            };
+            
             if (!relevantCriteria.has(comboId)) {
               relevantCriteria.set(comboId, {
-                ...technique,
+                ...combinedTechnique,
                 category: 'combo_criteria',
                 sources: []
               });
