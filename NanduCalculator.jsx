@@ -48,7 +48,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [throwMovement, forwardDiveRoll, catchMovement],
+        movements: [comboMovement, throwMovement, forwardDiveRoll, catchMovement], // Include the combo movement first
         connections: [], // No connections - score is fixed at 0.1 total
         expanded: true,
         isThrowCatchCombo: true,
@@ -62,7 +62,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [throwMovement, tengKongFeiJiao, catchMovement],
+        movements: [comboMovement, throwMovement, tengKongFeiJiao, catchMovement], // Include the combo movement first
         connections: [], // No connections - score is fixed at 0.1 connection bonus
         expanded: true,
         isThrowCatchCombo: true,
@@ -76,7 +76,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [throwMovement, xuanFengJiao, catchMovement],
+        movements: [comboMovement, throwMovement, xuanFengJiao, catchMovement], // Include the combo movement first
         connections: [], // No connections - score is fixed at 0.15 connection bonus
         expanded: true,
         isThrowCatchCombo: true,
@@ -90,7 +90,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       
       const newCombo = {
         id: Date.now(),
-        movements: [throwMovement, tengKongBaiLian, catchMovement],
+        movements: [comboMovement, throwMovement, tengKongBaiLian, catchMovement], // Include the combo movement first
         connections: [], // No connections - score is fixed at 0.15 connection bonus
         expanded: true,
         isThrowCatchCombo: true,
@@ -224,8 +224,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     if (combo.isThrowCatchCombo && combo.fixedScore !== undefined) {
       // For throw/catch combos, return difficulty points + fixed connection score
       const difficultyPoints = combo.movements.reduce((sum, mov) => {
-        // Only count actual difficulty points, not the throw/catch mechanics
-        if (mov.id === 'THROW' || mov.id === '9' || mov.id === '445A') {
+        // Only count actual difficulty points, not the throw/catch mechanics or combo metadata
+        if (mov.id === 'THROW' || mov.id === '9' || mov.id === '445A' || mov.isCombo) {
           return sum; // These don't contribute to movement score
         }
         return sum + mov.points;
@@ -245,8 +245,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     // Track all movements and their connections
     combos.forEach((combo, comboIndex) => {
       combo.movements.forEach((movement, movIndex) => {
-        // Only check scoring movements (not stances)
-        if (movement.points > 0) {
+        // Only check scoring movements (not stances or combo metadata)
+        if (movement.points > 0 && !movement.isCombo) {
           const key = movement.id;
           if (!movementUsage.has(key)) {
             movementUsage.set(key, []);

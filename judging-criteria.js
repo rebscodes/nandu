@@ -1079,6 +1079,72 @@ export const judgingCriteria = {
       ]
     }
   },
+  "combo_criteria": {
+    "COMBO_PAO_QIANG_JIE": {
+      "chinese": "抛+抢背+接",
+      "pinyin": "Pāo + Qiǎng Bèi + Jiē",
+      "english": "Toss + Forward Dive Roll + Catch",
+      "code": "套嵌",
+      "non_conformity": [
+        {
+          "chinese": "抢背后，手、臀、膝未离地",
+          "english": "When performing Forward Dive Roll, the hip/buttock, knee or single hand is not off the ground when catching the weapon"
+        },
+        {
+          "chinese": "未接握住器械或接抓刀彩、剑穗",
+          "english": "The catch is unsuccessful, or the weapon is caught by the broadsword ribbon/straight sword tassel"
+        }
+      ]
+    },
+    "COMBO_PAO_TENG_JIE": {
+      "chinese": "抛+腾空飞脚+接",
+      "pinyin": "Pāo + Téng Kōng Fēi Jiǎo + Jiē", 
+      "english": "Toss + Jumping Front Slap Kick + Catch",
+      "code": "套嵌",
+      "non_conformity": [
+        {
+          "chinese": "抢背后，手、臀、膝未离地",
+          "english": "When performing Forward Dive Roll, the hip/buttock, knee or single hand is not off the ground when catching the weapon"
+        },
+        {
+          "chinese": "未接握住器械或接抓刀彩、剑穗",
+          "english": "The catch is unsuccessful, or the weapon is caught by the broadsword ribbon/straight sword tassel"
+        }
+      ]
+    },
+    "COMBO_PAO_XUAN_JIE": {
+      "chinese": "抛+旋风脚360°+接",
+      "pinyin": "Pāo + Xuàn Fēng Jiǎo 360° + Jiē",
+      "english": "Toss + Tornado Kick 360° + Catch", 
+      "code": "套嵌",
+      "non_conformity": [
+        {
+          "chinese": "抢背后，手、臀、膝未离地",
+          "english": "When performing Forward Dive Roll, the hip/buttock, knee or single hand is not off the ground when catching the weapon"
+        },
+        {
+          "chinese": "未接握住器械或接抓刀彩、剑穗",
+          "english": "The catch is unsuccessful, or the weapon is caught by the broadsword ribbon/straight sword tassel"
+        }
+      ]
+    },
+    "COMBO_PAO_LIAN_JIE": {
+      "chinese": "抛+腾空摆莲360°+接",
+      "pinyin": "Pāo + Téng Kōng Bǎi Lián 360° + Jiē",
+      "english": "Toss + Jumping Lotus Kick 360° + Catch",
+      "code": "套嵌", 
+      "non_conformity": [
+        {
+          "chinese": "抢背后，手、臀、膝未离地",
+          "english": "When performing Forward Dive Roll, the hip/buttock, knee or single hand is not off the ground when catching the weapon"
+        },
+        {
+          "chinese": "未接握住器械或接抓刀彩、剑穗",
+          "english": "The catch is unsuccessful, or the weapon is caught by the broadsword ribbon/straight sword tassel"
+        }
+      ]
+    }
+  },
   "connection_criteria": {
     "dynamic_dynamic": {
       "description": "Connections between two jumping techniques",

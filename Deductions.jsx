@@ -116,92 +116,119 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
       } else if (selectedMovement.source === 'nandu') {
         // Handle nandu movements from the calculator
         const nanduMovement = selectedMovement.movement;
+        let foundMatch = false;
         
-        // Map nandu movements to judging criteria categories
-        let criteriaCategory = null;
-        let searchMovement = nanduMovement;
-        
-        // Special case: Falling Front Split is categorized as "Stance" in nandu but exists under leg_techniques in judging criteria
-        if (searchMovement.english === 'Falling Front Split' || searchMovement.name === 'Diē Shù Chà') {
-          criteriaCategory = 'leg_techniques';
-        } else if (nanduMovement.category === 'Balance') {
-          criteriaCategory = 'balance_techniques';
-        } else if (nanduMovement.category === 'Jumping') {
-          criteriaCategory = 'jumping_techniques';
-        } else if (nanduMovement.category === 'Leg' || nanduMovement.category === 'Sweeps') {
-          criteriaCategory = 'leg_techniques';
-        } else if (nanduMovement.category === 'Stance') {
-          criteriaCategory = 'stances';
-        }
-        
-        if (criteriaCategory && judgingCriteria[criteriaCategory]) {
-          let foundMatch = false;
-          let exactMatch = null;
-          const partialMatches = [];
-          
-          // First, check for exact matches
-          Object.keys(judgingCriteria[criteriaCategory]).forEach(techniqueKey => {
-            const technique = judgingCriteria[criteriaCategory][techniqueKey];
-            
-            const exactEnglishMatch = technique.english === searchMovement.english;
-            const exactChineseMatch = technique.chinese === searchMovement.name;
-            const exactPinyinMatch = technique.pinyin === searchMovement.name;
-            
-            if (exactEnglishMatch || exactChineseMatch || exactPinyinMatch) {
-              exactMatch = { techniqueKey, technique };
-            } else {
-              // For partial matches, be more strict to avoid conflicts
-              // Only consider it a match if the shorter string matches the longer one completely
-              const techniqueEnglishLower = technique.english.toLowerCase();
-              const searchEnglishLower = searchMovement.english.toLowerCase();
-              
-              // Only allow partial matches if one string is clearly a subset of another
-              // and the difference in length suggests they're related (not accidental matches)
-              const isSubset = (short, long) => long.includes(short) && Math.abs(long.length - short.length) > 3;
-              
-              if (isSubset(searchEnglishLower, techniqueEnglishLower) || 
-                  isSubset(techniqueEnglishLower, searchEnglishLower)) {
-                partialMatches.push({ techniqueKey, technique });
-              }
-            }
-          });
-          
-          // Use exact match if found, otherwise use the first partial match
-          const matchToUse = exactMatch || (partialMatches.length > 0 ? partialMatches[0] : null);
-          
-          if (matchToUse) {
+        // Check if this is a combo movement first
+        if (nanduMovement.category === 'Throw/Catch' && nanduMovement.isCombo) {
+          // Handle combo movements
+          const comboId = nanduMovement.id;
+          if (judgingCriteria.combo_criteria && judgingCriteria.combo_criteria[comboId]) {
             foundMatch = true;
-            const { techniqueKey, technique } = matchToUse;
+            const technique = judgingCriteria.combo_criteria[comboId];
             
-            if (!relevantCriteria.has(techniqueKey)) {
-              relevantCriteria.set(techniqueKey, {
+            if (!relevantCriteria.has(comboId)) {
+              relevantCriteria.set(comboId, {
                 ...technique,
-                category: criteriaCategory,
+                category: 'combo_criteria',
                 sources: []
               });
             }
-            relevantCriteria.get(techniqueKey).sources.push({
+            relevantCriteria.get(comboId).sources.push({
               ...selectedMovement,
-              movementData: searchMovement,
-              actualCategory: criteriaCategory
+              movementData: nanduMovement,
+              actualCategory: 'combo_criteria'
             });
           }
+        }
+        
+        // If not a combo or combo not found, handle as regular movement
+        if (!foundMatch) {
+          // Map nandu movements to judging criteria categories
+          let criteriaCategory = null;
+          let searchMovement = nanduMovement;
           
-          // If no exact match found, add to movements without criteria
-          if (!foundMatch) {
+          // Special case: Falling Front Split is categorized as "Stance" in nandu but exists under leg_techniques in judging criteria
+          if (searchMovement.english === 'Falling Front Split' || searchMovement.name === 'Diē Shù Chà') {
+            criteriaCategory = 'leg_techniques';
+          } else if (nanduMovement.category === 'Balance') {
+            criteriaCategory = 'balance_techniques';
+          } else if (nanduMovement.category === 'Jumping') {
+            criteriaCategory = 'jumping_techniques';
+          } else if (nanduMovement.category === 'Leg' || nanduMovement.category === 'Sweeps') {
+            criteriaCategory = 'leg_techniques';
+          } else if (nanduMovement.category === 'Stance') {
+            criteriaCategory = 'stances';
+          }
+        
+          if (criteriaCategory && judgingCriteria[criteriaCategory]) {
+            let foundTechniqueMatch = false;
+            let exactMatch = null;
+            const partialMatches = [];
+            
+            // First, check for exact matches
+            Object.keys(judgingCriteria[criteriaCategory]).forEach(techniqueKey => {
+              const technique = judgingCriteria[criteriaCategory][techniqueKey];
+              
+              const exactEnglishMatch = technique.english === searchMovement.english;
+              const exactChineseMatch = technique.chinese === searchMovement.name;
+              const exactPinyinMatch = technique.pinyin === searchMovement.name;
+              
+              if (exactEnglishMatch || exactChineseMatch || exactPinyinMatch) {
+                exactMatch = { techniqueKey, technique };
+              } else {
+                // For partial matches, be more strict to avoid conflicts
+                // Only consider it a match if the shorter string matches the longer one completely
+                const techniqueEnglishLower = technique.english.toLowerCase();
+                const searchEnglishLower = searchMovement.english.toLowerCase();
+                
+                // Only allow partial matches if one string is clearly a subset of another
+                // and the difference in length suggests they're related (not accidental matches)
+                const isSubset = (short, long) => long.includes(short) && Math.abs(long.length - short.length) > 3;
+                
+                if (isSubset(searchEnglishLower, techniqueEnglishLower) || 
+                    isSubset(techniqueEnglishLower, searchEnglishLower)) {
+                  partialMatches.push({ techniqueKey, technique });
+                }
+              }
+            });
+            
+            // Use exact match if found, otherwise use the first partial match
+            const matchToUse = exactMatch || (partialMatches.length > 0 ? partialMatches[0] : null);
+            
+            if (matchToUse) {
+              foundTechniqueMatch = true;
+              const { techniqueKey, technique } = matchToUse;
+              
+              if (!relevantCriteria.has(techniqueKey)) {
+                relevantCriteria.set(techniqueKey, {
+                  ...technique,
+                  category: criteriaCategory,
+                  sources: []
+                });
+              }
+              relevantCriteria.get(techniqueKey).sources.push({
+                ...selectedMovement,
+                movementData: searchMovement,
+                actualCategory: criteriaCategory
+              });
+            }
+            
+            // If no exact match found, add to movements without criteria
+            if (!foundTechniqueMatch) {
+              movementsWithoutCriteria.push({
+                ...selectedMovement,
+                movementData: searchMovement,
+                actualCategory: criteriaCategory
+              });
+            }
+          } else {
+            // Category not in judging criteria, add to movements without criteria
             movementsWithoutCriteria.push({
               ...selectedMovement,
               movementData: searchMovement,
-              actualCategory: criteriaCategory
+              actualCategory: nanduMovement.category
             });
           }
-        } else {
-          // Category not in judging criteria, add to movements without criteria
-          movementsWithoutCriteria.push({
-            ...selectedMovement,
-            movementData: searchMovement,
-            actualCategory: nanduMovement.category
-          });
         }
       }
     });
