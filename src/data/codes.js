@@ -1,50 +1,50 @@
 // Movement database based on the provided tables
 export const movements = [
   // Balance Techniques
-  { id: '111A', name: 'Bān Tuǐ Cháo Tiān Zhí Lì', english: 'Grasp the foot and bring it to head level', category: 'Balance', grade: 'A', points: 0.2 },
-  { id: '112A', name: 'Cè Tī Bào Jiǎo Zhí Lì', english: 'Side kick up to catch the foot at head level', category: 'Balance', grade: 'A', points: 0.2 },
-  { id: '123A', name: 'Yǎng Shēn Píng Héng', english: 'Backward Leaning Balance', category: 'Balance', grade: 'A', points: 0.2 },
-  { id: '153A', name: 'Tàn Hǎi Píng Héng', english: 'Exploring the Ocean Balance', category: 'Balance', grade: 'A', points: 0.2 },
-  { id: '163A', name: 'Wàng Yuè Píng Héng', english: 'Gazing at the Moon Balance', category: 'Balance', grade: 'A', points: 0.2 },
-  { id: '133B', name: 'Shí Zì Píng Héng', english: 'Forward Leaning Balance with Arms Outspread', category: 'Balance', grade: 'B', points: 0.3 },
+  { id: '111A', name: 'Bān Tuǐ Cháo Tiān Zhí Lì', chinese: '搬腿朝天直立', english: 'Grasp the foot and bring it to head level', category: 'Balance', grade: 'A', points: 0.2 },
+  { id: '112A', name: 'Cè Tī Bào Jiǎo Zhí Lì', chinese: '侧踢抱脚直立', english: 'Side kick up to catch the foot at head level', category: 'Balance', grade: 'A', points: 0.2 },
+  { id: '123A', name: 'Yǎng Shēn Píng Héng', chinese: '仰身平衡', english: 'Backward Leaning Balance', category: 'Balance', grade: 'A', points: 0.2 },
+  { id: '153A', name: 'Tàn Hǎi Píng Héng', chinese: '探海平衡', english: 'Exploring the Ocean Balance', category: 'Balance', grade: 'A', points: 0.2 },
+  { id: '163A', name: 'Wàng Yuè Píng Héng', chinese: '望月平衡', english: 'Gazing at the Moon Balance', category: 'Balance', grade: 'A', points: 0.2 },
+  { id: '133B', name: 'Shí Zì Píng Héng', chinese: '十字平衡', english: 'Forward Leaning Balance with Arms Outspread', category: 'Balance', grade: 'B', points: 0.3 },
   
   // Leg Techniques
-  { id: '244A', name: 'Qián Sǎo Tuǐ 540°', english: 'Front Sweep 540°', category: 'Leg', grade: 'A', points: 0.2 },
-  { id: '244B', name: 'Qián Sǎo Tuǐ 900°', english: 'Front Sweep 900°', category: 'Leg', grade: 'B', points: 0.3 },
+  { id: '244A', name: 'Qián Sǎo Tuǐ 540°', chinese: '前扫腿', english: 'Front Sweep 540°', category: 'Leg', grade: 'A', points: 0.2 },
+  { id: '244B', name: 'Qián Sǎo Tuǐ 900°', chinese: '前扫腿', english: 'Front Sweep 900°', category: 'Leg', grade: 'B', points: 0.3 },
   
   // Jumping Techniques
-  { id: '312A', name: 'Téng Kōng Fēi Jiǎo', english: 'Jumping Front Slap Kick', category: 'Jumping', grade: 'A', points: 0.2 },
-  { id: '312B', name: 'Téng Kōng Zhèng Tī Tuǐ', english: 'Jumping Front Straight Kick', category: 'Jumping', grade: 'B', points: 0.3 },
-  { id: '323A', name: 'Xuàn Fēng Jiǎo 360°', english: 'Tornado Kick 360°', category: 'Jumping', grade: 'A', points: 0.2 },
-  { id: '323B', name: 'Xuàn Fēng Jiǎo 540°', english: 'Tornado Kick 540°', category: 'Jumping', grade: 'B', points: 0.3 },
-  { id: '323C', name: 'Xuàn Fēng Jiǎo 630°(F)/720°', english: 'Tornado Kick 630°(F)/720°', category: 'Jumping', grade: 'C', points: 0.4 },
-  { id: '324A', name: 'Téng Kōng Bǎi Lián 360°', english: 'Jumping Lotus Kick 360°', category: 'Jumping', grade: 'A', points: 0.2 },
-  { id: '324B', name: 'Téng Kōng Bǎi Lián 540°', english: 'Jumping Lotus Kick 540°', category: 'Jumping', grade: 'B', points: 0.3 },
-  { id: '324C', name: 'Téng Kōng Bǎi Lián 630°(F)/720°', english: 'Jumping Lotus Kick 630°(F)/720°', category: 'Jumping', grade: 'C', points: 0.4 },
-  { id: '333A', name: 'Xuànzi', english: 'Butterfly Kick', category: 'Jumping', grade: 'A', points: 0.2 },
-  { id: '353B', name: 'Xuàn Zǐ Zhuǎn Tǐ 360°', english: 'Butterfly Twist 360°', category: 'Jumping', grade: 'B', points: 0.3 },
-  { id: '353C', name: 'Xuàn Zǐ Zhuǎn Tǐ 720°', english: 'Butterfly Twist 720°', category: 'Jumping', grade: 'C', points: 0.4 },
-  { id: '335A', name: 'Cè Kōng Fān', english: 'Aerial Cartwheel', category: 'Jumping', grade: 'A', points: 0.2 },
-  { id: '355B', name: 'Cè Kōng Fān Zhuǎn Tǐ 360°', english: 'Aerial Cartwheel Twist 360°', category: 'Jumping', grade: 'B', points: 0.3 },
+  { id: '312A', name: 'Téng Kōng Fēi Jiǎo', chinese: '腾空飞脚', english: 'Jumping Front Slap Kick', category: 'Jumping', grade: 'A', points: 0.2 },
+  { id: '312B', name: 'Téng Kōng Zhèng Tī Tuǐ', chinese: '腾空正踢腿', english: 'Jumping Front Straight Kick', category: 'Jumping', grade: 'B', points: 0.3 },
+  { id: '323A', name: 'Xuàn Fēng Jiǎo 360°', chinese: '旋风脚', english: 'Tornado Kick 360°', category: 'Jumping', grade: 'A', points: 0.2 },
+  { id: '323B', name: 'Xuàn Fēng Jiǎo 540°', chinese: '旋风脚', english: 'Tornado Kick 540°', category: 'Jumping', grade: 'B', points: 0.3 },
+  { id: '323C', name: 'Xuàn Fēng Jiǎo 630°(F)/720°', chinese: '旋风脚', english: 'Tornado Kick 630°(F)/720°', category: 'Jumping', grade: 'C', points: 0.4 },
+  { id: '324A', name: 'Téng Kōng Bǎi Lián 360°', chinese: '腾空摆莲', english: 'Jumping Lotus Kick 360°', category: 'Jumping', grade: 'A', points: 0.2 },
+  { id: '324B', name: 'Téng Kōng Bǎi Lián 540°', chinese: '腾空摆莲', english: 'Jumping Lotus Kick 540°', category: 'Jumping', grade: 'B', points: 0.3 },
+  { id: '324C', name: 'Téng Kōng Bǎi Lián 630°(F)/720°', chinese: '腾空摆莲', english: 'Jumping Lotus Kick 630°(F)/720°', category: 'Jumping', grade: 'C', points: 0.4 },
+  { id: '333A', name: 'Xuànzi', chinese: '旋子', english: 'Butterfly Kick', category: 'Jumping', grade: 'A', points: 0.2 },
+  { id: '353B', name: 'Xuàn Zǐ Zhuǎn Tǐ 360°', chinese: '旋子转体', english: 'Butterfly Twist 360°', category: 'Jumping', grade: 'B', points: 0.3 },
+  { id: '353C', name: 'Xuàn Zǐ Zhuǎn Tǐ 720°', chinese: '旋子转体', english: 'Butterfly Twist 720°', category: 'Jumping', grade: 'C', points: 0.4 },
+  { id: '335A', name: 'Cè Kōng Fān', chinese: '侧空翻', english: 'Aerial Cartwheel', category: 'Jumping', grade: 'A', points: 0.2 },
+  { id: '355B', name: 'Cè Kōng Fān Zhuǎn Tǐ 360°', chinese: '侧空翻转体', english: 'Aerial Cartwheel Twist 360°', category: 'Jumping', grade: 'B', points: 0.3 },
   
   // Stances for connections
-  { id: '0', name: 'Pū Bù', english: 'Crouching Stance', category: 'Stance', grade: '-', points: 0 },
-  { id: '1', name: 'Mǎ Bù', english: 'Horse Stance', category: 'Stance', grade: '-', points: 0 },
-  { id: '3', name: 'Tí Xī Dú Lì', english: 'Single Raised-Knee Stance', category: 'Stance', grade: '-', points: 0 },
-  { id: '4', name: 'Diē Shù Chà', english: 'Falling Front Split', category: 'Stance', grade: '-', points: 0 },
-  { id: '6', name: 'Zuò Pán', english: 'Cross-Legged Sitting', category: 'Stance', grade: '-', points: 0 },
-  { id: '7', name: 'Gōng Bù', english: 'Bow Stance', category: 'Stance', grade: '-', points: 0 },
+  { id: '0', name: 'Pū Bù', chinese: '仆步', english: 'Crouching Stance', category: 'Stance', grade: '-', points: 0 },
+  { id: '1', name: 'Mǎ Bù', chinese: '马步', english: 'Horse Stance', category: 'Stance', grade: '-', points: 0 },
+  { id: '3', name: 'Tí Xī Dú Lì', chinese: '提膝独立', english: 'Single Raised-Knee Stance', category: 'Stance', grade: '-', points: 0 },
+  { id: '4', name: 'Diē Shù Chà', chinese: '跌竖叉', english: 'Falling Front Split', category: 'Stance', grade: '-', points: 0 },
+  { id: '6', name: 'Zuò Pán', chinese: '坐盘', english: 'Cross-Legged Sitting', category: 'Stance', grade: '-', points: 0 },
+  { id: '7', name: 'Gōng Bù', chinese: '弓步', english: 'Bow Stance', category: 'Stance', grade: '-', points: 0 },
   
   // Throw/Catch combo sequences
-  { id: 'COMBO_PAO_QIANG_JIE', name: 'Pāo + Qiǎng Bèi + Jiē', english: 'Toss + Forward Dive Roll + Catch', category: 'Throw/Catch', grade: 'A', points: 0.1, isCombo: true },
-  { id: 'COMBO_PAO_TENG_JIE', name: 'Pāo + Téng Kōng Fēi Jiǎo + Jiē', english: 'Toss + Jumping Front Slap Kick + Catch', category: 'Throw/Catch', grade: 'A', points: 0.3, isCombo: true },
-  { id: 'COMBO_PAO_XUAN_JIE', name: 'Pāo + Xuàn Fēng Jiǎo 360° + Jiē', english: 'Toss + Tornado Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
-  { id: 'COMBO_PAO_LIAN_JIE', name: 'Pāo + Téng Kōng Bǎi Lián 360° + Jiē', english: 'Toss + Jumping Lotus Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
+  { id: 'COMBO_PAO_QIANG_JIE', name: 'Pāo + Qiǎng Bèi + Jiē', chinese: '抛+抢背+接', english: 'Toss + Forward Dive Roll + Catch', category: 'Throw/Catch', grade: 'A', points: 0.1, isCombo: true },
+  { id: 'COMBO_PAO_TENG_JIE', name: 'Pāo + Téng Kōng Fēi Jiǎo + Jiē', chinese: '抛+腾空飞脚+接', english: 'Toss + Jumping Front Slap Kick + Catch', category: 'Throw/Catch', grade: 'A', points: 0.3, isCombo: true },
+  { id: 'COMBO_PAO_XUAN_JIE', name: 'Pāo + Xuàn Fēng Jiǎo 360° + Jiē', chinese: '抛+旋风脚+接', english: 'Toss + Tornado Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
+  { id: 'COMBO_PAO_LIAN_JIE', name: 'Pāo + Téng Kōng Bǎi Lián 360° + Jiē', chinese: '抛+腾空摆莲+接', english: 'Toss + Jumping Lotus Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
   
   // Individual movements for connections (hidden from display)
-  { id: 'CATCH', name: 'Jiē', english: 'Catch', category: 'Hidden', grade: '-', points: 0 },
-  { id: '445A', name: 'Qiǎng Bèi', english: 'Forward Dive Roll', category: 'Hidden', grade: 'A', points: 0 },
-  { id: 'THROW', name: 'Pāo', english: 'Toss', category: 'Hidden', grade: '-', points: 0 }
+  { id: 'CATCH', name: 'Jiē', chinese: '接', english: 'Catch', category: 'Hidden', grade: '-', points: 0 },
+  { id: '445A', name: 'Qiǎng Bèi', chinese: '抢背', english: 'Forward Dive Roll', category: 'Hidden', grade: 'A', points: 0 },
+  { id: 'THROW', name: 'Pāo', chinese: '抛', english: 'Toss', category: 'Hidden', grade: '-', points: 0 }
 ];
 
 export const connections = [

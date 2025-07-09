@@ -7,95 +7,6 @@ import { movements } from './data/codes.js';
 const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = {} }) => {
   const [expandedSections, setExpandedSections] = useState({});
 
-  // Detect combo patterns from movement sequences
-  const detectComboPatterns = (movements) => {
-    const detectedCombos = [];
-    
-    // Check for 2-movement combinations
-    for (let i = 0; i < movements.length - 1; i++) {
-      const firstMove = movements[i];
-      const secondMove = movements[i + 1];
-      
-      if (!firstMove || !secondMove) continue;
-      
-      // Create combo string patterns to match against (with and without spaces)
-      const chinesePattern = `${firstMove.name || ''}+${secondMove.name || ''}`;
-      const chinesePatternWithSpaces = `${firstMove.name || ''} + ${secondMove.name || ''}`;
-      const englishPattern = `${firstMove.english || ''}+${secondMove.english || ''}`;
-      const englishPatternWithSpaces = `${firstMove.english || ''} + ${secondMove.english || ''}`;
-      
-      // Debug log to see what patterns are being created
-      console.log('Checking combo pattern:', {
-        chinesePattern,
-        chinesePatternWithSpaces,
-        englishPattern,
-        englishPatternWithSpaces,
-        firstMove: firstMove.name,
-        secondMove: secondMove.name
-      });
-      
-      // Find matching combo in criteria
-      const matchingComboId = findMatchingComboByPattern(chinesePattern, chinesePatternWithSpaces, englishPattern, englishPatternWithSpaces);
-      
-      if (matchingComboId) {
-        const comboData = judgingCriteria.combo_criteria[matchingComboId];
-        if (comboData) {
-          detectedCombos.push({
-            id: matchingComboId,
-            name: comboData.chinese,
-            english: comboData.english,
-            category: 'Combo',
-            isCombo: true,
-            isDetectedCombo: true
-          });
-        }
-      }
-    }
-    
-    return detectedCombos;
-  };
-
-  // Find matching combo by comparing name patterns
-  const findMatchingComboByPattern = (chinesePattern, chinesePatternWithSpaces, englishPattern, englishPatternWithSpaces) => {
-    const comboCriteria = judgingCriteria.combo_criteria || {};
-    
-    for (const [comboId, comboData] of Object.entries(comboCriteria)) {
-      // Skip throw/catch combos as they're handled separately
-      if (comboId.startsWith('COMBO_PAO_')) continue;
-      
-      // Check if the combo name contains our movement pattern
-      const comboChineseName = comboData.chinese || '';
-      const comboEnglishName = comboData.english || '';
-      const comboPinyinName = comboData.pinyin || '';
-      
-      // Try matching against Chinese characters
-      if (comboChineseName.includes('+')) {
-        if (comboChineseName === chinesePattern || comboChineseName === chinesePatternWithSpaces) {
-          return comboId;
-        }
-      }
-      
-      // Try matching against pinyin
-      if (comboPinyinName.includes('+')) {
-        if (comboPinyinName === chinesePattern || comboPinyinName === chinesePatternWithSpaces) {
-          return comboId;
-        }
-      }
-      
-      // Try matching against English
-      if (comboEnglishName.includes('+')) {
-        const normalizedComboName = comboEnglishName.toLowerCase();
-        const normalizedPattern1 = englishPattern.toLowerCase();
-        const normalizedPattern2 = englishPatternWithSpaces.toLowerCase();
-        
-        if (normalizedComboName === normalizedPattern1 || normalizedComboName === normalizedPattern2) {
-          return comboId;
-        }
-      }
-    }
-    
-    return null;
-  };
 
   // Get all selected movements from both pages
   const getAllSelectedMovements = () => {
@@ -121,15 +32,6 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
         });
       }
       
-      // Check for dynamic-dynamic and dynamic-static combo patterns
-      const detectedCombos = detectComboPatterns(combo.movements);
-      detectedCombos.forEach(detectedCombo => {
-        movements.push({
-          source: 'nandu',
-          movement: detectedCombo,
-          combo: combo.id
-        });
-      });
     });
 
     // Add selected movements from Changquan Planner

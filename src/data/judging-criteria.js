@@ -1193,7 +1193,7 @@ export const judgingCriteria = {
       ]
     },
     "COMBO_DD_XUANZI_XUANZIZHUANTI": {
-      "chinese": "旋子+旋子转体360°",
+      "chinese": "旋子+旋子转体",
       "pinyin": "Xuànzi + Xuàn Zǐ Zhuǎn Tǐ",
       "english": "Butterfly Kick + Butterfly Twist 360°",
       "code": "动动连接",
@@ -1205,7 +1205,7 @@ export const judgingCriteria = {
       ]
     },
     "COMBO_DD_FEIJIAO_XUANFENG_2STEP": {
-      "chinese": "腾空飞脚+旋风脚360°/540°",
+      "chinese": "腾空飞脚+旋风脚",
       "pinyin": "Téng Kōng Fēi Jiǎo + Xuàn Fēng Jiǎo",
       "english": "Jumping Front Slap Kick + Tornado Kick 360°/540°",
       "code": "动动连接",
