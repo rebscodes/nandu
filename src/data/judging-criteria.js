@@ -1143,6 +1143,538 @@ export const judgingCriteria = {
           "english": "The catch is unsuccessful, or the weapon is caught by the broadsword ribbon/straight sword tassel"
         }
       ]
+    },
+    "COMBO_DD_FEIJIAO_BAILIANCOMBO": {
+      "chinese": "腾空飞脚+腾空摆莲540°/630°/720°",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Téng Kōng Bǎi Lián",
+      "english": "Jumping Front Slap Kick + Jumping Lotus Kick 540°/630°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间出现助跑",
+          "english": "Occurrence of run-up step in between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANFENG_BAILIAN": {
+      "chinese": "旋风脚360°+腾空摆莲360°/540°",
+      "pinyin": "Xuàn Fēng Jiǎo 360° + Téng Kōng Bǎi Lián",
+      "english": "Tornado Kick 360° + Jumping Lotus Kick 360°/540°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间出现助跑",
+          "english": "Occurrence of run-up step in between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANFENG540_BAILIAN": {
+      "chinese": "旋风脚540°+腾空摆莲540°/630°/720°",
+      "pinyin": "Xuàn Fēng Jiǎo 540° + Téng Kōng Bǎi Lián",
+      "english": "Tornado Kick 540° + Jumping Lotus Kick 540°/630°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间出现助跑",
+          "english": "Occurrence of run-up step in between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_FEIJIAO_CEKONGFAN": {
+      "chinese": "腾空飞脚+侧空翻",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Cè Kōng Fān",
+      "english": "Jumping Front Slap Kick + Aerial Cartwheel",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过1步",
+          "english": "Exceeding 1 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANZI_XUANZIZHUANTI": {
+      "chinese": "旋子+旋子转体360°",
+      "pinyin": "Xuànzi + Xuàn Zǐ Zhuǎn Tǐ",
+      "english": "Butterfly Kick + Butterfly Twist 360°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过1步",
+          "english": "Exceeding 1 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_FEIJIAO_XUANFENG_2STEP": {
+      "chinese": "腾空飞脚+旋风脚360°/540°",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Xuàn Fēng Jiǎo",
+      "english": "Jumping Front Slap Kick + Tornado Kick 360°/540°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过2步",
+          "english": "Exceeding 2 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_FEIJIAO_BAILIANG360": {
+      "chinese": "腾空飞脚+腾空摆莲360°",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Téng Kōng Bǎi Lián",
+      "english": "Jumping Front Slap Kick + Jumping Lotus Kick 360°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过2步",
+          "english": "Exceeding 2 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_FEIJIAO_XUANFENG_4STEP": {
+      "chinese": "腾空飞脚+旋风脚630°/720°",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Xuàn Fēng Jiǎo",
+      "english": "Jumping Front Slap Kick + Tornado Kick 630°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_FEIJIAO_XUANZIZHUANTI": {
+      "chinese": "腾空飞脚+旋子转体360°/720°",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Xuàn Zǐ Zhuǎn Tǐ",
+      "english": "Jumping Front Slap Kick + Butterfly Twist 360°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANFENG_XUANZIZHUANTI": {
+      "chinese": "旋风脚360°+旋子转体360°/720°",
+      "pinyin": "Xuàn Fēng Jiǎo + Xuàn Zǐ Zhuǎn Tǐ",
+      "english": "Tornado Kick 360° + Butterfly Twist 360°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANZI_XUANZIZHUANTI720": {
+      "chinese": "旋子+旋子转体720°",
+      "pinyin": "Xuànzi + Xuàn Zǐ Zhuǎn Tǐ",
+      "english": "Butterfly Kick + Butterfly Twist 720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANZIZHUANTI_XUANFENG": {
+      "chinese": "旋子转体360°+旋风脚540°/630°/720°",
+      "pinyin": "Xuàn Zǐ Zhuǎn Tǐ + Xuàn Fēng Jiǎo",
+      "english": "Butterfly Twist 360° + Tornado Kick 540°/630°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_CEKONGFAN_XUANFENG": {
+      "chinese": "侧空翻+旋风脚540°/630°/720°",
+      "pinyin": "Cè Kōng Fān + Xuàn Fēng Jiǎo",
+      "english": "Aerial Cartwheel + Tornado Kick 540°/630°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_CEKONGFAN_XUANZIZHUANTI": {
+      "chinese": "侧空翻+旋子转体360°/720°",
+      "pinyin": "Cè Kōng Fān + Xuàn Zǐ Zhuǎn Tǐ",
+      "english": "Aerial Cartwheel + Butterfly Twist 360°/720°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "跳跃动作之间的助跑步数超过4步",
+          "english": "Exceeding 4 run-up step between the 2 jumping techniques"
+        }
+      ]
+    },
+    "COMBO_DD_XUANZI_QIANSAOTUI": {
+      "chinese": "旋子+前扫腿540°",
+      "pinyin": "Xuànzi + Qián Sǎo Tuǐ",
+      "english": "Butterfly Kick + Front Sweep 540°",
+      "code": "动动连接",
+      "non_conformity": [
+        {
+          "chinese": "动作之间明显停顿",
+          "english": "Obvious pause between the 2 techniques"
+        }
+      ]
+    },
+    "COMBO_DS_XUANFENG_MABU": {
+      "chinese": "旋风脚360°/540°/630°/720°+马步",
+      "pinyin": "Xuàn Fēng Jiǎo + Mǎ Bù",
+      "english": "Tornado Kick 360°/540°/630°/720° + Horse Stance",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "脚移动、跳动",
+          "english": "Foot shuffles or skips"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_BAILIANCOMBO_MABU": {
+      "chinese": "腾空摆莲360°/540°/630°/720°+马步",
+      "pinyin": "Téng Kōng Bǎi Lián + Mǎ Bù",
+      "english": "Jumping Lotus Kick 360°/540°/630°/720° + Horse Stance",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "脚移动、跳动",
+          "english": "Foot shuffles or skips"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_BAILIANG360_GONGBU": {
+      "chinese": "腾空摆莲360°+弓步",
+      "pinyin": "Téng Kōng Bǎi Lián + Gōng Bù",
+      "english": "Jumping Lotus Kick 360° + Bow Stance",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "脚移动、跳动",
+          "english": "Foot shuffles or skips"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_BAILIANG540_PUBU": {
+      "chinese": "腾空摆莲540°+仆步",
+      "pinyin": "Téng Kōng Bǎi Lián + Pū Bù",
+      "english": "Jumping Lotus Kick 540° + Crouching Stance",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "脚移动、跳动",
+          "english": "Foot shuffles or skips"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_XUANFENG_DIESHUCHA": {
+      "chinese": "旋风脚360°/540°/630°/720°+跌竖叉",
+      "pinyin": "Xuàn Fēng Jiǎo + Diē Shù Chà",
+      "english": "Tornado Kick 360°/540°/630°/720° + Falling Front Split",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "滑叉",
+          "english": "Sliding into the splits"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_BAILIANG360_DIESHUCHA": {
+      "chinese": "腾空摆莲360°+跌竖叉",
+      "pinyin": "Téng Kōng Bǎi Lián + Diē Shù Chà",
+      "english": "Jumping Lotus Kick 360° + Falling Front Split",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "滑叉",
+          "english": "Sliding into the splits"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_XUANZIZHUANTI_DIESHUCHA": {
+      "chinese": "旋子转体360°/720°+跌竖叉",
+      "pinyin": "Xuàn Zǐ Zhuǎn Tǐ + Diē Shù Chà",
+      "english": "Butterfly Twist 360°/720° + Falling Front Split",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "滑叉",
+          "english": "Sliding into the splits"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_CEKONGFAN_DIESHUCHA": {
+      "chinese": "侧空翻+跌竖叉",
+      "pinyin": "Cè Kōng Fān + Diē Shù Chà",
+      "english": "Aerial Cartwheel + Falling Front Split",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "两脚依次落地",
+          "english": "The feet land alternately (not simultaneously)"
+        },
+        {
+          "chinese": "滑叉",
+          "english": "Sliding into the splits"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_XUANFENG_TIXIDULI": {
+      "chinese": "旋风脚360°/540°+提膝独立",
+      "pinyin": "Xuàn Fēng Jiǎo + Tí Xī Dú Lì",
+      "english": "Tornado Kick 360°/540° + Single Raised-Knee Stance",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "击响脚未单脚落地",
+          "english": "The kicking and slapped foot is not the same leg which is singerly landed on"
+        },
+        {
+          "chinese": "落地时脚移动或跳动",
+          "english": "When landing the foot shuffles or skips"
+        },
+        {
+          "chinese": "提膝腿脚触地",
+          "english": "The foot of the raised knee touches the ground"
+        }
+      ]
+    },
+    "COMBO_DS_BAILIANG_TIXIDULI": {
+      "chinese": "腾空摆莲360°/540°+提膝独立",
+      "pinyin": "Téng Kōng Bǎi Lián + Tí Xī Dú Lì",
+      "english": "Jumping Lotus Kick 360°/540° + Single Raised-Knee Stance",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "击响脚未单脚落地",
+          "english": "The kicking and slapped foot is not the same leg which is singerly landed on"
+        },
+        {
+          "chinese": "落地时脚移动或跳动",
+          "english": "When landing the foot shuffles or skips"
+        },
+        {
+          "chinese": "提膝腿脚触地",
+          "english": "The foot of the raised knee touches the ground"
+        }
+      ]
+    },
+    "COMBO_DS_FEIJIAO_ZUOPAN": {
+      "chinese": "腾空飞脚+坐盘",
+      "pinyin": "Téng Kōng Fēi Jiǎo + Zuò Pán",
+      "english": "Jumping Front Slap Kick + Cross-Legged Sitting",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "动作之间明显停顿",
+          "english": "Obvious pause between the 2 techniques"
+        },
+        {
+          "chinese": "两大腿未交叉",
+          "english": "The thighs are not crossed clearly"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_XUANFENG_ZUOPAN": {
+      "chinese": "旋风脚360°/540°/630°/720°+坐盘",
+      "pinyin": "Xuàn Fēng Jiǎo + Zuò Pán",
+      "english": "Tornado Kick 360°/540°/630°/720° + Cross-Legged Sitting",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "动作之间明显停顿",
+          "english": "Obvious pause between the 2 techniques"
+        },
+        {
+          "chinese": "两大腿未交叉",
+          "english": "The thighs are not crossed clearly"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_BAILIANG_ZUOPAN": {
+      "chinese": "腾空摆莲360°/540°/630°/720°+坐盘",
+      "pinyin": "Téng Kōng Bǎi Lián + Zuò Pán",
+      "english": "Jumping Lotus Kick 360°/540°/630°/720° + Cross-Legged Sitting",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "动作之间明显停顿",
+          "english": "Obvious pause between the 2 techniques"
+        },
+        {
+          "chinese": "两大腿未交叉",
+          "english": "The thighs are not crossed clearly"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_XUANZI_ZUOPAN": {
+      "chinese": "旋子+坐盘",
+      "pinyin": "Xuànzi + Zuò Pán",
+      "english": "Butterfly Kick + Cross-Legged Sitting",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "动作之间明显停顿",
+          "english": "Obvious pause between the 2 techniques"
+        },
+        {
+          "chinese": "两大腿未交叉",
+          "english": "The thighs are not crossed clearly"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
+    },
+    "COMBO_DS_QIANSAOTUI_ZUOPAN": {
+      "chinese": "前扫腿540°+坐盘",
+      "pinyin": "Qián Sǎo Tuǐ + Zuò Pán",
+      "english": "Front Sweep 540° + Cross-Legged Sitting",
+      "code": "动静连接",
+      "non_conformity": [
+        {
+          "chinese": "动作之间明显停顿",
+          "english": "Obvious pause between the 2 techniques"
+        },
+        {
+          "chinese": "两大腿未交叉",
+          "english": "The thighs are not crossed clearly"
+        },
+        {
+          "chinese": "附加支撑",
+          "english": "Use of additional support"
+        },
+        {
+          "chinese": "倒地",
+          "english": "Fall"
+        }
+      ]
     }
   },
   "connection_criteria": {

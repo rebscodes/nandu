@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Circle, BookOpen, Users, Target, Clock, ChevronDown, ChevronRight, Check, RotateCcw, X } from 'lucide-react';
-import { changquanRequirements } from './changquan-requirements.js';
+import { changquanRequirements } from './data/changquan-requirements.js';
 
 const ChangquanPlanner = ({ sharedSelections = {}, setSharedSelections }) => {
   const [selectedTechniques, setSelectedTechniques] = useState(sharedSelections);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
-import { movements, connections } from './codes.js';
+import { movements, connections } from './data/codes.js';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [combos, setCombos] = useState(sharedCombos);
@@ -19,7 +19,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       setCombos(sharedCombos);
     }
   }, []);
-  const [selectedCategory, setSelectedCategory] = useState('Balance');
+  const [selectedCategory, setSelectedCategory] = useState('Jumping');
   const [draggedMovement, setDraggedMovement] = useState(null);
   const [dragOverCombo, setDragOverCombo] = useState(null);
   const [hasCreatedThrowCatchCombos, setHasCreatedThrowCatchCombos] = useState(false);
