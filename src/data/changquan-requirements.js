@@ -258,7 +258,7 @@ export const changquanRequirements = {
   },
   "balance_techniques": {
     "required_count": 1,
-    "description": "Extended balance technique (Long Time Balance techniques require that the static state be maintained for at least 2 seconds)",
+    "description": "Extended balance technique: the static state be maintained for at least 2 seconds",
     "movements": [
       {
         "chinese": "提膝平衡",

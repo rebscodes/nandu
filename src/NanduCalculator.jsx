@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
@@ -364,7 +364,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Movement Selection Panel */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">📚 Movement Library</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">📚 Degree of Difficulty Library</h2>
           
           {/* Search and Filter */}
           <div className="mb-4">

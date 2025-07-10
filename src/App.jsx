@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Calculator, BookOpen, Home, AlertTriangle } from 'lucide-react';
+import { Calculator, BookOpen, Home, AlertTriangle, Star, Swords } from 'lucide-react';
 import WushuNanduCalculator from './NanduCalculator.jsx';
 import ChangquanPlanner from './ChangquanPlanner.jsx';
 import Deductions from './Deductions.jsx';
@@ -13,7 +13,7 @@ const Navigation = () => {
       <div className="max-w-6xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Home className="h-6 w-6 text-orange-600" />
+            <Swords className="h-6 w-6 text-orange-600" />
             <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               Wushu Taolu Builder
             </span>
