@@ -344,60 +344,78 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
         
         {isExpanded && (
           <div className="p-6 pt-4">
-            {/* Deductions */}
-            {technique.deductions && technique.deductions.length > 0 && (
-              <div className="mb-4">
-                <h4 className="text-md font-medium mb-3 text-gray-700 flex items-center gap-2">
-                  <Circle className="h-4 w-4 text-red-600" />
-                  Potential Deductions
-                </h4>
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <ul className="space-y-2">
-                    {technique.deductions.map((deduction, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <span className="text-red-600 mt-1 text-sm">•</span>
-                        <div>
-                          <div className="text-sm font-medium text-red-800">
-                            {deduction.chinese}
+            {/* Two-column layout for deductions and non-conformity standards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Deductions Column */}
+              <div>
+                {technique.deductions && technique.deductions.length > 0 ? (
+                  <>
+                    <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                      <Circle className="h-4 w-4 text-red-600" />
+                      Potential Deductions
+                    </h4>
+                    <ul className="space-y-2">
+                      {technique.deductions.map((deduction, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-red-600 mt-1 text-sm">•</span>
+                          <div>
+                            <div className="text-sm font-medium text-gray-800">
+                              {deduction.chinese}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {deduction.english}
+                            </div>
                           </div>
-                          <div className="text-sm text-red-700">
-                            {deduction.english}
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                      <Circle className="h-4 w-4 text-gray-400" />
+                      Potential Deductions
+                    </h4>
+                    <p className="text-sm text-gray-500 italic">No specific deductions listed</p>
+                  </>
+                )}
               </div>
-            )}
 
-            {/* Non-Conformity Standards */}
-            {technique.non_conformity && technique.non_conformity.length > 0 && (
-              <div className="mb-4">
-                <h4 className="text-md font-medium mb-3 text-gray-700 flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-yellow-600" />
-                  Non-Conformity Standards
-                </h4>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <ul className="space-y-2">
-                    {technique.non_conformity.map((standard, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <span className="text-yellow-600 mt-1 text-sm">•</span>
-                        <div>
-                          <div className="text-sm font-medium text-yellow-800">
-                            {standard.chinese}
+              {/* Non-Conformity Standards Column */}
+              <div>
+                {technique.non_conformity && technique.non_conformity.length > 0 ? (
+                  <>
+                    <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                      <CheckCircle className="h-4 w-4 text-orange-600" />
+                      Non-Conformity Standards
+                    </h4>
+                    <ul className="space-y-2">
+                      {technique.non_conformity.map((standard, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-orange-600 mt-1 text-sm">•</span>
+                          <div>
+                            <div className="text-sm font-medium text-gray-800">
+                              {standard.chinese}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {standard.english}
+                            </div>
                           </div>
-                          <div className="text-sm text-yellow-700">
-                            {standard.english}
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <>
+                    <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                      <CheckCircle className="h-4 w-4 text-gray-400" />
+                      Non-Conformity Standards
+                    </h4>
+                    <p className="text-sm text-gray-500 italic">No specific standards listed</p>
+                  </>
+                )}
               </div>
-            )}
-
+            </div>
           </div>
         )}
       </div>
