@@ -131,3 +131,4 @@ export const connections = [
   { from: '324C', to: '1', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 630°(F)/720° + Horse Stance' },
   { from: '353C', to: '4', points: 0.25, grade: 'D', description: 'Butterfly Twist 720° + Falling Front Split' }
 ];
+

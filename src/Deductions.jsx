@@ -3,6 +3,7 @@ import { AlertTriangle, Eye, CheckCircle, Circle, Info } from 'lucide-react';
 import { judgingCriteria } from './data/judging-criteria.js';
 import { changquanRequirements } from './data/changquan-requirements.js';
 import { movements } from './data/codes.js';
+import { getNonConformityCriteria } from './data/combo-mappings.js';
 
 const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = {} }) => {
   const [expandedSections, setExpandedSections] = useState({});
@@ -31,6 +32,36 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
           combo: combo.id
         });
       }
+      
+      // Check for combo non-conformity criteria based on connections
+      combo.connections.forEach((connection, connectionIndex) => {
+        const fromMovement = combo.movements[connectionIndex];
+        const toMovement = combo.movements[connectionIndex + 1];
+        
+        if (fromMovement && toMovement) {
+          const comboCriteria = getNonConformityCriteria(fromMovement.id, toMovement.id, judgingCriteria);
+          if (comboCriteria) {
+            // Create a virtual combo movement for this connection
+            movements.push({
+              source: 'nandu',
+              movement: {
+                id: `${fromMovement.id}-${toMovement.id}`,
+                name: comboCriteria.chinese,
+                english: comboCriteria.english,
+                category: 'Combo Connection',
+                isCombo: true,
+                isConnectionCombo: true,
+                non_conformity: comboCriteria.non_conformity || [],
+                deductions: comboCriteria.deductions || [],
+                chinese: comboCriteria.chinese,
+                pinyin: comboCriteria.pinyin
+              },
+              combo: combo.id,
+              connection: connection
+            });
+          }
+        }
+      });
       
     });
 
@@ -130,8 +161,27 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
         const nanduMovement = selectedMovement.movement;
         let foundMatch = false;
         
-        // Check if this is a combo movement first
-        if (nanduMovement.category === 'Throw/Catch' && nanduMovement.isCombo) {
+        // Check if this is a combo connection movement first
+        if (nanduMovement.isConnectionCombo) {
+          // Handle combo connection movements - they already have the criteria
+          foundMatch = true;
+          const techniqueKey = nanduMovement.id;
+          
+          if (!relevantCriteria.has(techniqueKey)) {
+            relevantCriteria.set(techniqueKey, {
+              ...nanduMovement,
+              category: 'combo_connection',
+              sources: []
+            });
+          }
+          relevantCriteria.get(techniqueKey).sources.push({
+            ...selectedMovement,
+            movementData: nanduMovement,
+            actualCategory: 'combo_connection'
+          });
+        }
+        // Check if this is a combo movement
+        else if (nanduMovement.category === 'Throw/Catch' && nanduMovement.isCombo) {
           // Handle combo movements
           const comboId = nanduMovement.id;
           if (judgingCriteria.combo_criteria && judgingCriteria.combo_criteria[comboId]) {
