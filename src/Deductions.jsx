@@ -452,11 +452,6 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
             2024 IWUF rules
           </a>
         </p>
-        
-        <div className="text-sm text-gray-700">
-          <strong>General Deduction Rule:</strong> {judgingCriteria.general_rules.description} 
-          <span className="font-medium"> ({judgingCriteria.general_rules.deduction_amount} points per error)</span>
-        </div>
       </div>
 
       {/* Summary */}

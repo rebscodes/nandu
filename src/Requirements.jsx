@@ -227,9 +227,6 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
           )}
         </div>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Form:
-          </label>
           <div className="flex flex-wrap gap-2">
             {Object.entries(allWeaponOptions).map(([key, option]) => (
               <button
