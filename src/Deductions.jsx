@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { AlertTriangle, Eye, CheckCircle, Circle, Info } from 'lucide-react';
 import { judgingCriteria } from './data/judging-criteria.js';
-import { changquanRequirements } from './data/changquan-requirements.js';
+import { weaponRegistry, getWeaponRequirements, mapCategoryToJudgingCriteria, hasSpecialHandling } from './data/weapon-registry.js';
 import { movements } from './data/codes.js';
 import { getNonConformityCriteria } from './data/combo-mappings.js';
 
-const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = {} }) => {
+const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, selectedWeaponForm = 'changquan' }) => {
   const [expandedSections, setExpandedSections] = useState({});
+
+  // Get the appropriate requirements based on selected weapon form
+  const currentRequirements = getWeaponRequirements(selectedWeaponForm) || getWeaponRequirements('changquan');
 
 
   // Get all selected movements from both pages
@@ -65,13 +68,13 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
       
     });
 
-    // Add selected movements from Changquan Planner
-    Object.keys(selectedChangquanMovements).forEach(key => {
-      if (selectedChangquanMovements[key]) {
+    // Add selected movements from Form Planner
+    Object.keys(selectedFormMovements).forEach(key => {
+      if (selectedFormMovements[key]) {
         // Parse the key to get category and index
         const [category, index] = key.split('-');
         movements.push({
-          source: 'changquan',
+          source: 'form',
           category: category,
           index: parseInt(index),
           key: key
@@ -98,27 +101,34 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
     const movementsWithoutCriteria = [];
     
     selectedMovements.forEach(selectedMovement => {
-      if (selectedMovement.source === 'changquan') {
-        // Get the actual movement data from changquan requirements
+      if (selectedMovement.source === 'form') {
+        // Get the actual movement data from current requirements (changquan/jianshu)
         const { category, index } = selectedMovement;
         
         let movementData = null;
         let actualCategory = category;
         
         // Handle special case for leg techniques which have nested categories
-        const legCategory = changquanRequirements.leg_techniques?.categories?.find(cat => cat.type === category);
-        if (legCategory) {
-          if (legCategory.movements[index]) {
-            movementData = legCategory.movements[index];
-            actualCategory = 'leg_techniques'; // Map to the judging criteria category
+        if (hasSpecialHandling(selectedWeaponForm, 'hasLegSubcategories')) {
+          const legCategory = currentRequirements.leg_techniques?.categories?.find(cat => cat.type === category);
+          if (legCategory) {
+            if (legCategory.movements[index]) {
+              movementData = legCategory.movements[index];
+              actualCategory = 'leg_techniques'; // Map to the judging criteria category
+            }
+          } else if (currentRequirements[category]?.movements[index]) {
+            movementData = currentRequirements[category].movements[index];
           }
-        } else if (changquanRequirements[category]?.movements[index]) {
-          movementData = changquanRequirements[category].movements[index];
+        } else {
+          // For weapon forms without leg subcategories, use direct category lookup
+          if (currentRequirements[category]?.movements[index]) {
+            movementData = currentRequirements[category].movements[index];
+          }
         }
         
         if (movementData) {
-          // Map movement to judging criteria by matching Chinese or English names
-          const criteriaCategory = actualCategory; // Use the actual category name
+          // Map movement to judging criteria using the weapon registry
+          const criteriaCategory = mapCategoryToJudgingCriteria(selectedWeaponForm, actualCategory);
           
           let foundMatch = false;
           if (criteriaCategory && judgingCriteria[criteriaCategory]) {
@@ -452,9 +462,9 @@ const Deductions = ({ selectedNanduMovements = [], selectedChangquanMovements = 
             </p>
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-blue-800 mb-2">Required Movements</h3>
+            <h3 className="text-sm font-semibold text-blue-800 mb-2">Required Movements ({weaponRegistry[selectedWeaponForm]?.name || 'Form'})</h3>
             <p className="text-sm text-blue-700">
-              {Object.keys(selectedChangquanMovements).filter(key => selectedChangquanMovements[key]).length} movements selected
+              {Object.keys(selectedFormMovements).filter(key => selectedFormMovements[key]).length} movements selected
             </p>
           </div>
         </div>

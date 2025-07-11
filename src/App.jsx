@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Calculator, BookOpen, Home, AlertTriangle, Star, Swords } from 'lucide-react';
 import WushuNanduCalculator from './NanduCalculator.jsx';
-import ChangquanPlanner from './ChangquanPlanner.jsx';
+import FormPlanner from './FormPlanner.jsx';
 import Deductions from './Deductions.jsx';
 
 const Navigation = () => {
@@ -33,15 +33,15 @@ const Navigation = () => {
             </Link>
             
             <Link
-              to="/changquan"
+              to="/forms"
               className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
-                location.pathname === '/changquan'
+                location.pathname === '/forms'
                   ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
               }`}
             >
               <BookOpen className="h-4 w-4" />
-              Required Movements
+              Form Planner
             </Link>
             
             <Link
@@ -65,7 +65,8 @@ const Navigation = () => {
 const App = () => {
   // Shared state for cross-page data
   const [nanduCombos, setNanduCombos] = useState([]);
-  const [changquanSelections, setChangquanSelections] = useState({});
+  const [formSelections, setFormSelections] = useState({});
+  const [selectedWeaponForm, setSelectedWeaponForm] = useState('changquan');
 
   return (
     <Router>
@@ -82,11 +83,13 @@ const App = () => {
             } 
           />
           <Route 
-            path="/changquan" 
+            path="/forms" 
             element={
-              <ChangquanPlanner 
-                sharedSelections={changquanSelections} 
-                setSharedSelections={setChangquanSelections} 
+              <FormPlanner 
+                sharedSelections={formSelections} 
+                setSharedSelections={setFormSelections}
+                selectedWeaponForm={selectedWeaponForm}
+                setSelectedWeaponForm={setSelectedWeaponForm}
               />
             } 
           />
@@ -95,7 +98,8 @@ const App = () => {
             element={
               <Deductions 
                 selectedNanduMovements={nanduCombos} 
-                selectedChangquanMovements={changquanSelections} 
+                selectedFormMovements={formSelections}
+                selectedWeaponForm={selectedWeaponForm}
               />
             } 
           />
