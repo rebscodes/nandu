@@ -12,12 +12,7 @@ const FormPlanner = ({ sharedSelections = {}, setSharedSelections, selectedWeapo
     availableWeapons.map(weapon => [weapon.id, weapon])
   );
 
-  // Add placeholder entries for future weapons
-  const allWeaponOptions = {
-    ...weaponOptions,
-    gunshu: { id: 'gunshu', name: 'Gunshu', requirements: null },
-    qiangshu: { id: 'qiangshu', name: 'Qiangshu', requirements: null }
-  };
+  const allWeaponOptions = weaponOptions;
 
   const currentRequirements = getWeaponRequirements(selectedWeapon) || getWeaponRequirements('changquan');
 

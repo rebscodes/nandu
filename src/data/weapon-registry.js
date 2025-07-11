@@ -7,6 +7,8 @@
 import { changquanRequirements } from './changquan-requirements.js';
 import { jianshuRequirements } from './jianshuRequirements.js';
 import { daoshuRequirements } from './daoshuRequirements.js';
+import { gunshuRequirements } from './gunshuRequirements.js';
+import { qiangshuRequirements } from './qiangshuRequirements.js';
 
 export const weaponRegistry = {
   changquan: {
@@ -48,6 +50,30 @@ export const weaponRegistry = {
     requirements: daoshuRequirements,
     judgingCategoryMap: {
       broadsword_techniques: 'weapon_techniques',
+      stances: 'stances'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  gunshu: {
+    id: 'gunshu',
+    name: 'Gunshu',
+    requirements: gunshuRequirements,
+    judgingCategoryMap: {
+      cudgel_techniques: 'weapon_techniques',
+      stances: 'stances'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  qiangshu: {
+    id: 'qiangshu',
+    name: 'Qiangshu',
+    requirements: qiangshuRequirements,
+    judgingCategoryMap: {
+      spear_techniques: 'weapon_techniques',
       stances: 'stances'
     },
     specialHandling: {
