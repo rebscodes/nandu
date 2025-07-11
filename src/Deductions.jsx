@@ -442,7 +442,15 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
           </h1>
         </div>
         <p className="text-gray-600 text-lg mb-4">
-          ⚠️ Review potential deductions and non-conformity standards for your selected movements
+          ⚠️ Review potential deductions and non-conformity standards for your selected movements using{' '}
+          <a 
+            href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-orange-600 hover:text-orange-800 underline font-medium"
+          >
+            2024 IWUF rules
+          </a>
         </p>
         
         <div className="text-sm text-gray-700">

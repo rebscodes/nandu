@@ -253,7 +253,15 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
           </div>
         </div>
         <p className="text-gray-600 text-lg">
-          📋 Check off required techniques for your {allWeaponOptions[selectedWeapon]?.name || 'weapon'} routine
+          📋 Check off required techniques for your {allWeaponOptions[selectedWeapon]?.name || 'weapon'} routine using{' '}
+          <a 
+            href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-orange-600 hover:text-orange-800 underline font-medium"
+          >
+            2024 IWUF rules
+          </a>
         </p>
       </div>
 
