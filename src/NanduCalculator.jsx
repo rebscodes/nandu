@@ -411,21 +411,21 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
                       {movement.grade !== '-' && (
                         <span className={`px-2 py-1 rounded text-xs font-medium ${getGradeColor(movement.grade)}`}>
                           {movement.grade}
                         </span>
                       )}
                       {movement.category !== 'Stance' && (
-                        <span className="text-sm font-medium text-gray-600">{movement.id}</span>
+                        <span className="text-xs sm:text-sm font-medium text-gray-600">{movement.id}</span>
                       )}
                       {movement.points > 0 && (
-                        <span className="text-sm font-bold text-gray-800">{movement.points}pts</span>
+                        <span className="text-xs sm:text-sm font-bold text-gray-800">{movement.points}pts</span>
                       )}
                     </div>
-                    <div className="text-sm font-medium text-gray-800 mb-1">{movement.name}</div>
-                    <div className="text-xs text-gray-600">{movement.english}</div>
+                    <div className="text-sm font-medium text-gray-800 mb-1 leading-tight">{movement.name}</div>
+                    <div className="text-xs text-gray-600 leading-tight">{movement.english}</div>
                   </div>
                   <div className="flex items-center text-orange-400 ml-2">
                     <GripVertical className="h-4 w-4" />
