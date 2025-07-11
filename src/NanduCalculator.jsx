@@ -417,7 +417,9 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                           {movement.grade}
                         </span>
                       )}
-                      <span className="text-sm font-medium text-gray-600">{movement.id}</span>
+                      {movement.category !== 'Stance' && (
+                        <span className="text-sm font-medium text-gray-600">{movement.id}</span>
+                      )}
                       {movement.points > 0 && (
                         <span className="text-sm font-bold text-gray-800">{movement.points}pts</span>
                       )}
