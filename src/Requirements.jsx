@@ -272,37 +272,23 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
         })}
       </div>
 
-      {/* Additional Requirements - only show for Changquan */}
-      {selectedWeapon === 'changquan' && (
-        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mt-4">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
-            <Clock className="h-5 w-5 text-orange-600" />
-            Additional Competition Requirements
-          </h3>
-          <div className="space-y-3 text-sm text-gray-700">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <span><strong>Duration:</strong> 1 minute 20 seconds (±5 seconds)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <span><strong>Required Stances:</strong> Must include Mǎ Bù, Gōng Bù, Pū Bù, Xū Bù, Xiē Bù</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <span><strong>Rhythm Changes:</strong> Must demonstrate speed and rhythm variations</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <span><strong>Eye Focus:</strong> Must demonstrate Shén (spirit) through eye movements and focus</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <span><strong>Overall Balance:</strong> Routine must demonstrate balance of hand, leg, balance, jumping, and flexibility techniques</span>
-            </div>
+      {/* Routine Time Limits - show for all weapons */}
+      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mt-4">
+        <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+          <Clock className="h-5 w-5 text-orange-600" />
+          Routine Time Limits
+        </h3>
+        <div className="space-y-3 text-sm text-gray-700">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+            <span><strong>Adult Divisions:</strong> 1 minute 20 seconds to 1 minute 35 seconds</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+            <span><strong>Junior Divisions:</strong> 1 minute 10 seconds to 1 minute 25 seconds</span>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
