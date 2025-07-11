@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Calculator, BookOpen, Home, AlertTriangle, Star, Swords } from 'lucide-react';
 import WushuNanduCalculator from './NanduCalculator.jsx';
-import FormPlanner from './FormPlanner.jsx';
+import Requirements from './Requirements.jsx';
 import Deductions from './Deductions.jsx';
 
 const Navigation = () => {
@@ -41,7 +41,7 @@ const Navigation = () => {
               }`}
             >
               <BookOpen className="h-4 w-4" />
-              Form Planner
+              Requirements
             </Link>
             
             <Link
@@ -85,7 +85,7 @@ const App = () => {
           <Route 
             path="/forms" 
             element={
-              <FormPlanner 
+              <Requirements 
                 sharedSelections={formSelections} 
                 setSharedSelections={setFormSelections}
                 selectedWeaponForm={selectedWeaponForm}

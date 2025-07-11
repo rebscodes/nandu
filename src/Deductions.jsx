@@ -462,7 +462,7 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
             </p>
           </div>
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-blue-800 mb-2">Required Movements ({weaponRegistry[selectedWeaponForm]?.name || 'Form'})</h3>
+            <h3 className="text-sm font-semibold text-blue-800 mb-2">Requirements ({weaponRegistry[selectedWeaponForm]?.name || 'Form'})</h3>
             <p className="text-sm text-blue-700">
               {Object.keys(selectedFormMovements).filter(key => selectedFormMovements[key]).length} movements selected
             </p>
@@ -477,7 +477,7 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
             <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
             <h3 className="text-lg font-semibold text-gray-600 mb-2">No Movements Selected</h3>
             <p className="text-gray-500">
-              Select movements in the Nandu Calculator or Required Movements pages to see relevant deductions and standards.
+              Select movements in the Nandu Calculator or Requirements pages to see relevant deductions and standards.
             </p>
           </div>
         ) : (

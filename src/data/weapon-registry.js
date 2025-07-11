@@ -1,14 +1,14 @@
 // Centralized weapon registry for easy drop-in of new weapon forms
 // To add a new weapon form:
-// 1. Create a requirements file (e.g., daoshuRequirements.js)
+// 1. Create a requirements file (e.g., requirements/daoshuRequirements.js)
 // 2. Add entry to this registry
-// 3. Done! The form will automatically appear in FormPlanner and Deductions
+// 3. Done! The form will automatically appear in Requirements and Deductions
 
-import { changquanRequirements } from './changquan-requirements.js';
-import { jianshuRequirements } from './jianshuRequirements.js';
-import { daoshuRequirements } from './daoshuRequirements.js';
-import { gunshuRequirements } from './gunshuRequirements.js';
-import { qiangshuRequirements } from './qiangshuRequirements.js';
+import { changquanRequirements } from './requirements/changquan-requirements.js';
+import { jianshuRequirements } from './requirements/jianshuRequirements.js';
+import { daoshuRequirements } from './requirements/daoshuRequirements.js';
+import { gunshuRequirements } from './requirements/gunshuRequirements.js';
+import { qiangshuRequirements } from './requirements/qiangshuRequirements.js';
 
 export const weaponRegistry = {
   changquan: {

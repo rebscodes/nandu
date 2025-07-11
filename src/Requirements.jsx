@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, Circle, BookOpen, Clock, ChevronDown, ChevronRight, Check, RotateCcw, X, Sword } from 'lucide-react';
+import { CheckCircle, Circle, BookOpen, Clock, ChevronDown, ChevronRight, Check, RotateCcw, X } from 'lucide-react';
 import { weaponRegistry, getAvailableWeapons, getWeaponRequirements } from './data/weapon-registry.js';
 
-const FormPlanner = ({ sharedSelections = {}, setSharedSelections, selectedWeaponForm = 'changquan', setSelectedWeaponForm }) => {
+const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeaponForm = 'changquan', setSelectedWeaponForm }) => {
   const [selectedWeapon, setSelectedWeapon] = useState(selectedWeaponForm);
   const [selectedTechniques, setSelectedTechniques] = useState(sharedSelections);
 
@@ -228,7 +228,7 @@ const FormPlanner = ({ sharedSelections = {}, setSharedSelections, selectedWeapo
         </div>
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Weapon Form:
+            Select Form:
           </label>
           <div className="flex flex-wrap gap-2">
             {Object.entries(allWeaponOptions).map(([key, option]) => (
@@ -244,8 +244,7 @@ const FormPlanner = ({ sharedSelections = {}, setSharedSelections, selectedWeapo
                     : 'bg-gray-50 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                <Sword className="h-4 w-4" />
-                {option.name}
+{option.name}
                 {!option.requirements && (
                   <span className="text-xs">(Coming Soon)</span>
                 )}
@@ -254,7 +253,7 @@ const FormPlanner = ({ sharedSelections = {}, setSharedSelections, selectedWeapo
           </div>
         </div>
         <p className="text-gray-600 text-lg">
-          📋 Plan your {allWeaponOptions[selectedWeapon]?.name || 'weapon'} routine by selecting required techniques from each category
+          📋 Check off required techniques for your {allWeaponOptions[selectedWeapon]?.name || 'weapon'} routine
         </p>
       </div>
 
@@ -303,4 +302,4 @@ const FormPlanner = ({ sharedSelections = {}, setSharedSelections, selectedWeapo
   );
 };
 
-export default FormPlanner;
+export default Requirements;
