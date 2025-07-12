@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
+import BottomSheet from './BottomSheet.jsx';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [combos, setCombos] = useState(sharedCombos);
@@ -23,6 +24,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [draggedMovement, setDraggedMovement] = useState(null);
   const [dragOverCombo, setDragOverCombo] = useState(null);
   const [hasCreatedThrowCatchCombos, setHasCreatedThrowCatchCombos] = useState(false);
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const [targetComboId, setTargetComboId] = useState(null);
 
   const categories = ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
 
@@ -183,6 +186,48 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     setCombos([]);
   };
 
+  // Bottom sheet handlers
+  const openBottomSheet = (comboId = null) => {
+    setTargetComboId(comboId);
+    setShowBottomSheet(true);
+  };
+
+  const closeBottomSheet = () => {
+    setShowBottomSheet(false);
+    setTargetComboId(null);
+  };
+
+  const handleMovementSelect = (movement) => {
+    if (movement.isCombo) {
+      // Handle combo movements
+      const newCombo = handleComboMovementDrag(movement);
+      if (newCombo) {
+        if (targetComboId) {
+          // Replace existing combo
+          setCombos(combos.map(combo => combo.id === targetComboId ? newCombo : combo));
+        } else {
+          // Create new combo
+          setCombos([...combos, newCombo]);
+        }
+      }
+    } else {
+      if (targetComboId) {
+        // Add to existing combo
+        addMovementToCombo(targetComboId, movement);
+      } else {
+        // Create new combo with movement
+        const newCombo = {
+          id: Date.now(),
+          movements: [movement],
+          connections: [],
+          expanded: true
+        };
+        setCombos([...combos, newCombo]);
+      }
+    }
+    closeBottomSheet();
+  };
+
   // Drag and drop handlers
   const handleDragStart = (e, movement) => {
     setDraggedMovement(movement);
@@ -340,14 +385,83 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     }
   };
 
-  return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
-        <div className="flex items-center gap-3 mb-4">
-          <Calculator className="h-8 w-8 text-orange-600" />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Nandu Calculator</h1>
+  // Movement picker component for bottom sheet
+  const MovementPicker = () => (
+    <div className="p-6">
+      {/* Search and Filter */}
+      <div className="mb-4">
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <input
+            type="text"
+            placeholder="Search movements..."
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-        <p className="text-gray-600 text-lg">
+        
+        <div className="flex gap-2 flex-wrap">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                selectedCategory === category
+                  ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-orange-50 hover:text-orange-600 border border-gray-200'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Movement List */}
+      <div className="space-y-3">
+        {filteredMovements.map(movement => (
+          <button
+            key={movement.id}
+            onClick={() => handleMovementSelect(movement)}
+            className="w-full border border-gray-200 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 hover:border-orange-200 text-left"
+          >
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
+                  {movement.grade !== '-' && (
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${getGradeColor(movement.grade)}`}>
+                      {movement.grade}
+                    </span>
+                  )}
+                  {movement.category !== 'Stance' && (
+                    <span className="text-xs sm:text-sm font-medium text-gray-600">{movement.id}</span>
+                  )}
+                  {movement.points > 0 && (
+                    <span className="text-xs sm:text-sm font-bold text-gray-800">{movement.points}pts</span>
+                  )}
+                </div>
+                <div className="text-sm font-medium text-gray-800 mb-1 leading-tight">{movement.name}</div>
+                <div className="text-xs text-gray-600 leading-tight">{movement.english}</div>
+              </div>
+              <div className="flex items-center text-orange-400 ml-2">
+                <Plus className="h-4 w-4" />
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="max-w-6xl mx-auto p-3 sm:p-6">
+      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="flex items-center gap-3 mb-4">
+          <Calculator className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Nandu Calculator</h1>
+        </div>
+        <p className="text-gray-600 text-base sm:text-lg">
           ✨ Build combos using{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
@@ -361,9 +475,10 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Movement Selection Panel */}
-        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
+      {/* Mobile-first layout: single column by default, two columns on lg+ screens */}
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Movement Selection Panel - Hidden on mobile, shown on desktop */}
+        <div className="hidden lg:block bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">📚 Degree of Difficulty Library</h2>
           
           {/* Search and Filter */}
@@ -437,13 +552,14 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         </div>
 
         {/* Routine Builder Panel */}
-        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
-          <div className="flex justify-between items-center mb-4">
+        <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-2 mb-4">
             <h2 className="text-xl font-semibold text-gray-800">🤸 Your Routine</h2>
             <div className="flex gap-2">
+              {/* New Combo button for all screen sizes */}
               <button
                 onClick={createNewCombo}
-                className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-200 text-sm font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="flex items-center gap-2 px-4 py-3 bg-orange-100 text-orange-700 border border-orange-200 rounded-xl hover:bg-orange-200 hover:border-orange-300 transition-all duration-200 text-sm font-medium"
               >
                 <Plus className="h-4 w-4" />
                 ✨ New Combo
@@ -521,7 +637,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 }`}
                 onClick={() => {
                   if (!draggedMovement) {
-                    createNewCombo();
+                    // Mobile: open bottom sheet, Desktop: create new combo
+                    if (window.innerWidth < 1024) {
+                      openBottomSheet();
+                    } else {
+                      createNewCombo();
+                    }
                   }
                 }}
                 onDragOver={(e) => {
@@ -559,11 +680,14 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 }}
               >
                 <Calculator className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                <p>
+                <p className="hidden lg:block">
                   {draggedMovement 
                     ? '📦 Drop here to create a new combo!' 
                     : 'Drag a movement here to create your first combo!'
                   }
+                </p>
+                <p className="lg:hidden">
+                  Tap to add your first movement and create a combo!
                 </p>
               </div>
             ) : (
@@ -605,32 +729,11 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
                   {combo.expanded && (
                     <div>
-                      {/* Add Movement Dropdown */}
-                      <div className="mb-3">
-                        <select
-                          onChange={(e) => {
-                            const movement = movements.find(m => m.id === e.target.value);
-                            if (movement) {
-                              addMovementToCombo(combo.id, movement);
-                              e.target.value = '';
-                            }
-                          }}
-                          className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
-                        >
-                          <option value="">Add movement to combo...</option>
-                          {movements.map(movement => (
-                            <option key={movement.id} value={movement.id}>
-                              {movement.name} ({movement.id}) - {movement.points}pts
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
                       {/* Movements in Combo */}
                       {combo.movements.length === 0 ? (
-                        <p className="text-sm text-gray-500 italic">No movements yet - add your first movement above</p>
+                        <p className="text-sm text-gray-500 italic mb-3">No movements yet - add your first movement below</p>
                       ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-2 mb-3">
                           {combo.movements.map((movement, movIndex) => (
                             <div key={movIndex}>
                               <div className="flex justify-between items-center p-3 bg-gradient-to-r from-gray-50 to-orange-50 rounded-xl border border-orange-100">
@@ -682,6 +785,37 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                           ))}
                         </div>
                       )}
+
+                      {/* Add Movement Controls - Now at the bottom */}
+                      <div className="flex gap-2">
+                        {/* Mobile: Bottom sheet button */}
+                        <button
+                          onClick={() => openBottomSheet(combo.id)}
+                          className="flex items-center gap-2 px-4 py-3 bg-orange-100 text-orange-700 border border-orange-200 rounded-xl hover:bg-orange-200 hover:border-orange-300 transition-all duration-200 text-sm font-medium lg:hidden flex-1"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Add Movement
+                        </button>
+                        
+                        {/* Desktop: Dropdown */}
+                        <select
+                          onChange={(e) => {
+                            const movement = movements.find(m => m.id === e.target.value);
+                            if (movement) {
+                              addMovementToCombo(combo.id, movement);
+                              e.target.value = '';
+                            }
+                          }}
+                          className="hidden lg:block w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
+                        >
+                          <option value="">Add movement to combo...</option>
+                          {movements.map(movement => (
+                            <option key={movement.id} value={movement.id}>
+                              {movement.name} ({movement.id}) - {movement.points}pts
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -698,7 +832,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 }`}
                 onClick={() => {
                   if (!draggedMovement) {
-                    createNewCombo();
+                    // Mobile: open bottom sheet, Desktop: create new combo
+                    if (window.innerWidth < 1024) {
+                      openBottomSheet();
+                    } else {
+                      createNewCombo();
+                    }
                   }
                 }}
                 onDragOver={(e) => {
@@ -736,17 +875,29 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 }}
               >
                 <Plus className="h-8 w-8 mx-auto mb-2 text-gray-300" />
-                <p className="text-sm">
+                <p className="text-sm hidden lg:block">
                   {draggedMovement 
                     ? '📦 Drop here to create another combo!' 
                     : '➕ Drag a movement here to create a new combo'
                   }
+                </p>
+                <p className="text-sm lg:hidden">
+                  ➕ Tap to add another movement
                 </p>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Bottom Sheet for Mobile */}
+      <BottomSheet
+        isOpen={showBottomSheet}
+        onClose={closeBottomSheet}
+        title="📚 Select Movement"
+      >
+        <MovementPicker />
+      </BottomSheet>
     </div>
   );
 };
