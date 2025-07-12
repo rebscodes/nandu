@@ -19,10 +19,10 @@ const Navigation = () => {
             </span>
           </div>
           
-          <div className="flex flex-wrap gap-2 sm:gap-4">
+          <div className="flex gap-1 sm:gap-4">
             <Link
               to="/"
-              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base ${
+              className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl transition-all duration-200 text-xs sm:text-base ${
                 location.pathname === '/'
                   ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
@@ -34,7 +34,7 @@ const Navigation = () => {
             
             <Link
               to="/forms"
-              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base ${
+              className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl transition-all duration-200 text-xs sm:text-base ${
                 location.pathname === '/forms'
                   ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
@@ -46,7 +46,7 @@ const Navigation = () => {
             
             <Link
               to="/deductions"
-              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base ${
+              className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl transition-all duration-200 text-xs sm:text-base ${
                 location.pathname === '/deductions'
                   ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
