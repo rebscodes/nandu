@@ -10,50 +10,53 @@ const Navigation = () => {
   
   return (
     <nav className="bg-white shadow-lg border-b border-orange-100 mb-6">
-      <div className="max-w-6xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
             <Swords className="h-6 w-6 text-orange-600" />
-            <span className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+            <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               Wushu Taolu Builder
             </span>
           </div>
           
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-2 sm:gap-4">
             <Link
               to="/"
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base ${
                 location.pathname === '/'
                   ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
               }`}
             >
               <Calculator className="h-4 w-4" />
-              Nandu Calculator
+              <span className="hidden min-[480px]:inline">Nandu Calculator</span>
+              <span className="min-[480px]:hidden">Nandu</span>
             </Link>
             
             <Link
               to="/forms"
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base ${
                 location.pathname === '/forms'
                   ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'
               }`}
             >
               <BookOpen className="h-4 w-4" />
-              Requirements
+              <span className="hidden min-[480px]:inline">Requirements</span>
+              <span className="min-[480px]:hidden">Req</span>
             </Link>
             
             <Link
               to="/deductions"
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
+              className={`flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base ${
                 location.pathname === '/deductions'
                   ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg'
                   : 'text-gray-700 hover:bg-red-50 hover:text-red-600'
               }`}
             >
               <AlertTriangle className="h-4 w-4" />
-              Deductions
+              <span className="hidden min-[480px]:inline">Deductions</span>
+              <span className="min-[480px]:hidden">Ded</span>
             </Link>
           </div>
         </div>
