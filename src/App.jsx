@@ -11,7 +11,7 @@ const Navigation = () => {
   return (
     <nav className="bg-white shadow-lg border-b border-orange-100 mb-6">
       <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
             <Swords className="h-6 w-6 text-orange-600" />
             <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
@@ -29,8 +29,7 @@ const Navigation = () => {
               }`}
             >
               <Calculator className="h-4 w-4" />
-              <span className="hidden min-[480px]:inline">Nandu Calculator</span>
-              <span className="min-[480px]:hidden">Nandu</span>
+              Nandu Calculator
             </Link>
             
             <Link
@@ -42,8 +41,7 @@ const Navigation = () => {
               }`}
             >
               <BookOpen className="h-4 w-4" />
-              <span className="hidden min-[480px]:inline">Requirements</span>
-              <span className="min-[480px]:hidden">Req</span>
+              Requirements
             </Link>
             
             <Link
@@ -55,8 +53,7 @@ const Navigation = () => {
               }`}
             >
               <AlertTriangle className="h-4 w-4" />
-              <span className="hidden min-[480px]:inline">Deductions</span>
-              <span className="min-[480px]:hidden">Ded</span>
+              Deductions
             </Link>
           </div>
         </div>
