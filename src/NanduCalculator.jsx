@@ -345,7 +345,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <Calculator className="h-8 w-8 text-orange-600" />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Wushu Taolu Nandu Calculator</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Nandu Calculator</h1>
         </div>
         <p className="text-gray-600 text-lg">
           ✨ Build combos using{' '}
