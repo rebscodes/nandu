@@ -250,7 +250,7 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
           </div>
         </div>
         <p className="text-gray-600 text-lg">
-          📋 Check off required techniques for your {allWeaponOptions[selectedWeapon]?.name || 'weapon'} routine using{' '}
+          📋 Required techniques for optional {allWeaponOptions[selectedWeapon]?.name || 'weapon'} based on{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
             target="_blank" 

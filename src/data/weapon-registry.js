@@ -31,6 +31,18 @@ export const weaponRegistry = {
       hasLegSubcategories: true
     }
   },
+  daoshu: {
+    id: 'daoshu',
+    name: 'Daoshu',
+    requirements: daoshuRequirements,
+    judgingCategoryMap: {
+      broadsword_techniques: 'weapon_techniques',
+      stances: 'stances'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
   jianshu: {
     id: 'jianshu',
     name: 'Jianshu',
@@ -39,18 +51,6 @@ export const weaponRegistry = {
       sword_techniques: 'weapon_techniques', // Map sword techniques to weapon techniques in judging criteria
       stances: 'stances',
       balance_techniques: 'balance_techniques'
-    },
-    specialHandling: {
-      hasLegSubcategories: false
-    }
-  },
-  daoshu: {
-    id: 'daoshu',
-    name: 'Daoshu',
-    requirements: daoshuRequirements,
-    judgingCategoryMap: {
-      broadsword_techniques: 'weapon_techniques',
-      stances: 'stances'
     },
     specialHandling: {
       hasLegSubcategories: false
