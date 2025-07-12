@@ -85,7 +85,7 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
 
   const renderCompactTechniques = (category, techniques, categoryKey) => {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {techniques.map((technique, index) => {
           const techniqueKey = `${categoryKey}-${index}`;
           const isSelected = selectedTechniques[techniqueKey];
@@ -93,24 +93,24 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
           return (
             <div 
               key={index}
-              className={`border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+              className={`border rounded-xl p-4 sm:p-5 cursor-pointer transition-all duration-200 ${
                 isSelected
                   ? 'border-orange-400 bg-gradient-to-r from-orange-50 to-amber-50 shadow-md'
                   : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50/30'
               }`}
               onClick={() => toggleTechnique(categoryKey, index)}
             >
-              <div className="flex items-start gap-2 mb-3">
+              <div className="flex items-start gap-3">
                 {isSelected ? (
-                  <CheckCircle className="h-4 w-4 text-orange-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="h-5 w-5 text-orange-600 flex-shrink-0 mt-0.5" />
                 ) : (
-                  <Circle className="h-4 w-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <Circle className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-800 mb-1">
+                  <div className="text-sm sm:text-base font-medium text-gray-800 mb-2 leading-tight">
                     {technique.chinese} ({technique.pinyin}) - {technique.english}
                   </div>
-                  <p className="text-xs text-gray-600 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                     {technique.description}
                   </p>
                 </div>
@@ -141,21 +141,21 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
     
     return (
       <div key={categoryKey} className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 overflow-hidden">
-        <div className="p-4 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
+        <div className="p-4 sm:p-5 hover:bg-orange-50/50 transition-colors border-b border-gray-100">
           <div className="flex items-center justify-between">
             <div 
-              className="flex items-center gap-3 cursor-pointer flex-1"
+              className="flex items-center gap-3 cursor-pointer flex-1 min-w-0"
               onClick={() => toggleSection(sectionKey)}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
                 {expandedSections[sectionKey] ? (
-                  <ChevronDown className="h-5 w-5 text-gray-600" />
+                  <ChevronDown className="h-5 w-5 text-gray-600 flex-shrink-0" />
                 ) : (
-                  <ChevronRight className="h-5 w-5 text-gray-600" />
+                  <ChevronRight className="h-5 w-5 text-gray-600 flex-shrink-0" />
                 )}
-                <h3 className="text-lg font-semibold text-gray-800">{displayName}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 truncate">{displayName}</h3>
               </div>
-              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium flex-shrink-0 ${
                 getSelectedCount(categoryKey) >= categoryData.required_count
                   ? 'bg-green-100 text-green-800'
                   : 'bg-orange-100 text-orange-800'
@@ -166,9 +166,9 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 ml-2">
               {!expandedSections[sectionKey] && (
-                <div className="text-sm text-gray-500 max-w-md truncate">
+                <div className="hidden sm:block text-sm text-gray-500 max-w-md truncate">
                   {getSelectedTechniquesPreview(categoryKey, categoryKey)}
                 </div>
               )}
@@ -181,14 +181,14 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
                   className="flex items-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs rounded-lg transition-colors"
                 >
                   <X className="h-3 w-3" />
-                  Clear
+                  <span className="hidden sm:inline">Clear</span>
                 </button>
               )}
             </div>
           </div>
         </div>
         {expandedSections[sectionKey] && (
-          <div className="p-6 pt-4">
+          <div className="p-4 sm:p-6 pt-4">
             {categoryData.special_requirement && (
               <div className="text-sm text-gray-600 mb-4 p-3 bg-blue-50 rounded-lg">
                 <strong>Special Requirement:</strong> {categoryData.special_requirement}
@@ -207,12 +207,12 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
+    <div className="max-w-6xl mx-auto p-3 sm:p-6">
+      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
           <div className="flex items-center gap-3">
-            <BookOpen className="h-8 w-8 text-orange-600" />
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+            <BookOpen className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600" />
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               Required Movements
             </h1>
           </div>
@@ -227,13 +227,13 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
           )}
         </div>
         <div className="mb-6">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 sm:flex-wrap sm:overflow-x-visible sm:pb-0 sm:mx-0 sm:px-0">
             {Object.entries(allWeaponOptions).map(([key, option]) => (
               <button
                 key={key}
                 onClick={() => setSelectedWeapon(key)}
                 disabled={!option.requirements}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-colors ${
+                className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors whitespace-nowrap ${
                   selectedWeapon === key
                     ? 'bg-orange-600 text-white shadow-lg'
                     : option.requirements
@@ -241,7 +241,7 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
                     : 'bg-gray-50 text-gray-400 cursor-not-allowed'
                 }`}
               >
-{option.name}
+                {option.name}
                 {!option.requirements && (
                   <span className="text-xs">(Coming Soon)</span>
                 )}
@@ -249,7 +249,7 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
             ))}
           </div>
         </div>
-        <p className="text-gray-600 text-lg">
+        <p className="text-gray-600 text-base sm:text-lg">
           📋 Required techniques for optional {allWeaponOptions[selectedWeapon]?.name || 'weapon'} based on{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
@@ -263,7 +263,7 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
       </div>
 
       {/* Accordion Sections */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {Object.entries(currentRequirements).map(([categoryKey, categoryData]) => {
           if (!categoryData || !categoryData.movements || !categoryData.required_count) return null;
           
@@ -273,18 +273,18 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
       </div>
 
       {/* Routine Time Limits - show for all weapons */}
-      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mt-4">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
+      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6 mt-4">
+        <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
           <Clock className="h-5 w-5 text-orange-600" />
           Routine Time Limits
         </h3>
-        <div className="space-y-3 text-sm text-gray-700">
+        <div className="space-y-3 text-sm sm:text-base text-gray-700">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+            <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
             <span><strong>Adult Divisions:</strong> 1 minute 20 seconds to 1 minute 35 seconds</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+            <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
             <span><strong>Junior Divisions:</strong> 1 minute 10 seconds to 1 minute 25 seconds</span>
           </div>
         </div>

@@ -321,16 +321,16 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
     const isExpanded = expandedSections[techniqueKey];
     
     return (
-      <div key={techniqueKey} className="bg-white rounded-2xl shadow-xl shadow-red-100/50 overflow-hidden mb-4">
+      <div key={techniqueKey} className="bg-white rounded-2xl shadow-xl shadow-red-100/50 overflow-hidden mb-3 sm:mb-4">
         <div 
-          className="p-4 cursor-pointer hover:bg-red-50/50 transition-colors border-b border-gray-100"
+          className="p-4 sm:p-5 cursor-pointer hover:bg-red-50/50 transition-colors border-b border-gray-100"
           onClick={() => toggleSection(techniqueKey)}
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-600" />
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3 min-w-0 flex-1">
+              <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 leading-tight mb-1">
                   {technique.chinese} ({technique.pinyin}) - {technique.english}
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -339,8 +339,8 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="hidden sm:inline text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
                 Code: {technique.code}
               </span>
               {isExpanded ? (
@@ -353,9 +353,9 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
         </div>
         
         {isExpanded && (
-          <div className="p-6 pt-4">
-            {/* Two-column layout for deductions and non-conformity standards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-4 sm:p-6 pt-4">
+            {/* Mobile: stacked layout, Desktop: two-column */}
+            <div className="space-y-6 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-6 sm:space-y-0">
               {/* Deductions Column */}
               <div>
                 {technique.deductions && technique.deductions.length > 0 ? (
@@ -433,15 +433,15 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="bg-white rounded-2xl shadow-xl shadow-red-100/50 p-6 mb-6">
+    <div className="max-w-6xl mx-auto p-3 sm:p-6">
+      <div className="bg-white rounded-2xl shadow-xl shadow-red-100/50 p-4 sm:p-6 mb-4 sm:mb-6">
         <div className="flex items-center gap-3 mb-4">
-          <AlertTriangle className="h-8 w-8 text-red-600" />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+          <AlertTriangle className="h-6 w-6 sm:h-8 sm:w-8 text-red-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
             Deductions & Standards
           </h1>
         </div>
-        <p className="text-gray-600 text-lg mb-4">
+        <p className="text-gray-600 text-base sm:text-lg mb-4">
           ⚠️ Deductions and non-conformity standards for selected movements based on{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
@@ -455,16 +455,16 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
       </div>
 
       {/* Summary */}
-      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Selection Summary</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6 mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Selection Summary</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
             <h3 className="text-sm font-semibold text-orange-800 mb-2">Nandu Calculator</h3>
             <p className="text-sm text-orange-700">
               {selectedNanduMovements.length} combos selected
             </p>
           </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
             <h3 className="text-sm font-semibold text-blue-800 mb-2">Requirements ({weaponRegistry[selectedWeaponForm]?.name || 'Form'})</h3>
             <p className="text-sm text-blue-700">
               {Object.keys(selectedFormMovements).filter(key => selectedFormMovements[key]).length} movements selected
@@ -474,12 +474,12 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
       </div>
 
       {/* Deductions */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {relevantCriteria.size === 0 && movementsWithoutCriteria.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-8 text-center">
-            <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Movements Selected</h3>
-            <p className="text-gray-500">
+          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center">
+            <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-300" />
+            <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">No Movements Selected</h3>
+            <p className="text-sm sm:text-base text-gray-500">
               Select movements in the Nandu Calculator or Requirements pages to see relevant deductions and standards.
             </p>
           </div>
@@ -493,11 +493,11 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
             {/* Movements without deduction criteria */}
             {movementsWithoutCriteria.map((movement, index) => (
               <div key={`no-criteria-${index}`} className="bg-white rounded-2xl shadow-xl shadow-green-100/50 overflow-hidden">
-                <div className="p-4">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="h-6 w-6 text-green-600" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800">
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base sm:text-lg font-semibold text-gray-800 leading-tight mb-1">
                         {movement.movementData.chinese ? 
                           `${movement.movementData.chinese} (${movement.movementData.pinyin}) - ${movement.movementData.english}` :
                           `${movement.movementData.name} - ${movement.movementData.english}`
