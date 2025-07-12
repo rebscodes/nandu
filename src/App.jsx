@@ -15,7 +15,7 @@ const Navigation = () => {
           <div className="flex items-center gap-3">
             <Swords className="h-6 w-6 text-orange-600" />
             <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
-              WushuRules.app
+              WushuRules.App
             </span>
           </div>
           
