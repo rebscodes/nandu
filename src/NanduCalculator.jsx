@@ -62,10 +62,10 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     const matchesCategory = movement.category === selectedCategory || (selectedCategory === 'Sweeps' && movement.category === 'Leg');
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
-    // Sort by points (ascending), then by grade (A, B, C, D), then by name
+    // Sort by points (ascending), then by grade (A, B, C, D), then by code (ascending)
     if (a.points !== b.points) return a.points - b.points;
     if (a.grade !== b.grade) return a.grade.localeCompare(b.grade);
-    return a.name.localeCompare(b.name);
+    return a.id.localeCompare(b.id);
   });
 
   // Handle combo movements (special drag behavior for throw/catch combos)
@@ -435,10 +435,10 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       const matchesCategory = movement.category === mobileSelectedCategory || (mobileSelectedCategory === 'Sweeps' && movement.category === 'Leg');
       return matchesCategory;
     }).sort((a, b) => {
-      // Sort by points (ascending), then by grade (A, B, C, D), then by name
+      // Sort by points (ascending), then by grade (A, B, C, D), then by code (ascending)
       if (a.points !== b.points) return a.points - b.points;
       if (a.grade !== b.grade) return a.grade.localeCompare(b.grade);
-      return a.name.localeCompare(b.name);
+      return a.id.localeCompare(b.id);
     });
   }, [mobileSearchTerm, mobileSelectedCategory]);
 
