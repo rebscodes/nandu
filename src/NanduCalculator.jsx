@@ -31,10 +31,34 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
   const categories = ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
 
+  // Remove tones from pinyin for tone-agnostic search
+  const removeTones = (text) => {
+    if (!text) return '';
+    return text
+      .toLowerCase()
+      .replace(/[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜ]/g, (match) => {
+        const toneMap = {
+          'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a',
+          'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e',
+          'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i',
+          'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o',
+          'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u',
+          'ǖ': 'ü', 'ǘ': 'ü', 'ǚ': 'ü', 'ǜ': 'ü'
+        };
+        return toneMap[match] || match;
+      });
+  };
+
   const filteredMovements = movements.filter(movement => {
-    const matchesSearch = movement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         movement.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         movement.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase();
+    const searchWithoutTones = removeTones(searchLower);
+    const nameWithoutTones = removeTones(movement.name).toLowerCase();
+    
+    const matchesSearch = movement.name.toLowerCase().includes(searchLower) ||
+                         movement.english.toLowerCase().includes(searchLower) ||
+                         movement.id.toLowerCase().includes(searchLower) ||
+                         // Tone-agnostic pinyin search
+                         nameWithoutTones.includes(searchWithoutTones);
     const matchesCategory = movement.category === selectedCategory || (selectedCategory === 'Sweeps' && movement.category === 'Leg');
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
@@ -392,11 +416,24 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   // Memoized filtered movements for mobile to prevent re-renders
   const mobileFilteredMovements = useMemo(() => {
     return movements.filter(movement => {
-      const matchesSearch = movement.name.toLowerCase().includes(mobileSearchTerm.toLowerCase()) ||
-                           movement.english.toLowerCase().includes(mobileSearchTerm.toLowerCase()) ||
-                           movement.id.toLowerCase().includes(mobileSearchTerm.toLowerCase());
+      const searchLower = mobileSearchTerm.toLowerCase();
+      const searchWithoutTones = removeTones(searchLower);
+      const nameWithoutTones = removeTones(movement.name).toLowerCase();
+      
+      const matchesSearch = movement.name.toLowerCase().includes(searchLower) ||
+                           movement.english.toLowerCase().includes(searchLower) ||
+                           movement.id.toLowerCase().includes(searchLower) ||
+                           // Tone-agnostic pinyin search
+                           nameWithoutTones.includes(searchWithoutTones);
+      
+      // If there's a search term, search across all categories
+      if (mobileSearchTerm.trim()) {
+        return matchesSearch;
+      }
+      
+      // If no search term, filter by selected category
       const matchesCategory = movement.category === mobileSelectedCategory || (mobileSelectedCategory === 'Sweeps' && movement.category === 'Leg');
-      return matchesSearch && matchesCategory;
+      return matchesCategory;
     }).sort((a, b) => {
       // Sort by points (ascending), then by grade (A, B, C, D), then by name
       if (a.points !== b.points) return a.points - b.points;
@@ -409,16 +446,22 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const MovementPicker = () => {
     const searchInputRef = useRef(null);
 
-    const handleSearchSubmit = (e) => {
-      e.preventDefault();
-      const searchValue = searchInputRef.current?.value || '';
-      setMobileSearchTerm(searchValue);
-    };
+    // Set the initial value when component mounts
+    React.useEffect(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.value = mobileSearchTerm;
+      }
+    }, []);
 
-    const handleKeyPress = (e) => {
+    const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
+        e.preventDefault();
         const searchValue = searchInputRef.current?.value || '';
         setMobileSearchTerm(searchValue);
+        // Keep the text in the input after searching
+        if (searchInputRef.current) {
+          searchInputRef.current.value = searchValue;
+        }
       }
     };
 
@@ -426,20 +469,20 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       <div className="p-6">
         {/* Search and Filter */}
         <div className="mb-4">
-          <form onSubmit={handleSearchSubmit} className="relative mb-3">
+          <div className="relative mb-3">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <input
               ref={searchInputRef}
               type="text"
               placeholder="Type and press Enter to search..."
               className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyDown}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
             />
-          </form>
+          </div>
           
           <div className="flex gap-2 flex-wrap">
             {categories.map(category => (
