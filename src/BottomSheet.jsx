@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 
 const BottomSheet = ({ isOpen, onClose, children, title }) => {
+
   // Prevent background scroll when sheet is open
   useEffect(() => {
     if (isOpen) {

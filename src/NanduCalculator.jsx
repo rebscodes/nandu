@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
 import BottomSheet from './BottomSheet.jsx';
@@ -26,6 +26,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [hasCreatedThrowCatchCombos, setHasCreatedThrowCatchCombos] = useState(false);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [targetComboId, setTargetComboId] = useState(null);
+  const [mobileSearchTerm, setMobileSearchTerm] = useState('');
+  const [mobileSelectedCategory, setMobileSelectedCategory] = useState('Jumping');
 
   const categories = ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
 
@@ -195,6 +197,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const closeBottomSheet = () => {
     setShowBottomSheet(false);
     setTargetComboId(null);
+    // Clear mobile search when closing
+    setMobileSearchTerm('');
   };
 
   const handleMovementSelect = (movement) => {
@@ -385,42 +389,78 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     }
   };
 
-  // Movement picker component for bottom sheet
-  const MovementPicker = () => (
-    <div className="p-6">
-      {/* Search and Filter */}
-      <div className="mb-4">
-        <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <input
-            type="text"
-            placeholder="Search movements..."
-            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        <div className="flex gap-2 flex-wrap">
-          {categories.map(category => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                selectedCategory === category
-                  ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
-                  : 'bg-white text-gray-700 hover:bg-orange-50 hover:text-orange-600 border border-gray-200'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-      </div>
+  // Memoized filtered movements for mobile to prevent re-renders
+  const mobileFilteredMovements = useMemo(() => {
+    return movements.filter(movement => {
+      const matchesSearch = movement.name.toLowerCase().includes(mobileSearchTerm.toLowerCase()) ||
+                           movement.english.toLowerCase().includes(mobileSearchTerm.toLowerCase()) ||
+                           movement.id.toLowerCase().includes(mobileSearchTerm.toLowerCase());
+      const matchesCategory = movement.category === mobileSelectedCategory || (mobileSelectedCategory === 'Sweeps' && movement.category === 'Leg');
+      return matchesSearch && matchesCategory;
+    }).sort((a, b) => {
+      // Sort by points (ascending), then by grade (A, B, C, D), then by name
+      if (a.points !== b.points) return a.points - b.points;
+      if (a.grade !== b.grade) return a.grade.localeCompare(b.grade);
+      return a.name.localeCompare(b.name);
+    });
+  }, [mobileSearchTerm, mobileSelectedCategory]);
 
-      {/* Movement List */}
-      <div className="space-y-3">
-        {filteredMovements.map(movement => (
+  // Movement picker component for bottom sheet
+  const MovementPicker = () => {
+    const searchInputRef = useRef(null);
+
+    const handleSearchSubmit = (e) => {
+      e.preventDefault();
+      const searchValue = searchInputRef.current?.value || '';
+      setMobileSearchTerm(searchValue);
+    };
+
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        const searchValue = searchInputRef.current?.value || '';
+        setMobileSearchTerm(searchValue);
+      }
+    };
+
+    return (
+      <div className="p-6">
+        {/* Search and Filter */}
+        <div className="mb-4">
+          <form onSubmit={handleSearchSubmit} className="relative mb-3">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Type and press Enter to search..."
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
+              onKeyPress={handleKeyPress}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
+            />
+          </form>
+          
+          <div className="flex gap-2 flex-wrap">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => setMobileSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                  mobileSelectedCategory === category
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg'
+                    : 'bg-white text-gray-700 hover:bg-orange-50 hover:text-orange-600 border border-gray-200'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Movement List */}
+        <div className="space-y-3">
+          {mobileFilteredMovements.map(movement => (
           <button
             key={movement.id}
             onClick={() => handleMovementSelect(movement)}
@@ -453,6 +493,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       </div>
     </div>
   );
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-3 sm:p-6">
