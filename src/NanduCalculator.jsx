@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star } from 'lucide-react';
+import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star, ArrowUp, ArrowDown } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
 import BottomSheet from './BottomSheet.jsx';
 
@@ -179,6 +179,68 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         const newConnections = [];
         
         // Recalculate connections for the remaining movements
+        for (let i = 0; i < newMovements.length - 1; i++) {
+          const connection = connections.find(conn => 
+            conn.from === newMovements[i].id && conn.to === newMovements[i + 1].id
+          );
+          if (connection) {
+            newConnections.push(connection);
+          }
+        }
+        
+        return {
+          ...combo,
+          movements: newMovements,
+          connections: newConnections
+        };
+      }
+      return combo;
+    }));
+  };
+
+  const moveMovementUp = (comboId, movementIndex) => {
+    if (movementIndex === 0) return; // Can't move first item up
+    
+    setCombos(combos.map(combo => {
+      if (combo.id === comboId) {
+        const newMovements = [...combo.movements];
+        // Swap with previous movement
+        [newMovements[movementIndex - 1], newMovements[movementIndex]] = 
+        [newMovements[movementIndex], newMovements[movementIndex - 1]];
+        
+        // Recalculate connections for the new order
+        const newConnections = [];
+        for (let i = 0; i < newMovements.length - 1; i++) {
+          const connection = connections.find(conn => 
+            conn.from === newMovements[i].id && conn.to === newMovements[i + 1].id
+          );
+          if (connection) {
+            newConnections.push(connection);
+          }
+        }
+        
+        return {
+          ...combo,
+          movements: newMovements,
+          connections: newConnections
+        };
+      }
+      return combo;
+    }));
+  };
+
+  const moveMovementDown = (comboId, movementIndex, totalMovements) => {
+    if (movementIndex === totalMovements - 1) return; // Can't move last item down
+    
+    setCombos(combos.map(combo => {
+      if (combo.id === comboId) {
+        const newMovements = [...combo.movements];
+        // Swap with next movement
+        [newMovements[movementIndex], newMovements[movementIndex + 1]] = 
+        [newMovements[movementIndex + 1], newMovements[movementIndex]];
+        
+        // Recalculate connections for the new order
+        const newConnections = [];
         for (let i = 0; i < newMovements.length - 1; i++) {
           const connection = connections.find(conn => 
             conn.from === newMovements[i].id && conn.to === newMovements[i + 1].id
@@ -834,12 +896,42 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                                   </div>
                                   <div className="text-sm text-gray-800">{movement.name}</div>
                                 </div>
-                                <button
-                                  onClick={() => removeMovementFromCombo(combo.id, movIndex)}
-                                  className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                >
-                                  <X className="h-3 w-3" />
-                                </button>
+                                <div className="flex items-center gap-1">
+                                  {/* Move Up Button */}
+                                  <button
+                                    onClick={() => moveMovementUp(combo.id, movIndex)}
+                                    disabled={movIndex === 0}
+                                    className={`p-1.5 rounded-lg transition-colors ${
+                                      movIndex === 0 
+                                        ? 'text-gray-300 cursor-not-allowed' 
+                                        : 'text-blue-500 hover:bg-blue-50'
+                                    }`}
+                                    title="Move up"
+                                  >
+                                    <ArrowUp className="h-3 w-3" />
+                                  </button>
+                                  {/* Move Down Button */}
+                                  <button
+                                    onClick={() => moveMovementDown(combo.id, movIndex, combo.movements.length)}
+                                    disabled={movIndex === combo.movements.length - 1}
+                                    className={`p-1.5 rounded-lg transition-colors ${
+                                      movIndex === combo.movements.length - 1 
+                                        ? 'text-gray-300 cursor-not-allowed' 
+                                        : 'text-blue-500 hover:bg-blue-50'
+                                    }`}
+                                    title="Move down"
+                                  >
+                                    <ArrowDown className="h-3 w-3" />
+                                  </button>
+                                  {/* Delete Button */}
+                                  <button
+                                    onClick={() => removeMovementFromCombo(combo.id, movIndex)}
+                                    className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                    title="Remove movement"
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </div>
                               </div>
                               
                               {/* Show connection after this movement */}
