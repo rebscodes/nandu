@@ -106,7 +106,7 @@ const App = () => {
         </Routes>
         
         {/* Footer */}
-        <footer className="mt-12 py-8">
+        <footer className="mt-2 sm:mt-6 py-3 sm:py-6">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <p className="text-gray-600">
               made with 💖 by{' '}

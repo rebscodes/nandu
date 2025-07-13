@@ -658,12 +658,12 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
             </div>
           </div>
 
-          {/* Score Summary */}
-          <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 rounded-2xl p-6 mb-6 border border-orange-100">
-            <div className="grid grid-cols-3 gap-4 text-center">
+          {/* Score Summary - More compact on mobile */}
+          <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 rounded-2xl p-3 sm:p-6 mb-3 sm:mb-6 border border-orange-100">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
               <div>
-                <div className="text-sm text-gray-600">Movements</div>
-                <div className={`text-lg font-bold ${
+                <div className="text-xs sm:text-sm text-gray-600">Movements</div>
+                <div className={`text-sm sm:text-lg font-bold ${
                   totalMovementScore > 1.4 
                     ? 'text-orange-500' : 'text-gray-800'
                 }`}>
@@ -671,8 +671,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Connections</div>
-                <div className={`text-lg font-bold ${
+                <div className="text-xs sm:text-sm text-gray-600">Connections</div>
+                <div className={`text-sm sm:text-lg font-bold ${
                   totalConnectionScore > 0.6 
                     ? 'text-orange-500' : 'text-gray-800'
                 }`}>
@@ -680,38 +680,38 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Total</div>
-                <div className="text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{totalScore.toFixed(2)}/2.00</div>
+                <div className="text-xs sm:text-sm text-gray-600">Total</div>
+                <div className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{totalScore.toFixed(2)}/2.00</div>
               </div>
             </div>
           </div>
 
-          {/* Warnings */}
+          {/* Warnings - More compact on mobile */}
           {(() => {
             const warnings = getDuplicateMovementWarnings();
             return warnings.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-4">
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-3 sm:p-4 mb-3 sm:mb-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <X className="h-5 w-5 text-red-600" />
-                  <h3 className="text-sm font-semibold text-red-800">Rule Violations</h3>
+                  <X className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
+                  <h3 className="text-xs sm:text-sm font-semibold text-red-800">Rule Violations</h3>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1 sm:space-y-2">
                   {warnings.map((warning, index) => (
-                    <div key={index} className="text-sm text-red-700">
+                    <div key={index} className="text-xs sm:text-sm text-red-700">
                       <span className="font-medium">⚠️ {warning.message}</span>
                       <span className="text-red-600 ml-1">(Combos: {warning.combos.join(', ')})</span>
                     </div>
                   ))}
                 </div>
-                <div className="text-xs text-red-600 mt-2">
+                <div className="text-xs text-red-600 mt-1 sm:mt-2">
                   Each movement can only be used once unless it has different connections each time.
                 </div>
               </div>
             );
           })()}
 
-          {/* Combos */}
-          <div className="max-h-96 overflow-y-auto">
+          {/* Combos - Taller on mobile for better visibility */}
+          <div className="max-h-[70vh] sm:max-h-96 overflow-y-auto">
             {combos.length === 0 ? (
               <div 
                 className={`text-center text-gray-500 py-8 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer ${
