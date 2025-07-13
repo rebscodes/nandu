@@ -658,16 +658,16 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
           </div>
 
           {/* Movement List */}
-          <div className="max-h-96 overflow-y-auto">
-            {filteredMovements.map(movement => (
+          <div className="max-h-[32rem] overflow-y-auto">
+            {filteredMovements.map((movement, index) => (
               <div 
                 key={movement.id} 
                 draggable={true}
                 onDragStart={(e) => handleDragStart(e, movement)}
                 onDragEnd={handleDragEnd}
-                className={`border border-gray-200 rounded-xl p-4 mb-3 transition-all duration-200 hover:shadow-md cursor-grab hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 hover:border-orange-200 active:cursor-grabbing ${
+                className={`border border-gray-200 rounded-xl p-4 transition-all duration-200 hover:shadow-md cursor-grab hover:bg-gradient-to-r hover:from-orange-50 hover:to-amber-50 hover:border-orange-200 active:cursor-grabbing ${
                   draggedMovement?.id === movement.id ? 'opacity-50 scale-95' : ''
-                }`}
+                } ${index < filteredMovements.length - 1 ? 'mb-3' : ''}`}
                 title="Drag to add to combo"
               >
                 <div className="flex justify-between items-start">
@@ -773,7 +773,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
           })()}
 
           {/* Combos - Taller on mobile for better visibility */}
-          <div className="max-h-[70vh] sm:max-h-96 overflow-y-auto">
+          <div className="max-h-[75vh] sm:max-h-[32rem] overflow-y-auto">
             {combos.length === 0 ? (
               <div 
                 className={`text-center text-gray-500 py-8 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer ${
