@@ -37,7 +37,7 @@ export const sharedRequirements = {
   },
   "balance_techniques": {
     "required_count": 1,
-    "description": "Extended balance technique: the static state be maintained for at least 2 seconds",
+    "description": "Extended balance technique static state be maintained for at least 2 seconds. Balance technique MUST be completed rhythmically and quickly according to the characteristics of the event",
     "movements": [
       {
         "chinese": "提膝平衡",

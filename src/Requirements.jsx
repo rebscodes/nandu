@@ -190,12 +190,12 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
         {expandedSections[sectionKey] && (
           <div className="p-4 sm:p-6 pt-4">
             {categoryData.special_requirement && (
-              <div className="text-sm text-gray-600 mb-4 p-3 bg-blue-50 rounded-lg">
+              <div className="text-sm text-gray-600 mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <strong>Special Requirement:</strong> {categoryData.special_requirement}
               </div>
             )}
             {categoryData.description && (
-              <div className="text-sm text-gray-600 mb-4 p-3 bg-blue-50 rounded-lg">
+              <div className="text-sm text-gray-600 mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <strong>Note:</strong> {categoryData.description}
               </div>
             )}

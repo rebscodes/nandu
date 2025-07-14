@@ -364,6 +364,20 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
                       <Circle className="h-4 w-4 text-red-600" />
                       Potential Deductions
                     </h4>
+                    
+                    {/* 2024 Rule Update Notification for Code 22 */}
+                    {technique.code === "22" && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Info className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-semibold text-blue-800">2024 Rule Update</span>
+                        </div>
+                        <p className="text-xs text-blue-700">
+                          This deduction code is <strong>new as of the 2024 IWUF rules</strong>. Be sure to review the updated standards.
+                        </p>
+                      </div>
+                    )}
+                    
                     <ul className="space-y-2">
                       {technique.deductions.map((deduction, index) => (
                         <li key={index} className="flex items-start gap-2">

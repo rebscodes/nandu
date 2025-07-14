@@ -85,6 +85,14 @@ export const judgingCriteria = {
         {
           "chinese": "上举腿弯曲",
           "english": "Raised Leg Bent"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ],
       "non_conformity": [
@@ -107,6 +115,14 @@ export const judgingCriteria = {
         {
           "chinese": "上举腿弯曲",
           "english": "Raised Leg Bent"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ],
       "non_conformity": [
@@ -125,6 +141,14 @@ export const judgingCriteria = {
         {
           "chinese": "前举腿低于水平",
           "english": "The raised leg is held below horizontal level"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ],
       "non_conformity": [
@@ -147,6 +171,14 @@ export const judgingCriteria = {
         {
           "chinese": "躯干低于水平",
           "english": "The torso is below horizontal level"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ],
       "non_conformity": [
@@ -165,6 +197,14 @@ export const judgingCriteria = {
         {
           "chinese": "支撑腿大腿未达水平",
           "english": "Thigh of supporting leg is not at horizontal level"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ]
     },
@@ -177,6 +217,14 @@ export const judgingCriteria = {
         {
           "chinese": "支撑腿大腿未达水平",
           "english": "Thigh of supporting leg is not at horizontal level"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ]
     },
@@ -193,6 +241,14 @@ export const judgingCriteria = {
         {
           "chinese": "后举腿弯曲",
           "english": "Raised leg bent"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ]
     },
@@ -209,6 +265,14 @@ export const judgingCriteria = {
         {
           "chinese": "后举腿弯曲",
           "english": "Raised leg bent"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ],
       "non_conformity": [
@@ -235,6 +299,14 @@ export const judgingCriteria = {
         {
           "chinese": "屈收腿脚背未绷平",
           "english": "Instep of the raised bent leg not extended flat"
+        },
+        {
+          "chinese": "平衡动作未按项目特点有节奏快速完成（扣 0.1 分）",
+          "english": "Balance technique not completed rhythmically and quickly according to the characteristics of the event (deduct 0.1)"
+        },
+        {
+          "chinese": "平衡动作静止时间不足 2 秒钟（扣 0. 1 分）",
+          "english": "Balance technique not maintained for at least 2 seconds (deduct 0.1)"
         }
       ],
       "non_conformity": [
