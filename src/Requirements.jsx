@@ -283,9 +283,15 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
             <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0 mt-2"></div>
             <div>
               <div className="font-semibold text-gray-800 mb-1">Routine Time Limits</div>
-              <div className="space-y-1 text-gray-700">
-                <div><strong>Adult Divisions:</strong> 1 minute 20 seconds to 1 minute 35 seconds</div>
-                <div><strong>Junior Divisions:</strong> 1 minute 10 seconds to 1 minute 25 seconds</div>
+              <div className="text-gray-700 space-y-2">
+                <div>
+                  <div className="mb-1">（1）成年：1 分 20 秒钟～1 分 35 秒钟。</div>
+                  <div><strong>Adult Divisions:</strong> From 1 minute 20 seconds to 1 minute 35 seconds in total duration.</div>
+                </div>
+                <div>
+                  <div className="mb-1">（2）青少年：1 分 10 秒钟～1 分 25 秒钟。</div>
+                  <div><strong>Junior Divisions (including children):</strong> From 1 minute 10 seconds to 1 minute 25 seconds in total duration.</div>
+                </div>
               </div>
             </div>
           </div>
