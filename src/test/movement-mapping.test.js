@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { changquanRequirements } from '../../changquan-requirements.js'
-import { judgingCriteria } from '../../judging-criteria.js'
+import { changquanRequirements } from '../data/requirements/changquan-requirements.js'
+import { judgingCriteria } from '../data/judging-criteria.js'
 
 // Test the core mapping logic without UI rendering
 describe('Movement Mapping Logic', () => {

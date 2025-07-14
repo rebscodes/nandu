@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star, ArrowUp, ArrowDown } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
 import BottomSheet from './BottomSheet.jsx';
+import { getComboScore, getTotalScore } from './utils/scoring.js';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [combos, setCombos] = useState(sharedCombos);
@@ -359,22 +360,6 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     setDragOverCombo(null);
   };
 
-  const getComboScore = (combo) => {
-    if (combo.isThrowCatchCombo && combo.fixedScore !== undefined) {
-      // For throw/catch combos, return difficulty points + fixed connection score
-      const difficultyPoints = combo.movements.reduce((sum, mov) => {
-        // Only count actual difficulty points, not the throw/catch mechanics or combo metadata
-        if (mov.id === 'THROW' || mov.id === '9' || mov.id === '445A' || mov.isCombo) {
-          return sum; // These don't contribute to movement score
-        }
-        return sum + mov.points;
-      }, 0);
-      return difficultyPoints + combo.fixedScore;
-    }
-    const movementPoints = combo.movements.reduce((sum, mov) => sum + mov.points, 0);
-    const connectionPoints = combo.connections.reduce((sum, conn) => sum + conn.points, 0);
-    return movementPoints + connectionPoints;
-  };
 
   // Check for duplicate movements across all combos
   const getDuplicateMovementWarnings = () => {
@@ -436,34 +421,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     return warnings;
   };
 
-  // Calculate total scores
-  const totalMovementScore = Math.min(
-    combos.reduce((sum, combo) => {
-      if (combo.isThrowCatchCombo) {
-        // For throw/catch combos, only count the difficulty points (not the fixed combo score)
-        return sum + combo.movements.reduce((movSum, mov) => {
-          // Only count actual difficulty points, not the throw/catch mechanics
-          if (mov.id === 'THROW' || mov.id === 'CATCH' || mov.id === '445A') {
-            return movSum; // These don't contribute to movement score
-          }
-          return movSum + mov.points;
-        }, 0);
-      }
-      return sum + combo.movements.reduce((movSum, mov) => movSum + mov.points, 0);
-    }, 0), 1.4
-  );
-
-  const totalConnectionScore = Math.min(
-    combos.reduce((sum, combo) => {
-      if (combo.isThrowCatchCombo) {
-        // For throw/catch combos, use the fixed score as connection bonus
-        return sum + combo.fixedScore;
-      }
-      return sum + combo.connections.reduce((connSum, conn) => connSum + conn.points, 0);
-    }, 0), 0.6
-  );
-
-  const totalScore = Math.min(totalMovementScore + totalConnectionScore, 2.0);
+  // Calculate total scores using extracted utility functions
+  const { movementScore: totalMovementScore, connectionScore: totalConnectionScore, totalScore } = getTotalScore(combos);
 
   const getGradeColor = (grade) => {
     switch(grade) {
