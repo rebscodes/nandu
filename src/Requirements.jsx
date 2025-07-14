@@ -272,20 +272,32 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
         })}
       </div>
 
-      {/* Routine Time Limits - show for all weapons */}
+      {/* Additional Requirements - show for all weapons */}
       <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6 mt-4">
         <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 flex items-center gap-2">
           <Clock className="h-5 w-5 text-orange-600" />
-          Routine Time Limits
+          Additional Requirements
         </h3>
         <div className="space-y-3 text-sm sm:text-base text-gray-700">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-            <span><strong>Adult Divisions:</strong> 1 minute 20 seconds to 1 minute 35 seconds</span>
+          <div className="flex items-start gap-2">
+            <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0 mt-2"></div>
+            <div>
+              <div className="font-semibold text-gray-800 mb-1">Routine Time Limits</div>
+              <div className="space-y-1 text-gray-700">
+                <div><strong>Adult Divisions:</strong> 1 minute 20 seconds to 1 minute 35 seconds</div>
+                <div><strong>Junior Divisions:</strong> 1 minute 10 seconds to 1 minute 25 seconds</div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-orange-400 rounded-full flex-shrink-0"></div>
-            <span><strong>Junior Divisions:</strong> 1 minute 10 seconds to 1 minute 25 seconds</span>
+          <div className="flex items-start gap-2">
+            <div className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0 mt-2"></div>
+            <div>
+              <div className="font-semibold text-gray-800 mb-1">Degree of Difficulty Spacing</div>
+              <div className="text-gray-700">
+                <div className="mb-1">两组难度之间少于两个完整的技术动作。（扣 0.1 分）</div>
+                <div className="italic">Between 2 groups of Degree of Difficulty techniques, there are less than 2 complete technique movements. (Deduct 0.1)</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
