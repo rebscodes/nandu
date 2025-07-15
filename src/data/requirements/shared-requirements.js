@@ -43,7 +43,8 @@ export const sharedRequirements = {
         "chinese": "提膝平衡",
         "pinyin": "Tí Xī Píng Héng",
         "english": "Single Knee Raised Balance",
-        "description": "The supporting leg is upright and stable, the raised leg is bent at the knee which is held above waist height, the lower leg drawn in and hanging obliquely vertically. The foot of the raised leg is extended with the surface flat and drawn inwards."
+        "description": "The supporting leg is upright and stable, the raised leg is bent at the knee which is held above waist height, the lower leg drawn in and hanging obliquely vertically. The foot of the raised leg is extended with the surface flat and drawn inwards.",
+        "note": "⚠️ Note: This technique may not fulfill the balance requirement depending on competition circumstances. Check with competition organizers for specific balance technique requirements."
       },
       {
         "chinese": "侧身平衡",
