@@ -82,7 +82,7 @@ export const connections = [
   { from: '324B', to: '1', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Horse Stance' },
   { from: '324B', to: '6', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Cross-Legged Sitting' },
   { from: '333A', to: '244A', points: 0.15, grade: 'B', description: 'Butterfly Kick + Front Sweep 540°' },
-  { from: '353B', to: '323C', points: 0.15, grade: 'B', description: 'Butterfly Twist 360° + Falling Front ' },
+  { from: '353B', to: '4', points: 0.15, grade: 'B', description: 'Butterfly Twist 360° + Falling Front Split' },
   { from: '353B', to: '323B', points: 0.15, grade: 'B', description: 'Butterfly Twist 360° + Tornado Kick 540° (within 4 steps)' },
   { from: '335A', to: '323B', points: 0.15, grade: 'B', description: 'Aerial Cartwheel + Tornado Kick 540° (within 4 steps)' },
   
