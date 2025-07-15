@@ -72,12 +72,25 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
     Object.keys(selectedFormMovements).forEach(key => {
       if (selectedFormMovements[key]) {
         // Parse the key to get category and index
-        const [category, index] = key.split('-');
+        const keyParts = key.split('-');
+        let category, index;
+        
+        if (keyParts.length === 3) {
+          // Handle nested categories like "leg_techniques-straight_leg_swinging-0"
+          category = keyParts[1]; // Use subcategory for lookup
+          index = parseInt(keyParts[2]);
+        } else {
+          // Handle regular categories like "hand_forms-0"
+          category = keyParts[0];
+          index = parseInt(keyParts[1]);
+        }
+        
         movements.push({
           source: 'form',
           category: category,
-          index: parseInt(index),
-          key: key
+          index: index,
+          key: key,
+          originalKey: key // Keep original key for reference
         });
       }
     });
@@ -109,18 +122,14 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
         let actualCategory = category;
         
         // Handle special case for leg techniques which have nested categories
-        if (hasSpecialHandling(selectedWeaponForm, 'hasLegSubcategories')) {
+        if (hasSpecialHandling(selectedWeaponForm, 'hasLegSubcategories') && selectedMovement.originalKey.startsWith('leg_techniques-')) {
           const legCategory = currentRequirements.leg_techniques?.categories?.find(cat => cat.type === category);
-          if (legCategory) {
-            if (legCategory.movements[index]) {
-              movementData = legCategory.movements[index];
-              actualCategory = 'leg_techniques'; // Map to the judging criteria category
-            }
-          } else if (currentRequirements[category]?.movements[index]) {
-            movementData = currentRequirements[category].movements[index];
+          if (legCategory && legCategory.movements[index]) {
+            movementData = legCategory.movements[index];
+            actualCategory = 'leg_techniques'; // Map to the judging criteria category
           }
         } else {
-          // For weapon forms without leg subcategories, use direct category lookup
+          // For regular categories, use direct category lookup
           if (currentRequirements[category]?.movements[index]) {
             movementData = currentRequirements[category].movements[index];
           }

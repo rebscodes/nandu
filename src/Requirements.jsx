@@ -61,25 +61,58 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
 
   const clearCategorySelections = (category) => {
     const categoryTechniques = currentRequirements[category];
-    if (!categoryTechniques || !categoryTechniques.movements) return;
+    if (!categoryTechniques) return;
     
     setSelectedTechniques(prev => {
       const newState = { ...prev };
-      categoryTechniques.movements.forEach((_, index) => {
-        const key = `${category}-${index}`;
-        delete newState[key];
-      });
+      
+      // Handle direct movements
+      if (categoryTechniques.movements) {
+        categoryTechniques.movements.forEach((_, index) => {
+          const key = `${category}-${index}`;
+          delete newState[key];
+        });
+      }
+      
+      // Handle nested categories (like leg techniques)
+      if (categoryTechniques.categories) {
+        categoryTechniques.categories.forEach(cat => {
+          cat.movements.forEach((_, index) => {
+            const key = `${category}-${cat.type}-${index}`;
+            delete newState[key];
+          });
+        });
+      }
+      
       return newState;
     });
   };
 
   const getSelectedCount = (category) => {
     const categoryTechniques = currentRequirements[category];
-    if (!categoryTechniques || !categoryTechniques.movements) return 0;
+    if (!categoryTechniques) return 0;
     
-    return categoryTechniques.movements.filter((_, index) => 
-      selectedTechniques[`${category}-${index}`]
-    ).length;
+    // Handle direct movements
+    if (categoryTechniques.movements) {
+      return categoryTechniques.movements.filter((_, index) => 
+        selectedTechniques[`${category}-${index}`]
+      ).length;
+    }
+    
+    // Handle nested categories (like leg techniques) - count categories with at least one selection
+    if (categoryTechniques.categories) {
+      let categoriesWithSelections = 0;
+      categoryTechniques.categories.forEach(cat => {
+        const hasSelection = cat.movements.some((_, index) => {
+          const key = `${category}-${cat.type}-${index}`;
+          return selectedTechniques[key];
+        });
+        if (hasSelection) categoriesWithSelections++;
+      });
+      return categoriesWithSelections;
+    }
+    
+    return 0;
   };
 
 
@@ -131,18 +164,39 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
 
   const getSelectedTechniquesPreview = (category, categoryKey) => {
     const categoryTechniques = currentRequirements[category];
-    if (!categoryTechniques || !categoryTechniques.movements) return '';
+    if (!categoryTechniques) return '';
     
-    const selected = categoryTechniques.movements
-      .filter((_, index) => selectedTechniques[`${categoryKey}-${index}`])
-      .map(technique => technique.chinese)
-      .slice(0, 3);
+    let selected = [];
     
-    return selected.join(', ') + (selected.length < getSelectedCount(category) ? '...' : '');
+    // Handle direct movements
+    if (categoryTechniques.movements) {
+      selected = categoryTechniques.movements
+        .filter((_, index) => selectedTechniques[`${categoryKey}-${index}`])
+        .map(technique => technique.chinese);
+    }
+    
+    // Handle nested categories (like leg techniques)
+    if (categoryTechniques.categories) {
+      categoryTechniques.categories.forEach(cat => {
+        const catSelected = cat.movements
+          .filter((_, index) => selectedTechniques[`${categoryKey}-${cat.type}-${index}`])
+          .map(technique => technique.chinese);
+        selected = selected.concat(catSelected);
+      });
+    }
+    
+    const preview = selected.slice(0, 3);
+    return preview.join(', ') + (selected.length > 3 ? '...' : '');
   };
 
   const renderCategorySection = (categoryKey, categoryData, displayName) => {
-    if (!categoryData || !categoryData.movements) return null;
+    if (!categoryData) return null;
+    
+    // Handle both direct movements and categories with subcategories (like leg techniques)
+    const hasMovements = categoryData.movements && categoryData.movements.length > 0;
+    const hasCategories = categoryData.categories && categoryData.categories.length > 0;
+    
+    if (!hasMovements && !hasCategories) return null;
     
     const sectionKey = categoryKey;
     
@@ -206,7 +260,20 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
                 <strong>Note:</strong> {categoryData.description}
               </div>
             )}
-            {renderCompactTechniques(categoryKey, categoryData.movements, categoryKey)}
+            {categoryData.movements ? 
+              renderCompactTechniques(categoryKey, categoryData.movements, categoryKey) :
+              categoryData.categories?.map((category, catIndex) => (
+                <div key={catIndex} className="mb-6">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">
+                    {category.chinese} ({category.type.replace(/_/g, ' ')})
+                  </h4>
+                  {category.description && (
+                    <p className="text-xs text-gray-600 mb-3 italic">{category.description}</p>
+                  )}
+                  {renderCompactTechniques(`${categoryKey}-${category.type}`, category.movements, `${categoryKey}-${category.type}`)}
+                </div>
+              ))
+            }
           </div>
         )}
       </div>
@@ -272,7 +339,13 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
       {/* Accordion Sections */}
       <div className="space-y-3 sm:space-y-4">
         {Object.entries(currentRequirements).map(([categoryKey, categoryData]) => {
-          if (!categoryData || !categoryData.movements || !categoryData.required_count) return null;
+          if (!categoryData || !categoryData.required_count) return null;
+          
+          // Handle both direct movements and categories with subcategories (like leg techniques)
+          const hasMovements = categoryData.movements && categoryData.movements.length > 0;
+          const hasCategories = categoryData.categories && categoryData.categories.length > 0;
+          
+          if (!hasMovements && !hasCategories) return null;
           
           const displayName = categoryKey.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
           return renderCategorySection(categoryKey, categoryData, displayName);

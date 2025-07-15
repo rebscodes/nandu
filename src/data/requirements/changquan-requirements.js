@@ -134,6 +134,7 @@ export const changquanRequirements = {
   "stances": sharedRequirements.stances,
   "leg_techniques": {
     "required_count": 3,
+    "description": "One technique must be selected from each of the three categories below",
     "categories": [
       {
         "type": "straight_leg_swinging",
