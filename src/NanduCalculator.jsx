@@ -3,6 +3,7 @@ import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVer
 import { movements, connections } from './data/codes.js';
 import { southernMovements, southernConnections } from './data/southern-nandu-codes.js';
 import { taijiMovements, taijiConnections } from './data/taiji-nandu-codes.js';
+import { STYLE_CATEGORIES, SCORING_LIMITS } from './data/constants.js';
 import BottomSheet from './BottomSheet.jsx';
 import { getComboScore, getTotalScore } from './utils/scoring.js';
 
@@ -68,19 +69,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const currentMovements = getCurrentMovements();
   const currentConnections = getCurrentConnections();
 
-  const getCurrentCategories = () => {
-    switch (selectedStyle) {
-      case 'southern':
-        return ['Jumping', 'Stance', 'Leg', 'Tumbling'];
-      case 'taiji':
-        return ['Balance', 'Jumping', 'Stance', 'Leg'];
-      case 'northern':
-      default:
-        return ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
-    }
-  };
-
-  const categories = getCurrentCategories();
+  const categories = STYLE_CATEGORIES[selectedStyle] || STYLE_CATEGORIES.northern;
 
   // Remove tones from pinyin for tone-agnostic search
   const removeTones = (text) => {
@@ -849,24 +838,24 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Movements</div>
                 <div className={`text-sm sm:text-lg font-bold ${
-                  totalMovementScore > 1.4 
+                  totalMovementScore > SCORING_LIMITS.MOVEMENT_SCORE_CAP 
                     ? 'text-orange-500' : 'text-gray-800'
                 }`}>
-                  {totalMovementScore.toFixed(2)}/1.40
+                  {totalMovementScore.toFixed(2)}/{SCORING_LIMITS.MOVEMENT_SCORE_CAP.toFixed(2)}
                 </div>
               </div>
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Connections</div>
                 <div className={`text-sm sm:text-lg font-bold ${
-                  totalConnectionScore > 0.6 
+                  totalConnectionScore > SCORING_LIMITS.CONNECTION_SCORE_CAP 
                     ? 'text-orange-500' : 'text-gray-800'
                 }`}>
-                  {totalConnectionScore.toFixed(2)}/0.60
+                  {totalConnectionScore.toFixed(2)}/{SCORING_LIMITS.CONNECTION_SCORE_CAP.toFixed(2)}
                 </div>
               </div>
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Total</div>
-                <div className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{totalScore.toFixed(2)}/2.00</div>
+                <div className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{totalScore.toFixed(2)}/{SCORING_LIMITS.TOTAL_SCORE_CAP.toFixed(2)}</div>
               </div>
             </div>
           </div>

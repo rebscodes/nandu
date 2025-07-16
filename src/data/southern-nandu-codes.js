@@ -66,24 +66,3 @@ export const southernConnections = [
   { from: '324C', to: '1', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 630°(F)/720° + Horse Stance' },
   { from: '323B', to: '324C', points: 0.25, grade: 'D', description: 'Tornado Kick 540° + Jumping Lotus Kick 630°(F)/720°' },
 ];
-
-// Categories specific to southern styles
-export const southernCategories = [
-  'Leg',
-  'Jumping', 
-  'Tumbling'
-];
-
-// Grade point values
-export const southernGradePoints = {
-  'A': 0.2,
-  'B': 0.3, 
-  'C': 0.4
-};
-
-export const southernConnectionPoints = {
-  'A': 0.1,
-  'B': 0.15,
-  'C': 0.2,
-  'D': 0.25
-};

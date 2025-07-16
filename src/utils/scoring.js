@@ -3,6 +3,8 @@
  * Pure functions for calculating combo and total scores
  */
 
+import { SCORING_LIMITS } from '../data/constants.js';
+
 /**
  * Calculate the score for an individual combo
  * @param {Object} combo - The combo object with movements and connections
@@ -101,7 +103,7 @@ export const getTotalScore = (combos) => {
   // Use integer arithmetic to avoid floating point precision issues
   const totalScore = Math.min(
     Math.round((movementScore + connectionScore) * 100) / 100, 
-    2.0
+    SCORING_LIMITS.TOTAL_SCORE_CAP
   );
   
   return {
@@ -120,8 +122,8 @@ export const getScoreLimits = (combos) => {
   const { movementScore, connectionScore, totalScore } = getTotalScore(combos);
   
   return {
-    movementExceeded: movementScore >= 1.4,
-    connectionExceeded: connectionScore >= 0.6,
-    totalExceeded: totalScore >= 2.0
+    movementExceeded: movementScore >= SCORING_LIMITS.MOVEMENT_SCORE_CAP,
+    connectionExceeded: connectionScore >= SCORING_LIMITS.CONNECTION_SCORE_CAP,
+    totalExceeded: totalScore >= SCORING_LIMITS.TOTAL_SCORE_CAP
   };
 };

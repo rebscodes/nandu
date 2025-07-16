@@ -44,30 +44,9 @@ export const taijiConnections = [
   // C Grade Connections (0.2 points)
   { from: '323B', to: '3', points: 0.2, grade: 'C', description: 'Tornado Kick 360° + Single Raised-Knee Stance' },
   { from: '324B', to: '3', points: 0.2, grade: 'C', description: 'Jumping Lotus Kick 360° + Single Raised-Knee Stance' },
-  { from: '324C', to: '5', points: 0.2, grade: 'C', description: "Jumping Lotus Kick 450°(F)/540° + Hurdler's Split Position" }
+  { from: '324C', to: '5', points: 0.2, grade: 'C', description: "Jumping Lotus Kick 450°(F)/540° + Hurdler's Split Position" },
   
   // D Grade Connections (0.25 points)
   { from: '323C', to: '3', points: 0.25, grade: 'D', description: 'Tornado Kick 450°(F)/540° + Single Raised-Knee Stance' },
-  { from: '324C', to: '3', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 450°(F)/540° + Single Raised-Knee Stance' },
+  { from: '324C', to: '3', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 450°(F)/540° + Single Raised-Knee Stance' }
 ];
-
-// Categories specific to taiji styles
-export const taijiCategories = [
-  'Balance',
-  'Leg', 
-  'Jumping'
-];
-
-// Grade point values (same as other styles)
-export const taijiGradePoints = {
-  'A': 0.2,
-  'B': 0.3, 
-  'C': 0.4
-};
-
-export const taijiConnectionPoints = {
-  'A': 0.1,
-  'B': 0.15,
-  'C': 0.2,
-  'D': 0.25
-};
