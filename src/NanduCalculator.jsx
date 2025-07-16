@@ -418,6 +418,23 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       }
     });
     
+    // Check for movements used more than 2 times total (only for jumps/sweeps)
+    movementUsage.forEach((usages, movementId) => {
+      if (usages.length > 2) {
+        const movement = movements.find(m => m.id === movementId);
+        // Only check for Jumping and Leg (sweep) categories
+        if (movement && (movement.category === 'Jumping' || movement.category === 'Leg')) {
+          const comboNumbers = usages.map(u => u.comboIndex + 1);
+          warnings.push({
+            movement,
+            combos: comboNumbers,
+            connection: null,
+            message: `"${movement.name}" (${movement.id}) used ${usages.length} times - maximum 2 allowed for jumps/sweeps`
+          });
+        }
+      }
+    });
+    
     return warnings;
   };
 
