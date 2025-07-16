@@ -9,11 +9,19 @@ import { jianshuRequirements } from './requirements/jianshuRequirements.js';
 import { daoshuRequirements } from './requirements/daoshuRequirements.js';
 import { gunshuRequirements } from './requirements/gunshuRequirements.js';
 import { qiangshuRequirements } from './requirements/qiangshuRequirements.js';
+import { nanquanRequirements } from './requirements/nanquan-requirements.js';
+import { nandaoRequirements } from './requirements/nandao-requirements.js';
+import { nangunRequirements } from './requirements/nangun-requirements.js';
+import { taijiquanRequirements } from './requirements/taijiquan-requirements.js';
+import { taijijianRequirements } from './requirements/taijijian-requirements.js';
+import { taijishanRequirements } from './requirements/taijishan-requirements.js';
 
 export const weaponRegistry = {
   changquan: {
     id: 'changquan',
     name: 'Changquan',
+    group: 'Northern',
+    groupOrder: 1,
     requirements: changquanRequirements,
     // Maps requirement categories to judging criteria categories
     judgingCategoryMap: {
@@ -34,6 +42,8 @@ export const weaponRegistry = {
   daoshu: {
     id: 'daoshu',
     name: 'Daoshu',
+    group: 'Northern',
+    groupOrder: 2,
     requirements: daoshuRequirements,
     judgingCategoryMap: {
       broadsword_techniques: 'weapon_techniques',
@@ -46,6 +56,8 @@ export const weaponRegistry = {
   jianshu: {
     id: 'jianshu',
     name: 'Jianshu',
+    group: 'Northern',
+    groupOrder: 3,
     requirements: jianshuRequirements,
     judgingCategoryMap: {
       sword_techniques: 'weapon_techniques', // Map sword techniques to weapon techniques in judging criteria
@@ -59,6 +71,8 @@ export const weaponRegistry = {
   gunshu: {
     id: 'gunshu',
     name: 'Gunshu',
+    group: 'Northern',
+    groupOrder: 4,
     requirements: gunshuRequirements,
     judgingCategoryMap: {
       cudgel_techniques: 'weapon_techniques',
@@ -71,9 +85,104 @@ export const weaponRegistry = {
   qiangshu: {
     id: 'qiangshu',
     name: 'Qiangshu',
+    group: 'Northern',
+    groupOrder: 5,
     requirements: qiangshuRequirements,
     judgingCategoryMap: {
       spear_techniques: 'weapon_techniques',
+      stances: 'stances'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  nanquan: {
+    id: 'nanquan',
+    name: 'Nanquan',
+    group: 'Southern',
+    groupOrder: 1,
+    requirements: nanquanRequirements,
+    judgingCategoryMap: {
+      hand_shapes: 'hand_shapes',
+      fist_techniques: 'fist_techniques',
+      bridge_techniques: 'bridge_techniques',
+      stances: 'stances',
+      footwork_techniques: 'footwork_techniques',
+      leg_techniques: 'leg_techniques'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  nandao: {
+    id: 'nandao',
+    name: 'Nandao',
+    group: 'Southern',
+    groupOrder: 2,
+    requirements: nandaoRequirements,
+    judgingCategoryMap: {
+      broadsword_techniques: 'weapon_techniques',
+      stances: 'stances',
+      footwork_techniques: 'footwork_techniques',
+      leg_techniques: 'leg_techniques'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  nangun: {
+    id: 'nangun',
+    name: 'Nangun',
+    group: 'Southern',
+    groupOrder: 3,
+    requirements: nangunRequirements,
+    judgingCategoryMap: {
+      cudgel_techniques: 'weapon_techniques',
+      stances: 'stances',
+      footwork_techniques: 'footwork_techniques',
+      leg_techniques: 'leg_techniques'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  taijiquan: {
+    id: 'taijiquan',
+    name: 'Taijiquan',
+    group: 'Taiji',
+    groupOrder: 1,
+    requirements: taijiquanRequirements,
+    judgingCategoryMap: {
+      techniques: 'techniques',
+      stances: 'stances',
+      leg_techniques: 'leg_techniques'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  taijijian: {
+    id: 'taijijian',
+    name: 'Taijijian',
+    group: 'Taiji',
+    groupOrder: 2,
+    requirements: taijijianRequirements,
+    judgingCategoryMap: {
+      sword_techniques: 'weapon_techniques',
+      stances: 'stances'
+    },
+    specialHandling: {
+      hasLegSubcategories: false
+    }
+  },
+  taijishan: {
+    id: 'taijishan',
+    name: 'Taijishan',
+    group: 'Taiji',
+    groupOrder: 3,
+    requirements: taijishanRequirements,
+    judgingCategoryMap: {
+      fan_techniques: 'weapon_techniques',
       stances: 'stances'
     },
     specialHandling: {
@@ -90,6 +199,25 @@ export const getWeaponConfig = (weaponId) => {
 
 export const getAvailableWeapons = () => {
   return Object.values(weaponRegistry).filter(weapon => weapon.requirements);
+};
+
+export const getWeaponsByGroup = () => {
+  const weapons = getAvailableWeapons();
+  const groups = {};
+  
+  weapons.forEach(weapon => {
+    if (!groups[weapon.group]) {
+      groups[weapon.group] = [];
+    }
+    groups[weapon.group].push(weapon);
+  });
+  
+  // Sort weapons within each group by groupOrder
+  Object.keys(groups).forEach(group => {
+    groups[group].sort((a, b) => (a.groupOrder || 0) - (b.groupOrder || 0));
+  });
+  
+  return groups;
 };
 
 export const getWeaponRequirements = (weaponId) => {
