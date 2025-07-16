@@ -100,10 +100,10 @@ describe('Nandu Scoring Logic', () => {
           connections: [mockConnections.regular],
           isThrowCatchCombo: false
         }
-        // Total movement: 1.6, should be capped at 1.4
+        // Total movement: 1.6, should show actual uncapped value
       ];
       
-      expect(getTotalMovementScore(combos)).toBe(1.4);
+      expect(getTotalMovementScore(combos)).toBe(1.6);
     });
 
     it('calculates movement score under limit', () => {
@@ -182,9 +182,9 @@ describe('Nandu Scoring Logic', () => {
       ];
       
       const result = getTotalScore(combos);
-      expect(result.movementScore).toBe(1.4);
-      expect(result.connectionScore).toBe(0.6);
-      expect(result.totalScore).toBe(2.0); // 1.4 + 0.6, at the limit
+      expect(result.movementScore).toBe(3.2); // 8 × 0.4 = 3.2
+      expect(result.connectionScore).toBe(0.75); // 5 × 0.15 = 0.75
+      expect(result.totalScore).toBe(3.95); // 3.2 + 0.75 = 3.95
     });
 
     it('returns total under limit', () => {
@@ -238,7 +238,7 @@ describe('Nandu Scoring Logic', () => {
       const limits = getScoreLimits(combos);
       expect(limits.movementExceeded).toBe(true);
       expect(limits.connectionExceeded).toBe(false);
-      expect(limits.totalExceeded).toBe(false);
+      expect(limits.totalExceeded).toBe(true); // 3.2 > 2.0, so total is exceeded
     });
 
     it('identifies when connection score exceeds limit', () => {

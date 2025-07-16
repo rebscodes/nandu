@@ -36,7 +36,7 @@ export const getComboScore = (combo) => {
 /**
  * Calculate total movement score across all combos
  * @param {Array} combos - Array of combo objects
- * @returns {number} - Total movement score (capped at 1.4)
+ * @returns {number} - Total movement score (uncapped)
  */
 export const getTotalMovementScore = (combos) => {
   if (!Array.isArray(combos)) {
@@ -61,13 +61,13 @@ export const getTotalMovementScore = (combos) => {
     return sum + combo.movements.reduce((movSum, mov) => movSum + (mov.points || 0), 0);
   }, 0);
   
-  return Math.min(Math.round(rawScore * 100) / 100, 1.4);
+  return Math.round(rawScore * 100) / 100;
 };
 
 /**
  * Calculate total connection score across all combos
  * @param {Array} combos - Array of combo objects
- * @returns {number} - Total connection score (capped at 0.6)
+ * @returns {number} - Total connection score (uncapped)
  */
 export const getTotalConnectionScore = (combos) => {
   if (!Array.isArray(combos)) {
@@ -86,7 +86,7 @@ export const getTotalConnectionScore = (combos) => {
     return sum + (combo.connections || []).reduce((connSum, conn) => connSum + (conn.points || 0), 0);
   }, 0);
   
-  return Math.min(Math.round(rawScore * 100) / 100, 0.6);
+  return Math.round(rawScore * 100) / 100;
 };
 
 /**
@@ -99,10 +99,7 @@ export const getTotalScore = (combos) => {
   const connectionScore = getTotalConnectionScore(combos);
   
   // Use integer arithmetic to avoid floating point precision issues
-  const totalScore = Math.min(
-    Math.round((movementScore + connectionScore) * 100) / 100, 
-    2.0
-  );
+  const totalScore = Math.round((movementScore + connectionScore) * 100) / 100;
   
   return {
     movementScore,
@@ -120,8 +117,8 @@ export const getScoreLimits = (combos) => {
   const { movementScore, connectionScore, totalScore } = getTotalScore(combos);
   
   return {
-    movementExceeded: movementScore >= 1.4,
-    connectionExceeded: connectionScore >= 0.6,
-    totalExceeded: totalScore >= 2.0
+    movementExceeded: movementScore > 1.4,
+    connectionExceeded: connectionScore > 0.6,
+    totalExceeded: totalScore > 2.0
   };
 };

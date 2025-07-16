@@ -703,7 +703,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 <div className="text-xs sm:text-sm text-gray-600">Movements</div>
                 <div className={`text-sm sm:text-lg font-bold ${
                   totalMovementScore > 1.4 
-                    ? 'text-orange-500' : 'text-gray-800'
+                    ? 'text-red-600' : totalMovementScore === 1.4 
+                    ? 'text-green-600' : 'text-gray-800'
                 }`}>
                   {totalMovementScore.toFixed(2)}/1.40
                 </div>
@@ -712,7 +713,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                 <div className="text-xs sm:text-sm text-gray-600">Connections</div>
                 <div className={`text-sm sm:text-lg font-bold ${
                   totalConnectionScore > 0.6 
-                    ? 'text-orange-500' : 'text-gray-800'
+                    ? 'text-red-600' : totalConnectionScore === 0.6 
+                    ? 'text-green-600' : 'text-gray-800'
                 }`}>
                   {totalConnectionScore.toFixed(2)}/0.60
                 </div>
