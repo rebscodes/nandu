@@ -27,28 +27,28 @@ export const taijiConnections = [
   // A Grade Connections (0.1 points)
   { from: '142A', to: '3', points: 0.1, grade: 'A', description: 'Forward Stepping Kick with Low Balance + 180° Body Turn into Single Raised-Knee Stance' },
   { from: '143A', to: '3', points: 0.1, grade: 'A', description: 'Low Balance with Leg Stretched Forward + 180° Body Turn into Single Raised-Knee Stance' },
+  { from: '143A', to: '212A', points: 0.1, grade: 'A', description: 'Low Balance with Leg Stretched Forward + Heel Kick/Parting Kick' },
   { from: '312A', to: '3', points: 0.1, grade: 'A', description: 'Jumping Front Slap Kick + Single Raised-Knee Stance' },
+  { from: '312A', to: '324B', points: 0.1, grade: 'A', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 360°' },
   { from: '323A', to: '3', points: 0.1, grade: 'A', description: 'Tornado Kick 180° + Single Raised-Knee Stance' },
-  
+  { from: '323B', to: '8', points: 0.1, grade: 'A', description: 'Tornado Kick 360° + Landing on takeoff foot' },
+  { from: '324B', to: '8', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Landing on takeoff foot' },
+
   // B Grade Connections (0.15 points)
   { from: '143B', to: '3', points: 0.15, grade: 'B', description: 'Low Balance with Leg Crossed Behind + Lotus Kick into 180° Body Turn into Single Raised-Knee Stance' },
-  { from: '143A', to: '212A', points: 0.15, grade: 'B', description: 'Low Balance with Leg Stretched Forward + Heel Kick/Parting Kick' },
+  { from: '143B', to: '212A', points: 0.15, grade: 'B', description: 'Low Balance with Leg Crossed Behind + Heel Kick/Parting Kick' },
+  { from: '312A', to: '324C', points: 0.15, grade: 'B', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 450°(F)/540°' },
   { from: '312B', to: '8', points: 0.15, grade: 'B', description: 'Jumping Front Straight Kick + Landing on takeoff foot' },
-  { from: '323B', to: '8', points: 0.15, grade: 'B', description: 'Tornado Kick 360° + Landing on takeoff foot' },
-  { from: '324B', to: '8', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 360° + Landing on takeoff foot' },
+  { from: '324B', to: '5', points: 0.2, grade: 'C', description: "Jumping Lotus Kick 360° + Hurdler's Split Position" },
   
   // C Grade Connections (0.2 points)
-  { from: '143B', to: '212A', points: 0.2, grade: 'C', description: 'Low Balance with Leg Crossed Behind + Heel Kick/Parting Kick' },
   { from: '323B', to: '3', points: 0.2, grade: 'C', description: 'Tornado Kick 360° + Single Raised-Knee Stance' },
-  { from: '312A', to: '324B', points: 0.2, grade: 'C', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 360°' },
   { from: '324B', to: '3', points: 0.2, grade: 'C', description: 'Jumping Lotus Kick 360° + Single Raised-Knee Stance' },
-  { from: '324B', to: '5', points: 0.2, grade: 'C', description: "Jumping Lotus Kick 360° + Hurdler's Split Position" },
+  { from: '324C', to: '5', points: 0.2, grade: 'C', description: "Jumping Lotus Kick 450°(F)/540° + Hurdler's Split Position" }
   
   // D Grade Connections (0.25 points)
   { from: '323C', to: '3', points: 0.25, grade: 'D', description: 'Tornado Kick 450°(F)/540° + Single Raised-Knee Stance' },
-  { from: '312A', to: '324C', points: 0.25, grade: 'D', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 450°(F)/540°' },
   { from: '324C', to: '3', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 450°(F)/540° + Single Raised-Knee Stance' },
-  { from: '324C', to: '5', points: 0.25, grade: 'D', description: "Jumping Lotus Kick 450°(F)/540° + Hurdler's Split Position" }
 ];
 
 // Categories specific to taiji styles
