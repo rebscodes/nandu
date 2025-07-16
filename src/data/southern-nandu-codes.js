@@ -33,42 +33,38 @@ export const southernMovements = [
 export const southernConnections = [
   // A Grade Connections (0.1 points)
   { from: '312A', to: '3', points: 0.1, grade: 'A', description: 'Jumping Front Slap Kick + Single Raised-Knee Stance' },
-  { from: '323A', to: '3', points: 0.1, grade: 'A', description: 'Tornado Kick 360° + Single Raised-Knee Stance' },
   { from: '323A', to: '1', points: 0.1, grade: 'A', description: 'Tornado Kick 360° + Horse Stance' },
   { from: '323A', to: '2', points: 0.1, grade: 'A', description: 'Tornado Kick 360° + Butterfly Stance' },
   { from: '323A', to: '312A', points: 0.1, grade: 'A', description: 'Tornado Kick 360° + (within 2 steps) Jumping Front Slap Kick' },
   { from: '323A', to: '324A', points: 0.1, grade: 'A', description: 'Tornado Kick 360° + Jumping Lotus Kick 360°' },
   { from: '324A', to: '1', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Horse Stance' },
-  { from: '324A', to: '3', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + Single Raised-Knee Stance' },
+  { from: '324A', to: '346A', points: 0.1, grade: 'A', description: 'Jumping Lotus Kick 360° + No-Step Back Flip' },
   { from: '335A', to: '10', points: 0.1, grade: 'A', description: 'Aerial Cartwheel + Scissor Position' },
-  { from: '447A', to: '2', points: 0.1, grade: 'A', description: 'Carp Kip-Up + Butterfly Stance' },
   { from: '346A', to: '2', points: 0.1, grade: 'A', description: 'No-Step Back Flip + Butterfly Stance' },
 
   // B Grade Connections (0.15 points)
   { from: '312A', to: '346B', points: 0.15, grade: 'B', description: 'Jumping Front Slap Kick + (within 2 steps) Single Step Back Flip' },
   { from: '323A', to: '324B', points: 0.15, grade: 'B', description: 'Tornado Kick 360° + (within 2 steps) Jumping Lotus Kick 540°' },
-  { from: '323A', to: '346B', points: 0.15, grade: 'B', description: 'Tornado Kick 360° + (within 2 steps) Single Step Back Flip' },
   { from: '323B', to: '1', points: 0.15, grade: 'B', description: 'Tornado Kick 540° + Horse Stance' },
   { from: '323B', to: '2', points: 0.15, grade: 'B', description: 'Tornado Kick 540° + Butterfly Stance' },
   { from: '324A', to: '346B', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 360° + (within 2 steps) Single Step Back Flip' },
   { from: '324B', to: '1', points: 0.15, grade: 'B', description: 'Jumping Lotus Kick 540° + Horse Stance' },
   { from: '346B', to: '2', points: 0.15, grade: 'B', description: 'Single Step Back Flip + Butterfly Stance' },
-  { from: '346B', to: '11', points: 0.15, grade: 'B', description: 'Single Step Back Flip + Scorpion Stance' },
+  { from: '447A', to: '2', points: 0.15, grade: 'B', description: 'Carp Kip-Up + Butterfly Stance' },
 
   // C Grade Connections (0.2 points)
   { from: '323A', to: '3', points: 0.2, grade: 'C', description: 'Tornado Kick 360° + Single Raised-Knee Stance' },
-  { from: '323B', to: '1', points: 0.2, grade: 'C', description: 'Tornado Kick 540° + Horse Stance' },
+  { from: '323A', to: '346B', points: 0.2, grade: 'C', description: 'Tornado Kick 360° + Single Step Back Flip' },
   { from: '323B', to: '324B', points: 0.2, grade: 'C', description: 'Tornado Kick 540° + Jumping Lotus Kick 540°' },
   { from: '324A', to: '3', points: 0.2, grade: 'C', description: 'Jumping Lotus Kick 360° + Single Raised-Knee Stance' },
   { from: '324B', to: '0', points: 0.2, grade: 'C', description: 'Jumping Lotus Kick 540° + Crouching Stance' },
   { from: '324B', to: '346B', points: 0.2, grade: 'C', description: 'Jumping Lotus Kick 540° + (within 2 steps) Single Step Back Flip' },
-  { from: '323C', to: '1', points: 0.2, grade: 'C', description: 'Tornado Kick 630°(F)/720° + Horse Stance' },
+  { from: '346B', to: '11', points: 0.2, grade: 'C', description: 'Single Step Back Flip + Scorpion Stance' },
 
   // D Grade Connections (0.25 points)
   { from: '323C', to: '1', points: 0.25, grade: 'D', description: 'Tornado Kick 630°(F)/720° + Horse Stance' },
   { from: '324C', to: '1', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 630°(F)/720° + Horse Stance' },
   { from: '323B', to: '324C', points: 0.25, grade: 'D', description: 'Tornado Kick 540° + Jumping Lotus Kick 630°(F)/720°' },
-  { from: '324A', to: '346A', points: 0.25, grade: 'D', description: 'Jumping Lotus Kick 360° + No-Step Back Flip' }
 ];
 
 // Categories specific to southern styles
