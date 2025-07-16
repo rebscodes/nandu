@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star, ArrowUp, ArrowDown } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
 import { southernMovements, southernConnections } from './data/southern-nandu-codes.js';
+import { taijiMovements, taijiConnections } from './data/taiji-nandu-codes.js';
 import BottomSheet from './BottomSheet.jsx';
 import { getComboScore, getTotalScore } from './utils/scoring.js';
 
@@ -45,7 +46,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       case 'southern':
         return southernMovements;
       case 'taiji':
-        return []; // Will be implemented later
+        return taijiMovements;
       case 'northern':
       default:
         return movements;
@@ -57,7 +58,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       case 'southern':
         return southernConnections;
       case 'taiji':
-        return []; // Will be implemented later
+        return taijiConnections;
       case 'northern':
       default:
         return connections;
@@ -72,7 +73,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       case 'southern':
         return ['Jumping', 'Stance', 'Leg', 'Tumbling'];
       case 'taiji':
-        return ['Balance', 'Jumping', 'Stance', 'Leg']; // Will be updated when taiji codes are added
+        return ['Balance', 'Jumping', 'Stance', 'Leg'];
       case 'northern':
       default:
         return ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
