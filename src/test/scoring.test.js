@@ -6,6 +6,7 @@ import {
   getTotalScore,
   getScoreLimits 
 } from '../utils/scoring.js';
+import { SCORING_LIMITS } from '../data/constants.js';
 
 describe('Nandu Scoring Logic', () => {
   
@@ -172,7 +173,7 @@ describe('Nandu Scoring Logic', () => {
 
   describe('Total Score Calculations', () => {
     
-    it('calculates final total score with 2.0 limit', () => {
+    it('calculates final total score with limit', () => {
       const combos = [
         {
           movements: Array(8).fill(mockMovements.highValue), // 3.2 movement (capped at 1.4)
@@ -182,9 +183,9 @@ describe('Nandu Scoring Logic', () => {
       ];
       
       const result = getTotalScore(combos);
-      expect(result.movementScore).toBe(1.4);
-      expect(result.connectionScore).toBe(0.6);
-      expect(result.totalScore).toBe(2.0); // 1.4 + 0.6, at the limit
+      expect(result.movementScore).toBe(SCORING_LIMITS.MOVEMENT_SCORE_CAP);
+      expect(result.connectionScore).toBe(SCORING_LIMITS.CONNECTION_SCORE_CAP);
+      expect(result.totalScore).toBe(SCORING_LIMITS.TOTAL_SCORE_CAP);
     });
 
     it('returns total under limit', () => {
