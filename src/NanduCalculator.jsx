@@ -663,7 +663,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
           <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Nandu Calculator</h1>
         </div>
         
-        <p className="text-gray-600 text-base sm:text-lg mb-4">
+        <p className="text-gray-600 text-base sm:text-lg mb-2">
           ✨ Build combos using{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
@@ -829,7 +829,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
           </div>
           
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-2 mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">🤸 Your {selectedStyle.charAt(0).toUpperCase() + selectedStyle.slice(1)} Routine</h2>
+            <h2 className="text-xl font-semibold text-gray-800">🤸 {selectedStyle.charAt(0).toUpperCase() + selectedStyle.slice(1)} Combos</h2>
             <div className="flex gap-2">
               {/* New Combo button for all screen sizes */}
               <button
