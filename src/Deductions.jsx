@@ -1,104 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import { AlertTriangle, Eye, CheckCircle, Circle, Info } from 'lucide-react';
+import { AlertTriangle, Eye, CheckCircle, Circle, Info, Search } from 'lucide-react';
 import { judgingCriteria } from './data/judging-criteria.js';
+import { judgingCriteria as southernJudgingCriteria } from './data/southern-judging-criteria.js';
+import { judgingCriteria as taijiJudgingCriteria } from './data/taiji-judging-criteria.js';
 import { weaponRegistry, getWeaponRequirements, mapCategoryToJudgingCriteria, hasSpecialHandling } from './data/weapon-registry.js';
 import { movements } from './data/codes.js';
 import { getNonConformityCriteria } from './data/combo-mappings.js';
 
-const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, selectedWeaponForm = 'changquan' }) => {
+const Deductions = () => {
   const [expandedSections, setExpandedSections] = useState({});
+  const [activeTab, setActiveTab] = useState('Northern');
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  // Map style to judging criteria
+  const getJudgingCriteriaForStyle = (style) => {
+    switch(style) {
+      case 'Northern':
+        return judgingCriteria;
+      case 'Southern':
+        return southernJudgingCriteria;
+      case 'Taiji':
+        return taijiJudgingCriteria;
+      default:
+        return judgingCriteria;
+    }
+  };
+  
+  const currentJudgingCriteria = getJudgingCriteriaForStyle(activeTab);
 
-  // Get the appropriate requirements based on selected weapon form
-  const currentRequirements = getWeaponRequirements(selectedWeaponForm) || getWeaponRequirements('changquan');
 
-
-  // Get all selected movements from both pages
-  const getAllSelectedMovements = () => {
-    const movements = [];
-    
-    // Add selected movements from Nandu Calculator
-    selectedNanduMovements.forEach(combo => {
-      // Add individual movements
-      combo.movements.forEach(movement => {
-        movements.push({
-          source: 'nandu',
-          movement: movement,
-          combo: combo.id
-        });
-      });
-      
-      // Add combo movement if it's a throw/catch combo (for deductions detection)
-      if (combo.isThrowCatchCombo && combo.comboMovement) {
-        movements.push({
-          source: 'nandu',
-          movement: combo.comboMovement,
-          combo: combo.id
-        });
-      }
-      
-      // Check for combo non-conformity criteria based on connections
-      combo.connections.forEach((connection, connectionIndex) => {
-        const fromMovement = combo.movements[connectionIndex];
-        const toMovement = combo.movements[connectionIndex + 1];
-        
-        if (fromMovement && toMovement) {
-          const comboCriteria = getNonConformityCriteria(fromMovement.id, toMovement.id, judgingCriteria);
-          if (comboCriteria) {
-            // Create a virtual combo movement for this connection
-            movements.push({
-              source: 'nandu',
-              movement: {
-                id: `${fromMovement.id}-${toMovement.id}`,
-                name: comboCriteria.chinese,
-                english: comboCriteria.english,
-                category: 'Combo Connection',
-                isCombo: true,
-                isConnectionCombo: true,
-                non_conformity: comboCriteria.non_conformity || [],
-                deductions: comboCriteria.deductions || [],
-                chinese: comboCriteria.chinese,
-                pinyin: comboCriteria.pinyin
-              },
-              combo: combo.id,
-              connection: connection
-            });
-          }
-        }
-      });
-      
-    });
-
-    // Add selected movements from Form Planner
-    Object.keys(selectedFormMovements).forEach(key => {
-      if (selectedFormMovements[key]) {
-        // Parse the key to get category and index
-        const keyParts = key.split('-');
-        let category, index;
-        
-        if (keyParts.length === 3) {
-          // Handle nested categories like "leg_techniques-straight_leg_swinging-0"
-          category = keyParts[1]; // Use subcategory for lookup
-          index = parseInt(keyParts[2]);
-        } else {
-          // Handle regular categories like "hand_forms-0"
-          category = keyParts[0];
-          index = parseInt(keyParts[1]);
-        }
-        
-        movements.push({
-          source: 'form',
-          category: category,
-          index: index,
-          key: key,
-          originalKey: key // Keep original key for reference
-        });
-      }
-    });
-
-    return movements;
+  // Helper function to remove tone marks from Pinyin
+  const removeTones = (text) => {
+    if (!text) return '';
+    return text
+      .replace(/[āáǎàa]/g, 'a')
+      .replace(/[ēéěèe]/g, 'e')  
+      .replace(/[īíǐìi]/g, 'i')
+      .replace(/[ōóǒòo]/g, 'o')
+      .replace(/[ūúǔùu]/g, 'u')
+      .replace(/[ǖǘǚǜü]/g, 'u')
+      .replace(/[ńňǹ]/g, 'n')
+      .replace(/[ĀÁǍÀa]/g, 'A')
+      .replace(/[ĒÉĚÈe]/g, 'E')
+      .replace(/[ĪÍǏÌi]/g, 'I')
+      .replace(/[ŌÓǑÒo]/g, 'O')
+      .replace(/[ŪÚǓÙu]/g, 'U')
+      .replace(/[ǕǗǙǛü]/g, 'U')
+      .replace(/[ŃŇǸ]/g, 'N');
   };
 
-  const selectedMovements = getAllSelectedMovements();
+  // Search through all movements in current judging criteria
+  const searchMovements = () => {
+    if (!searchTerm.trim()) return [];
+    
+    const results = [];
+    const searchLower = searchTerm.toLowerCase();
+    const searchNoTones = removeTones(searchLower);
+    
+    // Search through all categories in the current style's judging criteria
+    Object.keys(currentJudgingCriteria).forEach(categoryKey => {
+      const category = currentJudgingCriteria[categoryKey];
+      
+      // Skip non-movement categories
+      if (typeof category !== 'object' || !category) return;
+      
+      Object.keys(category).forEach(techniqueKey => {
+        const technique = category[techniqueKey];
+        
+        // Skip if not a technique object
+        if (typeof technique !== 'object' || !technique.chinese) return;
+        
+        // Search in Chinese, English, and Pinyin (both with and without tones)
+        const matchesChinese = technique.chinese?.toLowerCase().includes(searchLower);
+        const matchesEnglish = technique.english?.toLowerCase().includes(searchLower);
+        const matchesPinyin = technique.pinyin?.toLowerCase().includes(searchLower);
+        const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
+        
+        if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones) {
+          results.push({
+            techniqueKey,
+            technique: {
+              ...technique,
+              category: categoryKey
+            }
+          });
+        }
+      });
+    });
+    
+    return results;
+  };
+  
+  const searchResults = searchMovements();
   
 
   const toggleSection = (section) => {
@@ -108,223 +101,11 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
     }));
   };
 
-  // Get relevant deductions for selected movements
-  const getRelevantDeductions = () => {
-    const relevantCriteria = new Map();
-    const movementsWithoutCriteria = [];
-    
-    selectedMovements.forEach(selectedMovement => {
-      if (selectedMovement.source === 'form') {
-        // Get the actual movement data from current requirements (changquan/jianshu)
-        const { category, index } = selectedMovement;
-        
-        let movementData = null;
-        let actualCategory = category;
-        
-        // Handle special case for leg techniques which have nested categories
-        if (hasSpecialHandling(selectedWeaponForm, 'hasLegSubcategories') && selectedMovement.originalKey.startsWith('leg_techniques-')) {
-          const legCategory = currentRequirements.leg_techniques?.categories?.find(cat => cat.type === category);
-          if (legCategory && legCategory.movements[index]) {
-            movementData = legCategory.movements[index];
-            actualCategory = 'leg_techniques'; // Map to the judging criteria category
-          }
-        } else {
-          // For regular categories, use direct category lookup
-          if (currentRequirements[category]?.movements[index]) {
-            movementData = currentRequirements[category].movements[index];
-          }
-        }
-        
-        if (movementData) {
-          // Map movement to judging criteria using the weapon registry
-          const criteriaCategory = mapCategoryToJudgingCriteria(selectedWeaponForm, actualCategory);
-          
-          let foundMatch = false;
-          if (criteriaCategory && judgingCriteria[criteriaCategory]) {
-            // Find the specific technique in judging criteria that matches this movement
-            Object.keys(judgingCriteria[criteriaCategory]).forEach(techniqueKey => {
-              const technique = judgingCriteria[criteriaCategory][techniqueKey];
-              
-              // Match by Chinese name or English name
-              if (technique.chinese === movementData.chinese || 
-                  technique.english === movementData.english ||
-                  technique.pinyin === movementData.pinyin) {
-                
-                foundMatch = true;
-                if (!relevantCriteria.has(techniqueKey)) {
-                  relevantCriteria.set(techniqueKey, {
-                    ...technique,
-                    category: criteriaCategory,
-                    sources: []
-                  });
-                }
-                relevantCriteria.get(techniqueKey).sources.push({
-                  ...selectedMovement,
-                  movementData
-                });
-              }
-            });
-          }
-          
-          // If no matching criteria found, add to movements without criteria
-          if (!foundMatch) {
-            movementsWithoutCriteria.push({
-              ...selectedMovement,
-              movementData,
-              actualCategory
-            });
-          }
-        }
-      } else if (selectedMovement.source === 'nandu') {
-        // Handle nandu movements from the calculator
-        const nanduMovement = selectedMovement.movement;
-        let foundMatch = false;
-        
-        // Check if this is a combo connection movement first
-        if (nanduMovement.isConnectionCombo) {
-          // Handle combo connection movements - they already have the criteria
-          foundMatch = true;
-          const techniqueKey = nanduMovement.id;
-          
-          if (!relevantCriteria.has(techniqueKey)) {
-            relevantCriteria.set(techniqueKey, {
-              ...nanduMovement,
-              category: 'combo_connection',
-              sources: []
-            });
-          }
-          relevantCriteria.get(techniqueKey).sources.push({
-            ...selectedMovement,
-            movementData: nanduMovement,
-            actualCategory: 'combo_connection'
-          });
-        }
-        // Check if this is a combo movement
-        else if (nanduMovement.category === 'Throw/Catch' && nanduMovement.isCombo) {
-          // Handle combo movements
-          const comboId = nanduMovement.id;
-          if (judgingCriteria.combo_criteria && judgingCriteria.combo_criteria[comboId]) {
-            foundMatch = true;
-            const technique = judgingCriteria.combo_criteria[comboId];
-            
-            // Add general weapon throwing & catching deductions to combo criteria
-            const generalThrowCatch = judgingCriteria.weapon_techniques?.["器械抛接"];
-            const combinedTechnique = {
-              ...technique,
-              deductions: generalThrowCatch?.deductions || []
-            };
-            
-            if (!relevantCriteria.has(comboId)) {
-              relevantCriteria.set(comboId, {
-                ...combinedTechnique,
-                category: 'combo_criteria',
-                sources: []
-              });
-            }
-            relevantCriteria.get(comboId).sources.push({
-              ...selectedMovement,
-              movementData: nanduMovement,
-              actualCategory: 'combo_criteria'
-            });
-          }
-        }
-        
-        // If not a combo or combo not found, handle as regular movement
-        if (!foundMatch) {
-          // Map nandu movements to judging criteria categories
-          let criteriaCategory = null;
-          let searchMovement = nanduMovement;
-          
-          // Special case: Falling Front Split is categorized as "Stance" in nandu but exists under leg_techniques in judging criteria
-          if (searchMovement.english === 'Falling Front Split' || searchMovement.name === 'Diē Shù Chà') {
-            criteriaCategory = 'leg_techniques';
-          } else if (nanduMovement.category === 'Balance') {
-            criteriaCategory = 'balance_techniques';
-          } else if (nanduMovement.category === 'Jumping') {
-            criteriaCategory = 'jumping_techniques';
-          } else if (nanduMovement.category === 'Leg' || nanduMovement.category === 'Sweeps') {
-            criteriaCategory = 'leg_techniques';
-          } else if (nanduMovement.category === 'Stance') {
-            criteriaCategory = 'stances';
-          }
-        
-          if (criteriaCategory && judgingCriteria[criteriaCategory]) {
-            let foundTechniqueMatch = false;
-            let exactMatch = null;
-            const partialMatches = [];
-            
-            // First, check for exact matches
-            Object.keys(judgingCriteria[criteriaCategory]).forEach(techniqueKey => {
-              const technique = judgingCriteria[criteriaCategory][techniqueKey];
-              
-              const exactEnglishMatch = technique.english === searchMovement.english;
-              const exactChineseMatch = technique.chinese === searchMovement.name;
-              const exactPinyinMatch = technique.pinyin === searchMovement.name;
-              
-              if (exactEnglishMatch || exactChineseMatch || exactPinyinMatch) {
-                exactMatch = { techniqueKey, technique };
-              } else {
-                // For partial matches, be more strict to avoid conflicts
-                // Only consider it a match if the shorter string matches the longer one completely
-                const techniqueEnglishLower = technique.english.toLowerCase();
-                const searchEnglishLower = searchMovement.english.toLowerCase();
-                
-                // Only allow partial matches if one string is clearly a subset of another
-                // and the difference in length suggests they're related (not accidental matches)
-                const isSubset = (short, long) => long.includes(short) && Math.abs(long.length - short.length) > 3;
-                
-                if (isSubset(searchEnglishLower, techniqueEnglishLower) || 
-                    isSubset(techniqueEnglishLower, searchEnglishLower)) {
-                  partialMatches.push({ techniqueKey, technique });
-                }
-              }
-            });
-            
-            // Use exact match if found, otherwise use the first partial match
-            const matchToUse = exactMatch || (partialMatches.length > 0 ? partialMatches[0] : null);
-            
-            if (matchToUse) {
-              foundTechniqueMatch = true;
-              const { techniqueKey, technique } = matchToUse;
-              
-              if (!relevantCriteria.has(techniqueKey)) {
-                relevantCriteria.set(techniqueKey, {
-                  ...technique,
-                  category: criteriaCategory,
-                  sources: []
-                });
-              }
-              relevantCriteria.get(techniqueKey).sources.push({
-                ...selectedMovement,
-                movementData: searchMovement,
-                actualCategory: criteriaCategory
-              });
-            }
-            
-            // If no exact match found, add to movements without criteria
-            if (!foundTechniqueMatch) {
-              movementsWithoutCriteria.push({
-                ...selectedMovement,
-                movementData: searchMovement,
-                actualCategory: criteriaCategory
-              });
-            }
-          } else {
-            // Category not in judging criteria, add to movements without criteria
-            movementsWithoutCriteria.push({
-              ...selectedMovement,
-              movementData: searchMovement,
-              actualCategory: nanduMovement.category
-            });
-          }
-        }
-      }
-    });
-
-    return { relevantCriteria, movementsWithoutCriteria };
-  };
-
-  const { relevantCriteria, movementsWithoutCriteria } = getRelevantDeductions();
+  // Convert search results to relevantCriteria format
+  const relevantCriteria = new Map();
+  searchResults.forEach(result => {
+    relevantCriteria.set(result.techniqueKey, result.technique);
+  });
 
   const renderDeductionCard = (technique, techniqueKey) => {
     const isExpanded = expandedSections[techniqueKey];
@@ -464,7 +245,7 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
             Deductions & Standards
           </h1>
         </div>
-        <p className="text-gray-600 text-base sm:text-lg mb-4">
+        <p className="text-gray-600 text-base sm:text-lg mb-6">
           ⚠️ Deductions and non-conformity standards for selected movements based on{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
@@ -475,63 +256,68 @@ const Deductions = ({ selectedNanduMovements = [], selectedFormMovements = {}, s
             2024 IWUF rules
           </a>
         </p>
-      </div>
-
-      {/* Summary */}
-      <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6 mb-4 sm:mb-6">
-        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-gray-800">Selection Summary</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
-            <h3 className="text-sm font-semibold text-orange-800 mb-2">Nandu Calculator</h3>
-            <p className="text-sm text-orange-700">
-              {selectedNanduMovements.length} combos selected
-            </p>
-          </div>
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <h3 className="text-sm font-semibold text-blue-800 mb-2">Requirements ({weaponRegistry[selectedWeaponForm]?.name || 'Form'})</h3>
-            <p className="text-sm text-blue-700">
-              {Object.keys(selectedFormMovements).filter(key => selectedFormMovements[key]).length} movements selected
-            </p>
-          </div>
+        
+        {/* Style Tabs */}
+        <div className="flex border-b border-gray-200 mb-6">
+          {['Northern', 'Southern', 'Taiji'].map((style) => (
+            <button
+              key={style}
+              onClick={() => setActiveTab(style)}
+              className={`px-4 py-3 font-medium text-sm transition-colors border-b-2 ${
+                activeTab === style
+                  ? 'border-red-500 text-red-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {style}
+            </button>
+          ))}
         </div>
+
+        {/* Search */}
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search movements by name (Chinese, English, or Pinyin)..."
+            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm sm:text-base"
+          />
+        </div>
+        {searchTerm && (
+          <p className="text-sm text-gray-600 mt-2">
+            Found {searchResults.length} movement{searchResults.length !== 1 ? 's' : ''} in {activeTab} style
+          </p>
+        )}
       </div>
 
       {/* Deductions */}
       <div className="space-y-3 sm:space-y-4">
-        {relevantCriteria.size === 0 && movementsWithoutCriteria.length === 0 ? (
+        {!searchTerm ? (
+          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center">
+            <Search className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-300" />
+            <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">Search for Movements</h3>
+            <p className="text-sm sm:text-base text-gray-500">
+              Use the search bar above to find deductions and standards for specific movements.
+            </p>
+          </div>
+        ) : searchResults.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center">
             <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">No Movements Selected</h3>
+            <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">No Results Found</h3>
             <p className="text-sm sm:text-base text-gray-500">
-              Select movements in the Nandu Calculator or Requirements pages to see relevant deductions and standards.
+              No movements found matching "{searchTerm}" in {activeTab} style. Try a different search term or switch styles.
             </p>
           </div>
         ) : (
           <>
-            {/* Movements with deduction criteria */}
+            {/* Search results */}
             {Array.from(relevantCriteria.entries()).map(([techniqueKey, technique]) => 
               renderDeductionCard(technique, techniqueKey)
             )}
-            
-            {/* Movements without deduction criteria */}
-            {movementsWithoutCriteria.map((movement, index) => (
-              <div key={`no-criteria-${index}`} className="bg-white rounded-2xl shadow-xl shadow-green-100/50 overflow-hidden">
-                <div className="p-4 sm:p-5">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-600 flex-shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-800 leading-tight mb-1">
-                        {movement.movementData.chinese ? 
-                          `${movement.movementData.chinese} (${movement.movementData.pinyin}) - ${movement.movementData.english}` :
-                          `${movement.movementData.name} - ${movement.movementData.english}`
-                        }
-                      </h3>
-                      <p className="text-sm text-gray-600">No specific deduction criteria available</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
           </>
         )}
       </div>
