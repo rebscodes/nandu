@@ -62,7 +62,9 @@ const Deductions = () => {
         if (typeof category !== 'object' || !category.deductions) return;
 
         category.deductions.forEach((deduction, index) => {
-          const combinedText = `${category.chinese} ${category.english} ${deduction.chinese} ${deduction.english}`.toLowerCase();
+          const includesText = deduction.includes ? 
+            (Array.isArray(deduction.includes) ? deduction.includes.join(' ') : deduction.includes) : '';
+          const combinedText = `${category.chinese} ${category.english} ${deduction.chinese} ${deduction.english} ${deduction.definition || ''} ${includesText} ${deduction.code || ''}`.toLowerCase();
           if (combinedText.includes(searchLower)) {
             results.push({
               techniqueKey: `${categoryKey}_${index}`,
@@ -88,8 +90,9 @@ const Deductions = () => {
           const matchesEnglish = technique.english?.toLowerCase().includes(searchLower);
           const matchesPinyin = technique.pinyin?.toLowerCase().includes(searchLower);
           const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
+          const matchesCode = technique.code?.toLowerCase().includes(searchLower);
 
-          if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones) {
+          if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
             results.push({
               techniqueKey,
               technique: {
@@ -118,7 +121,7 @@ const Deductions = () => {
     const isGeneral = activeTab === 'General';
 
     const hasDetails = isGeneral
-      ? !!technique.definition
+      ? !!technique.definition || !!technique.includes
       : (technique.deductions && technique.deductions.length > 0) || (technique.non_conformity && technique.non_conformity.length > 0);
 
     return (
@@ -183,6 +186,23 @@ const Deductions = () => {
                 {technique.definition && (
                   <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
                     <p className="text-sm text-gray-800">{technique.definition}</p>
+                  </div>
+                )}
+                {technique.includes && (
+                  <div className="mb-4">
+                    <h5 className="text-sm font-medium text-gray-700 mb-2">Includes:</h5>
+                    {Array.isArray(technique.includes) ? (
+                      <ul className="space-y-1">
+                        {technique.includes.map((item, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <span className="text-gray-600 mt-1 text-xs">•</span>
+                            <span className="text-sm text-gray-800">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-gray-800">{technique.includes}</p>
+                    )}
                   </div>
                 )}
               </div>
