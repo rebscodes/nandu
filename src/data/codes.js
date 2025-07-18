@@ -8,9 +8,9 @@ export const movements = [
   { id: '163A', name: 'Wàng Yuè Píng Héng', chinese: '望月平衡', english: 'Gazing at the Moon Balance', category: 'Balance', grade: 'A', points: 0.2 },
   { id: '133B', name: 'Shí Zì Píng Héng', chinese: '十字平衡', english: 'Forward Leaning Balance with Arms Outspread', category: 'Balance', grade: 'B', points: 0.3 },
   
-  // Leg Techniques
-  { id: '244A', name: 'Qián Sǎo Tuǐ 540°', chinese: '前扫腿', english: 'Front Sweep 540°', category: 'Leg', grade: 'A', points: 0.2 },
-  { id: '244B', name: 'Qián Sǎo Tuǐ 900°', chinese: '前扫腿', english: 'Front Sweep 900°', category: 'Leg', grade: 'B', points: 0.3 },
+  // Sweep Techniques
+  { id: '244A', name: 'Qián Sǎo Tuǐ 540°', chinese: '前扫腿', english: 'Front Sweep 540°', category: 'Sweeps', grade: 'A', points: 0.2 },
+  { id: '244B', name: 'Qián Sǎo Tuǐ 900°', chinese: '前扫腿', english: 'Front Sweep 900°', category: 'Sweeps', grade: 'B', points: 0.3 },
   
   // Jumping Techniques
   { id: '312A', name: 'Téng Kōng Fēi Jiǎo', chinese: '腾空飞脚', english: 'Jumping Front Slap Kick', category: 'Jumping', grade: 'A', points: 0.2 },
@@ -36,10 +36,10 @@ export const movements = [
   { id: '7', name: 'Gōng Bù', chinese: '弓步', english: 'Bow Stance', category: 'Stance', grade: '-', points: 0 },
   
   // Throw/Catch combo sequences
-  { id: 'COMBO_PAO_QIANG_JIE', name: 'Pāo + Qiǎng Bèi + Jiē', chinese: '抛+抢背+接', english: 'Toss + Forward Dive Roll + Catch', category: 'Throw/Catch', grade: 'A', points: 0.1, isCombo: true },
-  { id: 'COMBO_PAO_TENG_JIE', name: 'Pāo + Téng Kōng Fēi Jiǎo + Jiē', chinese: '抛+腾空飞脚+接', english: 'Toss + Jumping Front Slap Kick + Catch', category: 'Throw/Catch', grade: 'A', points: 0.3, isCombo: true },
-  { id: 'COMBO_PAO_XUAN_JIE', name: 'Pāo + Xuàn Fēng Jiǎo 360° + Jiē', chinese: '抛+旋风脚+接', english: 'Toss + Tornado Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
-  { id: 'COMBO_PAO_LIAN_JIE', name: 'Pāo + Téng Kōng Bǎi Lián 360° + Jiē', chinese: '抛+腾空摆莲+接', english: 'Toss + Jumping Lotus Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
+  { id: 'COMBO_PAO_QIANG_JIE', coreMovementId: '445A', name: 'Pāo + Qiǎng Bèi + Jiē', chinese: '抛+抢背+接', english: 'Toss + Forward Dive Roll + Catch', category: 'Throw/Catch', grade: 'A', points: 0.1, isCombo: true },
+  { id: 'COMBO_PAO_TENG_JIE', coreMovementId: '312A', name: 'Pāo + Téng Kōng Fēi Jiǎo + Jiē', chinese: '抛+腾空飞脚+接', english: 'Toss + Jumping Front Slap Kick + Catch', category: 'Throw/Catch', grade: 'A', points: 0.3, isCombo: true },
+  { id: 'COMBO_PAO_XUAN_JIE', coreMovementId: '323A', name: 'Pāo + Xuàn Fēng Jiǎo 360° + Jiē', chinese: '抛+旋风脚+接', english: 'Toss + Tornado Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
+  { id: 'COMBO_PAO_LIAN_JIE', coreMovementId: '324A', name: 'Pāo + Téng Kōng Bǎi Lián 360° + Jiē', chinese: '抛+腾空摆莲+接', english: 'Toss + Jumping Lotus Kick 360° + Catch', category: 'Throw/Catch', grade: 'B', points: 0.35, isCombo: true },
   
   // Individual movements for connections (hidden from display)
   { id: 'CATCH', name: 'Jiē', chinese: '接', english: 'Catch', category: 'Hidden', grade: '-', points: 0 },
