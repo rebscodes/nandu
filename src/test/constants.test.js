@@ -65,7 +65,7 @@ describe('Constants', () => {
 
     it('should have correct southern categories', () => {
       expect(STYLE_CATEGORIES.southern).toEqual([
-        'Jumping', 'Stance', 'Leg', 'Tumbling'
+        'Jumping', 'Stance', 'Sweeps', 'Tumbling'
       ]);
     });
 
