@@ -426,16 +426,6 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
               </div>
             </div>
           </div>
-          <div className="flex items-start gap-2">
-            <div className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0 mt-2"></div>
-            <div>
-              <div className="font-semibold text-gray-800 mb-1">Degree of Difficulty Spacing</div>
-              <div className="text-gray-700">
-                <div className="mb-1">两组难度之间少于两个完整的技术动作。（扣 0.1 分）</div>
-                <div className="italic">Between 2 groups of Degree of Difficulty techniques, there are less than 2 complete technique movements. (Deduct 0.1)</div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>

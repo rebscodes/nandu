@@ -183,9 +183,9 @@ describe('Nandu Scoring Logic', () => {
       ];
       
       const result = getTotalScore(combos);
-      expect(result.movementScore).toBe(3.2); // 8 × 0.4 = 3.2, uncapped
-      expect(result.connectionScore).toBe(0.75); // 5 × 0.15 = 0.75, uncapped
-      expect(result.totalScore).toBe(3.95); // 3.2 + 0.75 = 3.95, uncapped
+      expect(result.movementScore).toBe(3.2); // 8 × 0.4 = 3.2, uncapped for display
+      expect(result.connectionScore).toBe(0.75); // 5 × 0.15 = 0.75, uncapped for display
+      expect(result.totalScore).toBe(2.0); // min(3.2, 1.4) + min(0.75, 0.6) = 1.4 + 0.6 = 2.0
     });
 
     it('returns total under limit', () => {
@@ -239,7 +239,7 @@ describe('Nandu Scoring Logic', () => {
       const limits = getScoreLimits(combos);
       expect(limits.movementExceeded).toBe(true);
       expect(limits.connectionExceeded).toBe(false);
-      expect(limits.totalExceeded).toBe(true); // 3.2 > 2.0, so total is exceeded
+      expect(limits.totalExceeded).toBe(false); // Total is capped: min(3.2, 1.4) + min(0, 0.6) = 1.4 + 0 = 1.4 < 2.0
     });
 
     it('identifies when connection score exceeds limit', () => {
@@ -269,7 +269,7 @@ describe('Nandu Scoring Logic', () => {
       const limits = getScoreLimits(combos);
       expect(limits.movementExceeded).toBe(true);
       expect(limits.connectionExceeded).toBe(true);
-      expect(limits.totalExceeded).toBe(true); // 1.4 + 0.6 = 2.0, at limit
+      expect(limits.totalExceeded).toBe(false); // min(3.2, 1.4) + min(0.75, 0.6) = 1.4 + 0.6 = 2.0, exactly at limit (not exceeded)
     });
 
     it('identifies when no limits are exceeded', () => {

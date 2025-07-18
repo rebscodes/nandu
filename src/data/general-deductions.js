@@ -112,4 +112,88 @@ export const generalDeductions = {
       }
     ]
   },
+  "规定动作": {
+    "chinese": "规定动作",
+    "english": "Compulsory/mandatory technique",
+    "deductions": [
+      {
+        "chinese": "自选套路：每减少或改变一个规定动作",
+        "english": "For each missing/altering compulsory/mandatory technique in optional routines",
+        "code": "80",
+        "deduction": "0.2"
+      },
+      {
+        "chinese": "规定套路：每增加、减少或改变一个规定动作",
+        "english": "For each missing/additional/altering compulsory/mandatory technique in compulsory routines",
+        "code": "80",
+        "deduction": "0.2"
+      },
+      {
+        "chinese": "规定套路：每增加或减少一步",
+        "english": "Compulsory Routines: Missing or additional step",
+        "code": "81",
+        "deduction": "0.1"
+      },
+      {
+        "chinese": "南拳、南刀、南棍规定套路：未按规定发声或每增加或减少一次发声",
+        "english": "Nanquan, Nandao, Nangun Compulsory Routines: For each missing or additional vocalization or did not vocalize in accordance with the requirement",
+        "code": "82",
+        "deduction": "0.2"
+      }
+    ]
+  },
+  "结构布局": {
+    "chinese": "结构、布局",
+    "english": "Structure & Composition",
+    "deductions": [
+      {
+        "chinese": "静止姿势（平衡动作除外）停顿时间超过2秒",
+        "english": "A static state (excluding balance techniques) which is held for longer than 2 seconds",
+        "code": "83",
+        "deduction": "0.1"
+      },
+      {
+        "chinese": "太极拳、太极剑难度动作前出现停顿",
+        "english": "During Taijiquan or Taijijian there is an obvious unmethodical pause prior to the execution of Degree of Difficulty technique",
+        "code": "83",
+        "deduction": "0.1"
+      },
+      {
+        "chinese": "难度动作前出现影响套路节奏的无攻防动作演练",
+        "english": "Performing non-offensive or non-defensive actions that disrupts the routine's rhythm before executing the Degree of Difficulty techniques",
+        "code": "83",
+        "deduction": "0.1"
+      },
+      {
+        "chinese": "长拳、南拳及其器械动作每偏向超过90°",
+        "english": "For Changquan type and Nanquan Type events (including weapon routines), movements done in averted directions exceeding 90 degrees",
+        "code": "84",
+        "deduction": "0.1"
+      },
+      {
+        "chinese": "太极拳、太极剑、太极扇动作每偏向超过45°",
+        "english": "For Taijiquan and Taijijian events, movements done in averted directions exceeding 45 degrees",
+        "code": "84",
+        "deduction": "0.1"
+      },
+      {
+        "chinese": "两组难度之间少于两个完整的技术动作",
+        "english": "Between 2 groups of Degree of Difficulty techniques, there are less than 2 complete technique movements",
+        "code": "85",
+        "deduction": "0.1"
+      }
+    ]
+  },
+  "音乐": {
+    "chinese": "音乐",
+    "english": "Music",
+    "deductions": [
+      {
+        "chinese": "要求配乐的项目未配乐或配乐有有词说唱",
+        "english": "Events Requiring Musical Accompaniment: No music or music which includes vocals/lyrics",
+        "code": "86",
+        "deduction": "0.50"
+      }
+    ]
+  }
 };
