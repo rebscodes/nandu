@@ -20,6 +20,6 @@ export const CONNECTION_POINTS = {
 
 export const STYLE_CATEGORIES = {
   northern: ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'],
-  southern: ['Jumping', 'Stance', 'Leg', 'Tumbling'],
+  southern: ['Jumping', 'Stance', 'Sweeps', 'Tumbling'],
   taiji: ['Balance', 'Jumping', 'Stance', 'Leg']
 };

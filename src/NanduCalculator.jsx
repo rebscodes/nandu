@@ -99,9 +99,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                          movement.id.toLowerCase().includes(searchLower) ||
                          // Tone-agnostic pinyin search
                          nameWithoutTones.includes(searchWithoutTones);
-    const matchesCategory = movement.category === selectedCategory || 
-      (selectedCategory === 'Sweeps' && movement.category === 'Leg') ||
-      (selectedCategory === 'Leg' && movement.category === 'Leg');
+    const matchesCategory = movement.category === selectedCategory;
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
     // Sort by points (ascending), then by grade (A, B, C, D), then by code (ascending)
@@ -511,9 +509,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       }
       
       // If no search term, filter by selected category
-      const matchesCategory = movement.category === mobileSelectedCategory || 
-        (mobileSelectedCategory === 'Sweeps' && movement.category === 'Leg') ||
-        (mobileSelectedCategory === 'Leg' && movement.category === 'Leg');
+      const matchesCategory = movement.category === mobileSelectedCategory;
       return matchesCategory;
     }).sort((a, b) => {
       // Sort by points (ascending), then by grade (A, B, C, D), then by code (ascending)

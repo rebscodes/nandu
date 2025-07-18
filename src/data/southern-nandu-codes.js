@@ -1,8 +1,8 @@
 // Southern styles movement database based on IWUF rules (Nanquan, Nandao, Nangun)
 export const southernMovements = [
   // Leg Techniques
-  { id: '244A', name: 'Qián Sǎo Tuǐ 540°', chinese: '前扫腿 540°', english: 'Front Sweep 540°', category: 'Leg', grade: 'A', points: 0.2 },
-  { id: '244B', name: 'Qián Sǎo Tuǐ 900°', chinese: '前扫腿 900°', english: 'Front Sweep 900°', category: 'Leg', grade: 'B', points: 0.3 },
+  { id: '244A', name: 'Qián Sǎo Tuǐ 540°', chinese: '前扫腿 540°', english: 'Front Sweep 540°', category: 'Sweeps', grade: 'A', points: 0.2 },
+  { id: '244B', name: 'Qián Sǎo Tuǐ 900°', chinese: '前扫腿 900°', english: 'Front Sweep 900°', category: 'Sweeps', grade: 'B', points: 0.3 },
   
   // Jumping Techniques
   { id: '312A', name: 'Téng Kōng Fēi Jiǎo', chinese: '腾空飞脚', english: 'Jumping Front Slap Kick', category: 'Jumping', grade: 'A', points: 0.2 },
