@@ -95,13 +95,7 @@ const App = () => {
           />
           <Route 
             path="/deductions" 
-            element={
-              <Deductions 
-                selectedNanduMovements={nanduCombos} 
-                selectedFormMovements={formSelections}
-                selectedWeaponForm={selectedWeaponForm}
-              />
-            } 
+            element={<Deductions />} 
           />
         </Routes>
         

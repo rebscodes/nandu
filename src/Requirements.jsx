@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Circle, BookOpen, Clock, ChevronDown, ChevronRight, Check, RotateCcw, X } from 'lucide-react';
-import { weaponRegistry, getAvailableWeapons, getWeaponRequirements } from './data/weapon-registry.js';
+import { weaponRegistry, getAvailableWeapons, getWeaponRequirements, getWeaponsByGroup } from './data/weapon-registry.js';
 
 const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeaponForm = 'changquan', setSelectedWeaponForm }) => {
   const [selectedWeapon, setSelectedWeapon] = useState(selectedWeaponForm);
@@ -11,6 +11,7 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
   const weaponOptions = Object.fromEntries(
     availableWeapons.map(weapon => [weapon.id, weapon])
   );
+  const weaponGroups = getWeaponsByGroup();
 
   const allWeaponOptions = weaponOptions;
 
@@ -39,6 +40,15 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
   }, [sharedSelections]);
 
   const [expandedSections, setExpandedSections] = useState({});
+  const [activeTab, setActiveTab] = useState('Northern');
+
+  // Set initial active tab based on selected weapon - only when weapon changes
+  useEffect(() => {
+    const currentWeapon = weaponOptions[selectedWeapon];
+    if (currentWeapon?.group) {
+      setActiveTab(currentWeapon.group);
+    }
+  }, [selectedWeapon]); // Only depend on selectedWeapon
 
   const toggleTechnique = (category, index) => {
     const key = `${category}-${index}`;
@@ -146,6 +156,20 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
                   <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
                     {technique.description}
                   </p>
+                  {technique.subcategories && (
+                    <div className="mt-3 space-y-2">
+                      {technique.subcategories.map((subcategory, subIndex) => (
+                        <div key={subIndex} className="pl-4 border-l-2 border-gray-200">
+                          <div className="text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                            {subcategory.chinese} ({subcategory.pinyin}) - {subcategory.english}
+                          </div>
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            {subcategory.description}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {technique.note && (
                     <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
                       <p className="text-xs text-yellow-800 font-medium">
@@ -301,22 +325,40 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
           )}
         </div>
         <div className="mb-6">
-          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 sm:flex-wrap sm:overflow-x-visible sm:pb-0 sm:mx-0 sm:px-0">
-            {Object.entries(allWeaponOptions).map(([key, option]) => (
+          {/* Tab Headers */}
+          <div className="flex border-b border-gray-200 mb-4">
+            {Object.keys(weaponGroups).map((groupName) => (
               <button
-                key={key}
-                onClick={() => setSelectedWeapon(key)}
-                disabled={!option.requirements}
+                key={groupName}
+                onClick={() => setActiveTab(groupName)}
+                className={`px-4 py-3 font-medium text-sm transition-colors border-b-2 ${
+                  activeTab === groupName
+                    ? 'border-orange-500 text-orange-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {groupName} Styles
+              </button>
+            ))}
+          </div>
+          
+          {/* Tab Content */}
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 sm:flex-wrap sm:overflow-x-visible sm:pb-0 sm:mx-0 sm:px-0">
+            {weaponGroups[activeTab]?.map((weapon) => (
+              <button
+                key={weapon.id}
+                onClick={() => setSelectedWeapon(weapon.id)}
+                disabled={!weapon.requirements}
                 className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-colors whitespace-nowrap ${
-                  selectedWeapon === key
+                  selectedWeapon === weapon.id
                     ? 'bg-orange-600 text-white shadow-lg'
-                    : option.requirements
+                    : weapon.requirements
                     ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                     : 'bg-gray-50 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {option.name}
-                {!option.requirements && (
+                {weapon.name}
+                {!weapon.requirements && (
                   <span className="text-xs">(Coming Soon)</span>
                 )}
               </button>
@@ -364,24 +406,23 @@ const Requirements = ({ sharedSelections = {}, setSharedSelections, selectedWeap
             <div>
               <div className="font-semibold text-gray-800 mb-1">Routine Time Limits</div>
               <div className="text-gray-700 space-y-2">
-                <div>
-                  <div className="mb-1">（1）成年：1 分 20 秒钟～1 分 35 秒钟。</div>
-                  <div><strong>Adult Divisions:</strong> From 1 minute 20 seconds to 1 minute 35 seconds in total duration.</div>
-                </div>
-                <div>
-                  <div className="mb-1">（2）青少年：1 分 10 秒钟～1 分 25 秒钟。</div>
-                  <div><strong>Junior Divisions (including children):</strong> From 1 minute 10 seconds to 1 minute 25 seconds in total duration.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <div className="w-2 h-2 bg-red-400 rounded-full flex-shrink-0 mt-2"></div>
-            <div>
-              <div className="font-semibold text-gray-800 mb-1">Degree of Difficulty Spacing</div>
-              <div className="text-gray-700">
-                <div className="mb-1">两组难度之间少于两个完整的技术动作。（扣 0.1 分）</div>
-                <div className="italic">Between 2 groups of Degree of Difficulty techniques, there are less than 2 complete technique movements. (Deduct 0.1)</div>
+                {(['taijiquan', 'taijijian', 'taijishan'].includes(selectedWeapon)) ? (
+                  <div>
+                    <div className="mb-1">自选套路：2 分 45 秒钟～3 分钟 15 秒钟。</div>
+                    <div><strong>Optional Routines:</strong> From 2 minutes 45 seconds to 3 minutes 15 seconds in total duration.</div>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <div className="mb-1">（1）成年：1 分 20 秒钟～1 分 35 秒钟。</div>
+                      <div><strong>Adult Divisions:</strong> From 1 minute 20 seconds to 1 minute 35 seconds in total duration.</div>
+                    </div>
+                    <div>
+                      <div className="mb-1">（2）青少年：1 分 10 秒钟～1 分 25 秒钟。</div>
+                      <div><strong>Junior Divisions (including children):</strong> From 1 minute 10 seconds to 1 minute 25 seconds in total duration.</div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

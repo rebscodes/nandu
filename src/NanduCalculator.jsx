@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star, ArrowUp, ArrowDown } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
+import { southernMovements, southernConnections } from './data/southern-nandu-codes.js';
+import { taijiMovements, taijiConnections } from './data/taiji-nandu-codes.js';
+import { STYLE_CATEGORIES, SCORING_LIMITS } from './data/constants.js';
 import BottomSheet from './BottomSheet.jsx';
 import { getComboScore, getTotalScore } from './utils/scoring.js';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [combos, setCombos] = useState(sharedCombos);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('northern');
+
+  // Clear combos and reset category when style changes
+  useEffect(() => {
+    setCombos([]);
+    setSelectedCategory('Jumping');
+    setMobileSelectedCategory('Jumping');
+  }, [selectedStyle]);
 
   // Sync with shared state
   useEffect(() => {
@@ -30,7 +41,35 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [mobileSearchTerm, setMobileSearchTerm] = useState('');
   const [mobileSelectedCategory, setMobileSelectedCategory] = useState('Jumping');
 
-  const categories = ['Jumping', 'Stance', 'Balance', 'Sweeps', 'Throw/Catch'];
+  // Get current movements and connections based on selected style
+  const getCurrentMovements = () => {
+    switch (selectedStyle) {
+      case 'southern':
+        return southernMovements;
+      case 'taiji':
+        return taijiMovements;
+      case 'northern':
+      default:
+        return movements;
+    }
+  };
+
+  const getCurrentConnections = () => {
+    switch (selectedStyle) {
+      case 'southern':
+        return southernConnections;
+      case 'taiji':
+        return taijiConnections;
+      case 'northern':
+      default:
+        return connections;
+    }
+  };
+
+  const currentMovements = getCurrentMovements();
+  const currentConnections = getCurrentConnections();
+
+  const categories = STYLE_CATEGORIES[selectedStyle] || STYLE_CATEGORIES.northern;
 
   // Remove tones from pinyin for tone-agnostic search
   const removeTones = (text) => {
@@ -50,7 +89,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       });
   };
 
-  const filteredMovements = movements.filter(movement => {
+  const filteredMovements = currentMovements.filter(movement => {
     const searchLower = searchTerm.toLowerCase();
     const searchWithoutTones = removeTones(searchLower);
     const nameWithoutTones = removeTones(movement.name).toLowerCase();
@@ -60,7 +99,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                          movement.id.toLowerCase().includes(searchLower) ||
                          // Tone-agnostic pinyin search
                          nameWithoutTones.includes(searchWithoutTones);
-    const matchesCategory = movement.category === selectedCategory || (selectedCategory === 'Sweeps' && movement.category === 'Leg');
+    const matchesCategory = movement.category === selectedCategory;
     return matchesSearch && matchesCategory;
   }).sort((a, b) => {
     // Sort by points (ascending), then by grade (A, B, C, D), then by code (ascending)
@@ -72,9 +111,9 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   // Handle combo movements (special drag behavior for throw/catch combos)
   const handleComboMovementDrag = (comboMovement) => {
     if (comboMovement.id === 'COMBO_PAO_QIANG_JIE') {
-      const throwMovement = movements.find(m => m.id === 'THROW');
-      const forwardDiveRoll = movements.find(m => m.id === '445A');
-      const catchMovement = movements.find(m => m.id === 'CATCH');
+      const throwMovement = currentMovements.find(m => m.id === 'THROW');
+      const forwardDiveRoll = currentMovements.find(m => m.id === '445A');
+      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
       
       const newCombo = {
         id: Date.now(),
@@ -87,9 +126,9 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       };
       return newCombo;
     } else if (comboMovement.id === 'COMBO_PAO_TENG_JIE') {
-      const throwMovement = movements.find(m => m.id === 'THROW');
-      const tengKongFeiJiao = movements.find(m => m.id === '312A');
-      const catchMovement = movements.find(m => m.id === 'CATCH');
+      const throwMovement = currentMovements.find(m => m.id === 'THROW');
+      const tengKongFeiJiao = currentMovements.find(m => m.id === '312A');
+      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
       
       const newCombo = {
         id: Date.now(),
@@ -102,9 +141,9 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       };
       return newCombo;
     } else if (comboMovement.id === 'COMBO_PAO_XUAN_JIE') {
-      const throwMovement = movements.find(m => m.id === 'THROW');
-      const xuanFengJiao = movements.find(m => m.id === '323A');
-      const catchMovement = movements.find(m => m.id === 'CATCH');
+      const throwMovement = currentMovements.find(m => m.id === 'THROW');
+      const xuanFengJiao = currentMovements.find(m => m.id === '323A');
+      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
       
       const newCombo = {
         id: Date.now(),
@@ -117,9 +156,9 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       };
       return newCombo;
     } else if (comboMovement.id === 'COMBO_PAO_LIAN_JIE') {
-      const throwMovement = movements.find(m => m.id === 'THROW');
-      const tengKongBaiLian = movements.find(m => m.id === '324A');
-      const catchMovement = movements.find(m => m.id === 'CATCH');
+      const throwMovement = currentMovements.find(m => m.id === 'THROW');
+      const tengKongBaiLian = currentMovements.find(m => m.id === '324A');
+      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
       
       const newCombo = {
         id: Date.now(),
@@ -155,7 +194,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         if (newMovements.length >= 2) {
           const lastMove = newMovements[newMovements.length - 2];
           const currentMove = newMovements[newMovements.length - 1];
-          const connection = connections.find(conn => 
+          const connection = currentConnections.find(conn => 
             conn.from === lastMove.id && conn.to === currentMove.id
           );
           if (connection) {
@@ -181,7 +220,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         
         // Recalculate connections for the remaining movements
         for (let i = 0; i < newMovements.length - 1; i++) {
-          const connection = connections.find(conn => 
+          const connection = currentConnections.find(conn => 
             conn.from === newMovements[i].id && conn.to === newMovements[i + 1].id
           );
           if (connection) {
@@ -212,7 +251,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         // Recalculate connections for the new order
         const newConnections = [];
         for (let i = 0; i < newMovements.length - 1; i++) {
-          const connection = connections.find(conn => 
+          const connection = currentConnections.find(conn => 
             conn.from === newMovements[i].id && conn.to === newMovements[i + 1].id
           );
           if (connection) {
@@ -243,7 +282,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         // Recalculate connections for the new order
         const newConnections = [];
         for (let i = 0; i < newMovements.length - 1; i++) {
-          const connection = connections.find(conn => 
+          const connection = currentConnections.find(conn => 
             conn.from === newMovements[i].id && conn.to === newMovements[i + 1].id
           );
           if (connection) {
@@ -403,9 +442,9 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         // Check if any connection appears more than once (excluding no-connection cases)
         connectionGroups.forEach((group, connectionKey) => {
           if (group.length > 1 && connectionKey !== 'no-connection') {
-            const movement = movements.find(m => m.id === movementId);
+            const movement = currentMovements.find(m => m.id === movementId);
             const comboNumbers = group.map(u => u.comboIndex + 1);
-            const connectionName = movements.find(m => m.id === connectionKey)?.name || connectionKey;
+            const connectionName = currentMovements.find(m => m.id === connectionKey)?.name || connectionKey;
             
             warnings.push({
               movement,
@@ -453,7 +492,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
   // Memoized filtered movements for mobile to prevent re-renders
   const mobileFilteredMovements = useMemo(() => {
-    return movements.filter(movement => {
+    return currentMovements.filter(movement => {
       const searchLower = mobileSearchTerm.toLowerCase();
       const searchWithoutTones = removeTones(searchLower);
       const nameWithoutTones = removeTones(movement.name).toLowerCase();
@@ -470,7 +509,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       }
       
       // If no search term, filter by selected category
-      const matchesCategory = movement.category === mobileSelectedCategory || (mobileSelectedCategory === 'Sweeps' && movement.category === 'Leg');
+      const matchesCategory = movement.category === mobileSelectedCategory;
       return matchesCategory;
     }).sort((a, b) => {
       // Sort by points (ascending), then by grade (A, B, C, D), then by code (ascending)
@@ -478,7 +517,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
       if (a.grade !== b.grade) return a.grade.localeCompare(b.grade);
       return a.id.localeCompare(b.id);
     });
-  }, [mobileSearchTerm, mobileSelectedCategory]);
+  }, [mobileSearchTerm, mobileSelectedCategory, currentMovements]);
 
   // Movement picker component for bottom sheet
   const MovementPicker = () => {
@@ -505,6 +544,42 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
     return (
       <div className="p-6">
+        {/* Mobile Style Tabs */}
+        <div className="mb-6">
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setSelectedStyle('northern')}
+              className={`px-4 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
+                selectedStyle === 'northern'
+                  ? 'border-blue-500 text-blue-600 bg-blue-50'
+                  : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+              }`}
+            >
+              Northern
+            </button>
+            <button
+              onClick={() => setSelectedStyle('southern')}
+              className={`px-4 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
+                selectedStyle === 'southern'
+                  ? 'border-red-500 text-red-600 bg-red-50'
+                  : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+              }`}
+            >
+              Southern
+            </button>
+            <button
+              onClick={() => setSelectedStyle('taiji')}
+              className={`px-4 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
+                selectedStyle === 'taiji'
+                  ? 'border-green-500 text-green-600 bg-green-50'
+                  : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+              }`}
+            >
+              Taiji
+            </button>
+          </div>
+        </div>
+        
         {/* Search and Filter */}
         <div className="mb-4">
           <div className="relative mb-3">
@@ -583,7 +658,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
           <Calculator className="h-6 w-6 sm:h-8 sm:w-8 text-orange-600" />
           <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Nandu Calculator</h1>
         </div>
-        <p className="text-gray-600 text-base sm:text-lg">
+        
+        <p className="text-gray-600 text-base sm:text-lg mb-2">
           ✨ Build combos using{' '}
           <a 
             href="https://www.iwuf.org/xhimg/soft/240912/WUSHU-TAOLU-COMPETITION-RULES-AND-JUDGING-METHODS-2024.pdf" 
@@ -597,11 +673,48 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         </p>
       </div>
 
+
       {/* Mobile-first layout: single column by default, two columns on lg+ screens */}
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Movement Selection Panel - Hidden on mobile, shown on desktop */}
         <div className="hidden lg:block bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">📚 Degree of Difficulty Library</h2>
+          {/* Style Tabs */}
+          <div className="mb-6">
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setSelectedStyle('northern')}
+                className={`px-6 py-3 text-sm font-medium transition-all duration-200 border-b-2 ${
+                  selectedStyle === 'northern'
+                    ? 'border-blue-500 text-blue-600 bg-blue-50'
+                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                }`}
+              >
+                Northern
+              </button>
+              <button
+                onClick={() => setSelectedStyle('southern')}
+                className={`px-6 py-3 text-sm font-medium transition-all duration-200 border-b-2 ${
+                  selectedStyle === 'southern'
+                    ? 'border-red-500 text-red-600 bg-red-50'
+                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                }`}
+              >
+                Southern
+              </button>
+              <button
+                onClick={() => setSelectedStyle('taiji')}
+                className={`px-6 py-3 text-sm font-medium transition-all duration-200 border-b-2 ${
+                  selectedStyle === 'taiji'
+                    ? 'border-green-500 text-green-600 bg-green-50'
+                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                }`}
+              >
+                Taiji
+              </button>
+            </div>
+          </div>
+          
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">📚 {selectedStyle.charAt(0).toUpperCase() + selectedStyle.slice(1)} Movements Library</h2>
           
           {/* Search and Filter */}
           <div className="mb-4">
@@ -675,8 +788,44 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
         {/* Routine Builder Panel */}
         <div className="bg-white rounded-2xl shadow-xl shadow-orange-100/50 p-4 sm:p-6">
+          {/* Mobile Style Selector */}
+          <div className="lg:hidden mb-4">
+            <div className="flex border-b border-gray-200">
+              <button
+                onClick={() => setSelectedStyle('northern')}
+                className={`px-4 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
+                  selectedStyle === 'northern'
+                    ? 'border-blue-500 text-blue-600 bg-blue-50'
+                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                }`}
+              >
+                Northern
+              </button>
+              <button
+                onClick={() => setSelectedStyle('southern')}
+                className={`px-4 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
+                  selectedStyle === 'southern'
+                    ? 'border-red-500 text-red-600 bg-red-50'
+                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                }`}
+              >
+                Southern
+              </button>
+              <button
+                onClick={() => setSelectedStyle('taiji')}
+                className={`px-4 py-2 text-sm font-medium transition-all duration-200 border-b-2 ${
+                  selectedStyle === 'taiji'
+                    ? 'border-green-500 text-green-600 bg-green-50'
+                    : 'border-transparent text-gray-600 hover:text-gray-800 hover:border-gray-300'
+                }`}
+              >
+                Taiji
+              </button>
+            </div>
+          </div>
+          
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-2 mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">🤸 Your Routine</h2>
+            <h2 className="text-xl font-semibold text-gray-800">🤸 {selectedStyle.charAt(0).toUpperCase() + selectedStyle.slice(1)} Combos</h2>
             <div className="flex gap-2">
               {/* New Combo button for all screen sizes */}
               <button
@@ -702,26 +851,26 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Movements</div>
                 <div className={`text-sm sm:text-lg font-bold ${
-                  totalMovementScore > 1.4 
-                    ? 'text-red-600' : totalMovementScore === 1.4 
+                  totalMovementScore > SCORING_LIMITS.MOVEMENT_SCORE_CAP
+                    ? 'text-red-600' : totalMovementScore === SCORING_LIMITS.MOVEMENT_SCORE_CAP 
                     ? 'text-green-600' : 'text-gray-800'
                 }`}>
-                  {totalMovementScore.toFixed(2)}/1.40
+                  {totalMovementScore.toFixed(2)}/{SCORING_LIMITS.MOVEMENT_SCORE_CAP.toFixed(2)}
                 </div>
               </div>
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Connections</div>
                 <div className={`text-sm sm:text-lg font-bold ${
-                  totalConnectionScore > 0.6 
-                    ? 'text-red-600' : totalConnectionScore === 0.6 
+                  totalConnectionScore > SCORING_LIMITS.CONNECTION_SCORE_CAP 
+                    ? 'text-red-600' : totalConnectionScore === SCORING_LIMITS.CONNECTION_SCORE_CAP 
                     ? 'text-green-600' : 'text-gray-800'
                 }`}>
-                  {totalConnectionScore.toFixed(2)}/0.60
+                  {totalConnectionScore.toFixed(2)}/{SCORING_LIMITS.CONNECTION_SCORE_CAP.toFixed(2)}
                 </div>
               </div>
               <div>
                 <div className="text-xs sm:text-sm text-gray-600">Total</div>
-                <div className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{totalScore.toFixed(2)}/2.00</div>
+                <div className="text-lg sm:text-xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{totalScore.toFixed(2)}/{SCORING_LIMITS.TOTAL_SCORE_CAP.toFixed(2)}</div>
               </div>
             </div>
           </div>
@@ -954,7 +1103,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                         {/* Desktop: Dropdown */}
                         <select
                           onChange={(e) => {
-                            const movement = movements.find(m => m.id === e.target.value);
+                            const movement = currentMovements.find(m => m.id === e.target.value);
                             if (movement) {
                               addMovementToCombo(combo.id, movement);
                               e.target.value = '';
@@ -963,7 +1112,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                           className="hidden lg:block w-full p-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-orange-50/30"
                         >
                           <option value="">Add movement to combo...</option>
-                          {movements.map(movement => (
+                          {currentMovements.map(movement => (
                             <option key={movement.id} value={movement.id}>
                               {movement.name} ({movement.id}) - {movement.points}pts
                             </option>

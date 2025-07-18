@@ -3,6 +3,8 @@
  * Pure functions for calculating combo and total scores
  */
 
+import { SCORING_LIMITS } from '../data/constants.js';
+
 /**
  * Calculate the score for an individual combo
  * @param {Object} combo - The combo object with movements and connections
@@ -95,15 +97,19 @@ export const getTotalConnectionScore = (combos) => {
  * @returns {Object} - Object with movementScore, connectionScore, and totalScore
  */
 export const getTotalScore = (combos) => {
-  const movementScore = getTotalMovementScore(combos);
-  const connectionScore = getTotalConnectionScore(combos);
+  const rawMovementScore = getTotalMovementScore(combos);
+  const rawConnectionScore = getTotalConnectionScore(combos);
+  
+  // Cap each category independently - excess in one cannot compensate for deficiency in the other
+  const cappedMovementScore = Math.min(rawMovementScore, SCORING_LIMITS.MOVEMENT_SCORE_CAP);
+  const cappedConnectionScore = Math.min(rawConnectionScore, SCORING_LIMITS.CONNECTION_SCORE_CAP);
   
   // Use integer arithmetic to avoid floating point precision issues
-  const totalScore = Math.round((movementScore + connectionScore) * 100) / 100;
+  const totalScore = Math.round((cappedMovementScore + cappedConnectionScore) * 100) / 100;
   
   return {
-    movementScore,
-    connectionScore,
+    movementScore: rawMovementScore,
+    connectionScore: rawConnectionScore,
     totalScore
   };
 };
@@ -117,8 +123,8 @@ export const getScoreLimits = (combos) => {
   const { movementScore, connectionScore, totalScore } = getTotalScore(combos);
   
   return {
-    movementExceeded: movementScore > 1.4,
-    connectionExceeded: connectionScore > 0.6,
-    totalExceeded: totalScore > 2.0
+    movementExceeded: movementScore > SCORING_LIMITS.MOVEMENT_SCORE_CAP,
+    connectionExceeded: connectionScore > SCORING_LIMITS.CONNECTION_SCORE_CAP,
+    totalExceeded: totalScore > SCORING_LIMITS.TOTAL_SCORE_CAP
   };
 };
