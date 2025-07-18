@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star, ArrowUp, ArrowDown } from 'lucide-react';
+import { Search, Plus, X, RotateCcw, Calculator, ChevronDown, ChevronUp, GripVertical, Star, ArrowUp, ArrowDown, Copy } from 'lucide-react';
 import { movements, connections } from './data/codes.js';
 import { southernMovements, southernConnections } from './data/southern-nandu-codes.js';
 import { taijiMovements, taijiConnections } from './data/taiji-nandu-codes.js';
 import { STYLE_CATEGORIES, SCORING_LIMITS } from './data/constants.js';
 import BottomSheet from './BottomSheet.jsx';
 import { getComboScore, getTotalScore } from './utils/scoring.js';
+import { generateComboPrintout } from './utils/combo-printout.js';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [combos, setCombos] = useState(sharedCombos);
@@ -110,68 +111,27 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
   // Handle combo movements (special drag behavior for throw/catch combos)
   const handleComboMovementDrag = (comboMovement) => {
-    if (comboMovement.id === 'COMBO_PAO_QIANG_JIE') {
-      const throwMovement = currentMovements.find(m => m.id === 'THROW');
-      const forwardDiveRoll = currentMovements.find(m => m.id === '445A');
-      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
-      
-      const newCombo = {
-        id: Date.now(),
-        movements: [throwMovement, forwardDiveRoll, catchMovement], // Only individual movements
-        connections: [], // No connections - score is fixed at 0.1 total
-        expanded: true,
-        isThrowCatchCombo: true,
-        fixedScore: 0.1,
-        comboMovement: comboMovement // Store combo movement separately for deductions detection
-      };
-      return newCombo;
-    } else if (comboMovement.id === 'COMBO_PAO_TENG_JIE') {
-      const throwMovement = currentMovements.find(m => m.id === 'THROW');
-      const tengKongFeiJiao = currentMovements.find(m => m.id === '312A');
-      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
-      
-      const newCombo = {
-        id: Date.now(),
-        movements: [throwMovement, tengKongFeiJiao, catchMovement], // Only individual movements
-        connections: [], // No connections - score is fixed at 0.1 connection bonus
-        expanded: true,
-        isThrowCatchCombo: true,
-        fixedScore: 0.1,
-        comboMovement: comboMovement // Store combo movement separately for deductions detection
-      };
-      return newCombo;
-    } else if (comboMovement.id === 'COMBO_PAO_XUAN_JIE') {
-      const throwMovement = currentMovements.find(m => m.id === 'THROW');
-      const xuanFengJiao = currentMovements.find(m => m.id === '323A');
-      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
-      
-      const newCombo = {
-        id: Date.now(),
-        movements: [throwMovement, xuanFengJiao, catchMovement], // Only individual movements
-        connections: [], // No connections - score is fixed at 0.15 connection bonus
-        expanded: true,
-        isThrowCatchCombo: true,
-        fixedScore: 0.15,
-        comboMovement: comboMovement // Store combo movement separately for deductions detection
-      };
-      return newCombo;
-    } else if (comboMovement.id === 'COMBO_PAO_LIAN_JIE') {
-      const throwMovement = currentMovements.find(m => m.id === 'THROW');
-      const tengKongBaiLian = currentMovements.find(m => m.id === '324A');
-      const catchMovement = currentMovements.find(m => m.id === 'CATCH');
-      
-      const newCombo = {
-        id: Date.now(),
-        movements: [throwMovement, tengKongBaiLian, catchMovement], // Only individual movements
-        connections: [], // No connections - score is fixed at 0.15 connection bonus
-        expanded: true,
-        isThrowCatchCombo: true,
-        fixedScore: 0.15,
-        comboMovement: comboMovement // Store combo movement separately for deductions detection
-      };
-      return newCombo;
-    }
-    return null;
+    if (!comboMovement.coreMovementId) return null;
+    
+    const throwMovement = currentMovements.find(m => m.id === 'THROW');
+    const coreMovement = currentMovements.find(m => m.id === comboMovement.coreMovementId);
+    const catchMovement = currentMovements.find(m => m.id === 'CATCH');
+    
+    if (!throwMovement || !coreMovement || !catchMovement) return null;
+    
+    // Calculate connection bonus (total points minus difficulty movement points)
+    const connectionBonus = comboMovement.points - coreMovement.points;
+    
+    const newCombo = {
+      id: Date.now(),
+      movements: [throwMovement, coreMovement, catchMovement],
+      connections: [],
+      expanded: true,
+      isThrowCatchCombo: true,
+      fixedScore: connectionBonus,
+      comboMovement: comboMovement
+    };
+    return newCombo;
   };
 
   const createNewCombo = () => {
@@ -190,14 +150,18 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
         const newMovements = [...combo.movements, movement];
         const newConnections = [...combo.connections];
         
-        // Check if there's a connection between the last two movements
+        // Check if there's a connection between the last movement and the new one
         if (newMovements.length >= 2) {
           const lastMove = newMovements[newMovements.length - 2];
           const currentMove = newMovements[newMovements.length - 1];
+          
+          // Look for a connection where the last movement connects to the current movement
           const connection = currentConnections.find(conn => 
             conn.from === lastMove.id && conn.to === currentMove.id
           );
+          
           if (connection) {
+            // Add the connection as-is (it already points to the correct target)
             newConnections.push(connection);
           }
         }
@@ -401,6 +365,16 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
 
 
   // Check for duplicate movements across all combos
+  // Copy codes to clipboard
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(generateComboPrintout(combos));
+      // Could add a toast notification here if desired
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
+
   const getDuplicateMovementWarnings = () => {
     const warnings = [];
     const movementUsage = new Map(); // movement.id -> array of {comboIndex, connections}
@@ -1065,7 +1039,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                               {combo.connections[movIndex] && (
                                 <div className="ml-4 mt-2 p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-l-4 border-emerald-400 shadow-sm">
                                   <div className="text-xs text-green-800 font-medium">
-                                    Connection: +{combo.connections[movIndex].points}pts ({combo.connections[movIndex].grade} Grade)
+                                    Connection: +{(Math.round(combo.connections[movIndex].points * 100) / 100).toFixed(2)}pts ({combo.connections[movIndex].grade} Grade)
                                   </div>
                                   <div className="text-xs text-green-600">
                                     {combo.connections[movIndex].description}
@@ -1077,7 +1051,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                               {combo.isThrowCatchCombo && movIndex === combo.movements.length - 1 && (
                                 <div className="ml-4 mt-2 p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-l-4 border-emerald-400 shadow-sm">
                                   <div className="text-xs text-green-800 font-medium">
-                                    Throw/Catch Combo Bonus: +{combo.fixedScore}pts
+                                    Throw/Catch Combo Bonus: +{(Math.round(combo.fixedScore * 100) / 100).toFixed(2)}pts
                                   </div>
                                   <div className="text-xs text-green-600">
                                     Complete sequence bonus for toss-movement-catch combination
@@ -1190,6 +1164,29 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
               </div>
             )}
           </div>
+
+          {/* Combo Printout - For competition registration */}
+          {combos.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 sm:p-4 mt-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-blue-600 font-medium text-sm">📝 Your Nandu Codes</div>
+                <button
+                  onClick={copyToClipboard}
+                  className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                >
+                  <Copy className="h-3 w-3" />
+                  Copy
+                </button>
+              </div>
+              <textarea
+                value={generateComboPrintout(combos)}
+                readOnly
+                className="w-full p-2 text-sm bg-white border border-blue-200 rounded-lg font-mono resize-none"
+                rows="1"
+                onClick={(e) => e.target.select()}
+              />
+            </div>
+          )}
         </div>
       </div>
 

@@ -72,12 +72,7 @@ describe('Style Integration', () => {
       
       // Should contain all northern categories (plus Hidden and others)
       STYLE_CATEGORIES.northern.forEach(category => {
-        if (category === 'Sweeps') {
-          // Sweeps is mapped to Leg category in the data
-          expect(uniqueCategories).toContain('Leg');
-        } else {
-          expect(uniqueCategories).toContain(category);
-        }
+        expect(uniqueCategories).toContain(category);
       });
     });
   });
