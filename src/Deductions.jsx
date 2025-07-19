@@ -158,8 +158,8 @@ const Deductions = () => {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               {technique.code && (
-                <span className="hidden sm:inline text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
-                  Code: {technique.code}
+                <span className="text-xs text-gray-500 px-2 py-1 bg-gray-100 rounded">
+                  {technique.code}
                 </span>
               )}
               {hasDetails ? (
