@@ -572,5 +572,406 @@ export const judgingCriteria = {
         }
       ]
     }
+  },
+  "connection_criteria": {
+    "dynamic_dynamic": {
+      "description": "Connections between two jumping techniques",
+      "connections": {
+        "旋风脚360°+腾空外摆腿360°/540°": {
+          "chinese": "旋风脚360°+腾空外摆腿360°/540°",
+          "pinyin": "Xuàn Fēng Jiǎo 360° + Téng Kōng Wài Bǎi Tuǐ",
+          "english": "Tornado Kick 360° + Jumping Lotus Kick 360°/540°",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间出现助跑",
+              "english": "Occurrence of run-up step in between the 2 jumping techniques"
+            }
+          ]
+        },
+        "旋风脚540°+腾空外摆腿540°/630°/720°": {
+          "chinese": "旋风脚540°+腾空外摆腿540°/630°/720°",
+          "pinyin": "Xuàn Fēng Jiǎo 540° + Téng Kōng Wài Bǎi Tuǐ",
+          "english": "Tornado Kick 540° + Jumping Lotus Kick 540°/630°/720°",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间出现助跑",
+              "english": "Occurrence of run-up step in between the 2 jumping techniques"
+            }
+          ]
+        },
+        "腾空外摆腿360°+原地后空翻": {
+          "chinese": "腾空外摆腿360°+原地后空翻",
+          "pinyin": "Téng Kōng Wài Bǎi Tuǐ + Yuán Dì Hòu Kōng Fān",
+          "english": "Jumping Lotus Kick 360° + No-Step Back Flip",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间出现助跑",
+              "english": "Occurrence of run-up step in between the 2 jumping techniques"
+            }
+          ]
+        },
+        "腾空飞脚+单跳后空翻": {
+          "chinese": "腾空飞脚+单跳后空翻",
+          "pinyin": "Téng Kōng Fēi Jiǎo + Dān Tiào Hòu Kōng Fān",
+          "english": "Jumping Front Slap Kick + Single Step Back Flip",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间的助跑步数超过2步",
+              "english": "Exceeding 2 run-up steps in between 2 jumps"
+            }
+          ]
+        },
+        "旋风脚360°+腾空飞脚": {
+          "chinese": "旋风脚360°+腾空飞脚",
+          "pinyin": "Xuàn Fēng Jiǎo 360° + Téng Kōng Fēi Jiǎo",
+          "english": "Tornado Kick 360° + Jumping Front Slap Kick",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间的助跑步数超过2步",
+              "english": "Exceeding 2 run-up steps in between 2 jumps"
+            }
+          ]
+        },
+        "旋风脚360°+单跳后空翻": {
+          "chinese": "旋风脚360°+单跳后空翻",
+          "pinyin": "Xuàn Fēng Jiǎo 360° + Dān Tiào Hòu Kōng Fān",
+          "english": "Tornado Kick 360° + Single Step Back Flip",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间的助跑步数超过2步",
+              "english": "Exceeding 2 run-up steps in between 2 jumps"
+            }
+          ]
+        },
+        "腾空外摆腿360°/540°+单跳后空翻": {
+          "chinese": "腾空外摆腿360°/540°+单跳后空翻",
+          "pinyin": "Téng Kōng Wài Bǎi Tuǐ + Dān Tiào Hòu Kōng Fān",
+          "english": "Jumping Lotus Kick 360°/540° + Single Step Back Flip",
+          "code": "动动连接",
+          "non_conformity": [
+            {
+              "chinese": "跳跃动作之间的助跑步数超过2步",
+              "english": "Exceeding 2 run-up steps in between 2 jumps"
+            }
+          ]
+        }
+      }
+    },
+    "dynamic_static": {
+      "description": "Connections from jumping technique to static position",
+      "connections": {
+        "旋风脚360°/540°/630°/720°+马步": {
+          "chinese": "旋风脚360°/540°/630°/720°+马步",
+          "pinyin": "Xuàn Fēng Jiǎo + Mǎ Bù",
+          "english": "Tornado Kick 360°/540°/630/720° + Horse Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "腾空外摆腿360°/540°/630°/720°+马步": {
+          "chinese": "腾空外摆腿360°/540°/630°/720°+马步",
+          "pinyin": "Téng Kōng Wài Bǎi Tuǐ + Mǎ Bù",
+          "english": "Jumping Lotus Kick 360°/540°/630°/720° + Horse Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "腾空外摆腿540°+仆步": {
+          "chinese": "腾空外摆腿540°+仆步",
+          "pinyin": "Téng Kōng Wài Bǎi Tuǐ + Pū Bù",
+          "english": "Jumping Lotus Kick 540° + Crouching Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "旋风脚360°/540°+蝶步": {
+          "chinese": "旋风脚360°/540°+蝶步",
+          "pinyin": "Xuàn Fēng Jiǎo + Dié Bù",
+          "english": "Tornado Kick 360°/540° + Butterfly Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "落地后再成蝶步",
+              "english": "Forming the butterfly stance only after landing"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "原地后空翻+蝶步": {
+          "chinese": "原地后空翻+蝶步",
+          "pinyin": "Yuán Dì Hòu Kōng Fān + Dié Bù",
+          "english": "No-Step Back Flip + Butterfly Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "落地后再成蝶步",
+              "english": "Forming the butterfly stance only after landing"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "单跳后空翻+蝶步": {
+          "chinese": "单跳后空翻+蝶步",
+          "pinyin": "Dān Tiào Hòu Kōng Fān + Dié Bù",
+          "english": "Single Step Back Flip + Butterfly Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "落地后再成蝶步",
+              "english": "Forming the butterfly stance only after landing"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "鲤鱼打挺+蝶步": {
+          "chinese": "鲤鱼打挺+蝶步",
+          "pinyin": "Lǐ Yú Dǎ Tǐng + Dié Bù",
+          "english": "Carp Kip-Up + Butterfly Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "落地后再成蝶步",
+              "english": "Forming the butterfly stance only after landing"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "腾空飞脚+提膝独立": {
+          "chinese": "腾空飞脚+提膝独立",
+          "pinyin": "Téng Kōng Fēi Jiǎo + Tí Xī Dú Lì",
+          "english": "Jumping Front Slap Kick + Single Raised-Knee Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "击响（外摆）腿未单脚落地",
+              "english": "The kicking/slapped foot is not the same leg which is singerly landed on"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "提膝腿脚触地",
+              "english": "The foot of the raised knee touches the ground"
+            }
+          ]
+        },
+        "旋风脚360°+提膝独立": {
+          "chinese": "旋风脚360°+提膝独立",
+          "pinyin": "Xuàn Fēng Jiǎo + Tí Xī Dú Lì",
+          "english": "Tornado Kick 360° + Single Raised-Knee Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "击响（外摆）腿未单脚落地",
+              "english": "The kicking/slapped foot is not the same leg which is singerly landed on"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "提膝腿脚触地",
+              "english": "The foot of the raised knee touches the ground"
+            }
+          ]
+        },
+        "腾空外摆腿360°+提膝独立": {
+          "chinese": "腾空外摆腿360°+提膝独立",
+          "pinyin": "Téng Kōng Wài Bǎi Tuǐ + Tí Xī Dú Lì",
+          "english": "Jumping Lotus Kick 360° + Single Raised-Knee Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "击响（外摆）腿未单脚落地",
+              "english": "The kicking/slapped foot is not the same leg which is singerly landed on"
+            },
+            {
+              "chinese": "脚移动或跳动",
+              "english": "Foot shuffles or skips"
+            },
+            {
+              "chinese": "提膝腿脚触地",
+              "english": "The foot of the raised knee touches the ground"
+            }
+          ]
+        },
+        "侧空翻+剪势": {
+          "chinese": "侧空翻+剪势",
+          "pinyin": "Cè Kōng Fān + Jiǎn Shì",
+          "english": "Aerial Cartwheel + Scissor Position",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "两脚依次落地",
+              "english": "The feet land alternately (not simultaneously)"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        },
+        "单跳后空翻+蝎势": {
+          "chinese": "单跳后空翻+蝎势",
+          "pinyin": "Dān Tiào Hòu Kōng Fān + Xiē Shì",
+          "english": "Single-Step Back Flip + Scorpion Stance",
+          "code": "动静连接",
+          "non_conformity": [
+            {
+              "chinese": "手与脚依次落地",
+              "english": "Hand and foot landing alternately (not simultaneously)"
+            },
+            {
+              "chinese": "后举腿触地",
+              "english": "Rear raised Leg touches the floor"
+            },
+            {
+              "chinese": "附加支撑",
+              "english": "Use of additional support"
+            },
+            {
+              "chinese": "倒地",
+              "english": "Fall"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "execution_standards": {
+    "rotation_calculation": {
+      "two_feet_landing": "For jumping techniques with rotation landing on two feet; or landing into stances; the calculation of degree of rotation is based on the angle formed by the line between both feet at the time of takeoff and at the time of landing.",
+      "single_foot_landing": "For jumping techniques with rotation that land on a single foot, the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line at the time of takeoff and that at the time of landing.",
+      "leg_sweeping": "For leg sweeping techniques, the calculation of degree of rotation is based on the degree of rotation performed by the sweeping leg's foot from the start of the rotation to its completion."
+    },
+    "run_up_rules": {
+      "counting": "Prior to the execution of a jumping technique, each time a foot is planted on the ground while running in a single direction (including in an arc), it will be counted as a run-up step.",
+      "connections": "For jumping techniques, the number of connection steps between two techniques shall be counted from the first step taken after landing on a single foot or with both feet from the previous jumping technique."
+    },
+    "general_rules": {
+      "difficulty_failure": "Should a Degree of Difficulty technique be unsuccessfully executed, then its preceding or the following Degree of Difficulty connection may not be confirmed.",
+      "form_change": "Should an executed Degree of Difficulty connection differ from what was registered, then both the Degree of Difficulty technique and its connections may not be confirmed.",
+      "weapon_support": "The Degree of Difficulty for a balance will not be confirmed as successful if the technique was completed with the use of a weapon for additional support.",
+      "technique_requirement": "Upon completing a Dynamic + Static Degree of Difficulty connection technique, one must complete two or more technical movements prior to another set of Degree of Difficulty technique."
+    }
   }
 };

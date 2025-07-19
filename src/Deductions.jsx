@@ -82,24 +82,52 @@ const Deductions = () => {
         const category = currentJudgingCriteria[categoryKey];
         if (typeof category !== 'object' || !category) return;
 
+        // Handle regular technique structure
         Object.keys(category).forEach(techniqueKey => {
           const technique = category[techniqueKey];
-          if (typeof technique !== 'object' || !technique.chinese) return;
+          if (typeof technique !== 'object') return;
 
-          const matchesChinese = technique.chinese?.toLowerCase().includes(searchLower);
-          const matchesEnglish = technique.english?.toLowerCase().includes(searchLower);
-          const matchesPinyin = technique.pinyin?.toLowerCase().includes(searchLower);
-          const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
-          const matchesCode = technique.code?.toLowerCase().includes(searchLower);
+          // Handle connection criteria (nested structure)
+          if (categoryKey === 'connection_criteria' && technique.connections) {
+            Object.keys(technique.connections).forEach(connectionKey => {
+              const connection = technique.connections[connectionKey];
+              if (typeof connection !== 'object' || !connection.chinese) return;
 
-          if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
-            results.push({
-              techniqueKey,
-              technique: {
-                ...technique,
-                category: categoryKey
+              const matchesChinese = connection.chinese?.toLowerCase().includes(searchLower);
+              const matchesEnglish = connection.english?.toLowerCase().includes(searchLower);
+              const matchesPinyin = connection.pinyin?.toLowerCase().includes(searchLower);
+              const matchesPinyinNoTones = removeTones(connection.pinyin?.toLowerCase() || '').includes(searchNoTones);
+              const matchesCode = connection.code?.toLowerCase().includes(searchLower);
+
+              if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
+                results.push({
+                  techniqueKey: `${categoryKey}_${techniqueKey}_${connectionKey}`,
+                  technique: {
+                    ...connection,
+                    category: `${categoryKey} - ${techniqueKey}`,
+                    categoryName: technique.description || techniqueKey
+                  }
+                });
               }
             });
+          } 
+          // Handle regular techniques
+          else if (technique.chinese) {
+            const matchesChinese = technique.chinese?.toLowerCase().includes(searchLower);
+            const matchesEnglish = technique.english?.toLowerCase().includes(searchLower);
+            const matchesPinyin = technique.pinyin?.toLowerCase().includes(searchLower);
+            const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
+            const matchesCode = technique.code?.toLowerCase().includes(searchLower);
+
+            if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
+              results.push({
+                techniqueKey,
+                technique: {
+                  ...technique,
+                  category: categoryKey
+                }
+              });
+            }
           }
         });
       });
