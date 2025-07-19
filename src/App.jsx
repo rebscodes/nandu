@@ -4,7 +4,7 @@ import { Calculator, BookOpen, Home, AlertTriangle, Star, Swords } from 'lucide-
 import WushuNanduCalculator from './NanduCalculator.jsx';
 import Requirements from './Requirements.jsx';
 import Deductions from './Deductions.jsx';
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react";
 
 const Navigation = () => {
   const location = useLocation();
