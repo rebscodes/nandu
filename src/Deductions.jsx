@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AlertTriangle, Eye, CheckCircle, Circle, Info, Search, Minus } from 'lucide-react';
 import { judgingCriteria } from './data/judging-criteria.js';
 import { judgingCriteria as southernJudgingCriteria } from './data/southern-judging-criteria.js';
 import { judgingCriteria as taijiJudgingCriteria } from './data/taiji-judging-criteria.js';
 import { generalDeductions } from './data/general-deductions.js';
-import { weaponRegistry, getWeaponRequirements, mapCategoryToJudgingCriteria, hasSpecialHandling } from './data/weapon-registry.js';
-import { movements } from './data/codes.js';
-import { getNonConformityCriteria } from './data/combo-mappings.js';
 
 const Deductions = () => {
   const [expandedSections, setExpandedSections] = useState({});
@@ -28,7 +25,6 @@ const Deductions = () => {
     }
   };
 
-  const currentJudgingCriteria = getJudgingCriteriaForStyle(activeTab);
 
   const removeTones = (text) => {
     if (!text) return '';
@@ -49,93 +45,102 @@ const Deductions = () => {
       .replace(/[ŃŇǸ]/g, 'N');
   };
 
-  const searchMovements = () => {
-    if (!searchTerm.trim()) return [];
+  const searchAllCategories = () => {
+    if (!searchTerm.trim()) return { Northern: [], Southern: [], Taiji: [], General: [] };
 
-    const results = [];
+    const allResults = { Northern: [], Southern: [], Taiji: [], General: [] };
     const searchLower = searchTerm.toLowerCase();
     const searchNoTones = removeTones(searchLower);
 
-    if (activeTab === 'General') {
-      Object.keys(currentJudgingCriteria).forEach(categoryKey => {
-        const category = currentJudgingCriteria[categoryKey];
-        if (typeof category !== 'object' || !category.deductions) return;
+    // Search across all styles
+    ['Northern', 'Southern', 'Taiji', 'General'].forEach(style => {
+      const criteria = getJudgingCriteriaForStyle(style);
+      const results = [];
 
-        category.deductions.forEach((deduction, index) => {
-          const includesText = deduction.includes ? 
-            (Array.isArray(deduction.includes) ? deduction.includes.join(' ') : deduction.includes) : '';
-          const combinedText = `${category.chinese} ${category.english} ${deduction.chinese} ${deduction.english} ${deduction.definition || ''} ${includesText} ${deduction.code || ''}`.toLowerCase();
-          if (combinedText.includes(searchLower)) {
-            results.push({
-              techniqueKey: `${categoryKey}_${index}`,
-              technique: {
-                ...deduction,
-                categoryName: category.english,
-                categoryChinese: category.chinese,
-              },
-            });
-          }
+      if (style === 'General') {
+        Object.keys(criteria).forEach(categoryKey => {
+          const category = criteria[categoryKey];
+          if (typeof category !== 'object' || !category.deductions) return;
+
+          category.deductions.forEach((deduction, index) => {
+            const includesText = deduction.includes ? 
+              (Array.isArray(deduction.includes) ? deduction.includes.join(' ') : deduction.includes) : '';
+            const combinedText = `${category.chinese} ${category.english} ${deduction.chinese} ${deduction.english} ${deduction.definition || ''} ${includesText} ${deduction.code || ''}`.toLowerCase();
+            if (combinedText.includes(searchLower)) {
+              results.push({
+                techniqueKey: `${categoryKey}_${index}`,
+                technique: {
+                  ...deduction,
+                  categoryName: category.english,
+                  categoryChinese: category.chinese,
+                },
+              });
+            }
+          });
         });
-      });
-    } else {
-      Object.keys(currentJudgingCriteria).forEach(categoryKey => {
-        const category = currentJudgingCriteria[categoryKey];
-        if (typeof category !== 'object' || !category) return;
+      } else {
+        Object.keys(criteria).forEach(categoryKey => {
+          const category = criteria[categoryKey];
+          if (typeof category !== 'object' || !category) return;
 
-        // Handle regular technique structure
-        Object.keys(category).forEach(techniqueKey => {
-          const technique = category[techniqueKey];
-          if (typeof technique !== 'object') return;
+          // Handle regular technique structure
+          Object.keys(category).forEach(techniqueKey => {
+            const technique = category[techniqueKey];
+            if (typeof technique !== 'object') return;
 
-          // Handle connection criteria (nested structure)
-          if (categoryKey === 'connection_criteria' && technique.connections) {
-            Object.keys(technique.connections).forEach(connectionKey => {
-              const connection = technique.connections[connectionKey];
-              if (typeof connection !== 'object' || !connection.chinese) return;
+            // Handle connection criteria (nested structure)
+            if (categoryKey === 'connection_criteria' && technique.connections) {
+              Object.keys(technique.connections).forEach(connectionKey => {
+                const connection = technique.connections[connectionKey];
+                if (typeof connection !== 'object' || !connection.chinese) return;
 
-              const matchesChinese = connection.chinese?.toLowerCase().includes(searchLower);
-              const matchesEnglish = connection.english?.toLowerCase().includes(searchLower);
-              const matchesPinyin = connection.pinyin?.toLowerCase().includes(searchLower);
-              const matchesPinyinNoTones = removeTones(connection.pinyin?.toLowerCase() || '').includes(searchNoTones);
-              const matchesCode = connection.code?.toLowerCase().includes(searchLower);
+                const matchesChinese = connection.chinese?.toLowerCase().includes(searchLower);
+                const matchesEnglish = connection.english?.toLowerCase().includes(searchLower);
+                const matchesPinyin = connection.pinyin?.toLowerCase().includes(searchLower);
+                const matchesPinyinNoTones = removeTones(connection.pinyin?.toLowerCase() || '').includes(searchNoTones);
+                const matchesCode = connection.code?.toLowerCase().includes(searchLower);
+
+                if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
+                  results.push({
+                    techniqueKey: `${categoryKey}_${techniqueKey}_${connectionKey}`,
+                    technique: {
+                      ...connection,
+                      category: `${categoryKey} - ${techniqueKey}`,
+                      categoryName: technique.description || techniqueKey
+                    }
+                  });
+                }
+              });
+            } 
+            // Handle regular techniques
+            else if (technique.chinese) {
+              const matchesChinese = technique.chinese?.toLowerCase().includes(searchLower);
+              const matchesEnglish = technique.english?.toLowerCase().includes(searchLower);
+              const matchesPinyin = technique.pinyin?.toLowerCase().includes(searchLower);
+              const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
+              const matchesCode = technique.code?.toLowerCase().includes(searchLower);
 
               if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
                 results.push({
-                  techniqueKey: `${categoryKey}_${techniqueKey}_${connectionKey}`,
+                  techniqueKey,
                   technique: {
-                    ...connection,
-                    category: `${categoryKey} - ${techniqueKey}`,
-                    categoryName: technique.description || techniqueKey
+                    ...technique,
+                    category: categoryKey
                   }
                 });
               }
-            });
-          } 
-          // Handle regular techniques
-          else if (technique.chinese) {
-            const matchesChinese = technique.chinese?.toLowerCase().includes(searchLower);
-            const matchesEnglish = technique.english?.toLowerCase().includes(searchLower);
-            const matchesPinyin = technique.pinyin?.toLowerCase().includes(searchLower);
-            const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
-            const matchesCode = technique.code?.toLowerCase().includes(searchLower);
-
-            if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
-              results.push({
-                techniqueKey,
-                technique: {
-                  ...technique,
-                  category: categoryKey
-                }
-              });
             }
-          }
+          });
         });
-      });
-    }
-    return results;
+      }
+      allResults[style] = results;
+    });
+
+    return allResults;
   };
 
-  const searchResults = searchMovements();
+  const allSearchResults = searchAllCategories();
+  const totalResults = Object.values(allSearchResults).reduce((sum, results) => sum + results.length, 0);
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
@@ -144,9 +149,9 @@ const Deductions = () => {
     }));
   };
 
-  const renderDeductionCard = (technique, techniqueKey) => {
+  const renderDeductionCard = (technique, techniqueKey, style = activeTab) => {
     const isExpanded = expandedSections[techniqueKey];
-    const isGeneral = activeTab === 'General';
+    const isGeneral = style === 'General';
 
     const hasDetails = isGeneral
       ? !!technique.definition || !!technique.includes
@@ -345,7 +350,20 @@ const Deductions = () => {
           </a>
         </p>
 
-        <div className="flex border-b border-gray-200 mb-6">
+        <div className="relative mb-6">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search across all categories (Chinese, English, Pinyin, or code)..."
+            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm sm:text-base"
+          />
+        </div>
+
+        <div className="flex border-b border-gray-200">
           {['Northern', 'Southern', 'Taiji', 'General'].map((style) => (
             <button
               key={style}
@@ -357,53 +375,54 @@ const Deductions = () => {
               }`}
             >
               {style}
+              {searchTerm && allSearchResults[style].length > 0 && (
+                <span className="ml-1 text-xs">({allSearchResults[style].length})</span>
+              )}
             </button>
           ))}
         </div>
 
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={activeTab === 'General' ? "Search all general deductions..." : "Search movements by name (Chinese, English, or Pinyin)..."}
-            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm sm:text-base"
-          />
-        </div>
-        {searchTerm && (
-          <p className="text-sm text-gray-600 mt-2">
-            Found {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} in {activeTab} style
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-3 sm:space-y-4">
+        {/* Tab Content Area */}
+        <div className="border border-gray-200 border-t-0 rounded-b-2xl bg-gray-50 min-h-[400px] flex flex-col">
+          <div className="p-4 sm:p-6 flex-1 flex flex-col">
         {!searchTerm ? (
-          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center">
+          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center flex-1 flex flex-col justify-center">
             <Search className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-300" />
             <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">Search for Movements</h3>
             <p className="text-sm sm:text-base text-gray-500">
-              Use the search bar above to find deductions and standards for specific movements.
+              Use the search bar above to find deductions and standards across all categories.
             </p>
           </div>
-        ) : searchResults.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center">
+        ) : totalResults === 0 ? (
+          <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center flex-1 flex flex-col justify-center">
             <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-300" />
             <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">No Results Found</h3>
             <p className="text-sm sm:text-base text-gray-500">
-              No movements found matching "{searchTerm}" in {activeTab} style. Try a different search term or switch styles.
+              No movements found matching "{searchTerm}" across any category. Try a different search term.
             </p>
           </div>
         ) : (
           <>
-            {searchResults.map(({ technique, techniqueKey }) =>
-              renderDeductionCard(technique, techniqueKey)
+            {/* Show results only for active tab */}
+            {allSearchResults[activeTab].length > 0 ? (
+              <div className="space-y-3 sm:space-y-4">
+                {allSearchResults[activeTab].map(({ technique, techniqueKey }) =>
+                  renderDeductionCard(technique, techniqueKey, activeTab)
+                )}
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-xl shadow-gray-100/50 p-6 sm:p-8 text-center flex-1 flex flex-col justify-center">
+                <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 text-gray-300" />
+                <h3 className="text-base sm:text-lg font-semibold text-gray-600 mb-2">No Results in {activeTab}</h3>
+                <p className="text-sm sm:text-base text-gray-500">
+                  No movements found matching "{searchTerm}" in {activeTab} category. Try switching to a different tab or adjusting your search term.
+                </p>
+              </div>
             )}
           </>
         )}
+          </div>
+        </div>
       </div>
     </div>
   );
