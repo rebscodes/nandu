@@ -120,7 +120,18 @@ const Deductions = () => {
               const matchesPinyinNoTones = removeTones(technique.pinyin?.toLowerCase() || '').includes(searchNoTones);
               const matchesCode = technique.code?.toLowerCase().includes(searchLower);
 
-              if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode) {
+              // Also search in requirements if they exist
+              let matchesRequirements = false;
+              if (technique.requirements) {
+                technique.requirements.forEach(req => {
+                  const reqText = `${req.chinese || ''} ${req.english || ''}`.toLowerCase();
+                  if (reqText.includes(searchLower)) {
+                    matchesRequirements = true;
+                  }
+                });
+              }
+
+              if (matchesChinese || matchesEnglish || matchesPinyin || matchesPinyinNoTones || matchesCode || matchesRequirements) {
                 results.push({
                   techniqueKey,
                   technique: {
@@ -155,7 +166,9 @@ const Deductions = () => {
 
     const hasDetails = isGeneral
       ? !!technique.definition || !!technique.includes
-      : (technique.deductions && technique.deductions.length > 0) || (technique.non_conformity && technique.non_conformity.length > 0);
+      : (technique.deductions && technique.deductions.length > 0) || 
+        (technique.non_conformity && technique.non_conformity.length > 0) ||
+        (technique.requirements && technique.requirements.length > 0);
 
     return (
       <div key={techniqueKey} className="bg-white rounded-2xl shadow-xl shadow-red-100/50 overflow-hidden mb-3 sm:mb-4">
@@ -169,9 +182,9 @@ const Deductions = () => {
               <div className="min-w-0 flex-1">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 leading-tight mb-1">
                   {isGeneral ? (
-                    `${technique.chinese} - ${technique.english}`
+                    `${technique.english} - ${technique.chinese}`
                   ) : (
-                    `${technique.chinese} (${technique.pinyin}) - ${technique.english}`
+                    `${technique.english} - ${technique.chinese} (${technique.pinyin})`
                   )}
                 </h3>
                 <p className="text-sm text-gray-600">
@@ -184,6 +197,7 @@ const Deductions = () => {
                     <>
                       {technique.deductions?.length || 0} potential deductions
                       {technique.non_conformity && ` • ${technique.non_conformity.length} non-conformity standards`}
+                      {technique.requirements && ` • ${technique.requirements.length} requirements`}
                     </>
                   )}
                 </p>
@@ -240,88 +254,114 @@ const Deductions = () => {
                 )}
               </div>
             ) : (
-              <div className="space-y-6 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-6 sm:space-y-0">
-                {/* Deductions Column */}
+              technique.requirements && technique.requirements.length > 0 ? (
+                // Requirements only layout (for execution standards)
                 <div>
-                  {technique.deductions && technique.deductions.length > 0 ? (
-                    <>
-                      <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
-                        <Circle className="h-4 w-4 text-red-600" />
-                        Potential Deductions
-                      </h4>
-                      {technique.code === "22" && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Info className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-semibold text-blue-800">2024 Rule Update</span>
+                  <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                    <CheckCircle className="h-4 w-4 text-blue-600" />
+                    Standard Requirements
+                  </h4>
+                  <ul className="space-y-3">
+                    {technique.requirements.map((requirement, index) => (
+                      <li key={index} className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-1 text-sm">•</span>
+                        <div>
+                          <div className="text-sm font-medium text-gray-800 mb-1">
+                            {requirement.chinese}
                           </div>
-                          <p className="text-xs text-blue-700">
-                            This deduction code is <strong>new as of the 2024 IWUF rules</strong>. Be sure to review the updated standards.
-                          </p>
+                          <div className="text-sm text-gray-600">
+                            {requirement.english}
+                          </div>
                         </div>
-                      )}
-                      <ul className="space-y-2">
-                        {technique.deductions.map((deduction, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <span className="text-red-600 mt-1 text-sm">•</span>
-                            <div>
-                              <div className="text-sm font-medium text-gray-800">
-                                {deduction.chinese}
-                              </div>
-                              <div className="text-sm text-gray-600">
-                                {deduction.english}
-                              </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  ) : (
-                    <>
-                      <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
-                        <Circle className="h-4 w-4 text-gray-400" />
-                        Potential Deductions
-                      </h4>
-                      <p className="text-sm text-gray-500 italic">No specific deductions listed</p>
-                    </>
-                  )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+              ) : (
+                // Standard deductions and non-conformity layout
+                <div className="space-y-6 sm:grid sm:grid-cols-1 lg:grid-cols-2 sm:gap-6 sm:space-y-0">
+                  {/* Deductions Column */}
+                  <div>
+                    {technique.deductions && technique.deductions.length > 0 ? (
+                      <>
+                        <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                          <Circle className="h-4 w-4 text-red-600" />
+                          Potential Deductions
+                        </h4>
+                        {technique.code === "22" && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Info className="h-4 w-4 text-blue-600" />
+                              <span className="text-sm font-semibold text-blue-800">2024 Rule Update</span>
+                            </div>
+                            <p className="text-xs text-blue-700">
+                              This deduction code is <strong>new as of the 2024 IWUF rules</strong>. Be sure to review the updated standards.
+                            </p>
+                          </div>
+                        )}
+                        <ul className="space-y-2">
+                          {technique.deductions.map((deduction, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <span className="text-red-600 mt-1 text-sm">•</span>
+                              <div>
+                                <div className="text-sm font-medium text-gray-800">
+                                  {deduction.chinese}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                  {deduction.english}
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : (
+                      <>
+                        <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                          <Circle className="h-4 w-4 text-gray-400" />
+                          Potential Deductions
+                        </h4>
+                        <p className="text-sm text-gray-500 italic">No specific deductions listed</p>
+                      </>
+                    )}
+                  </div>
 
-                {/* Non-Conformity Standards Column */}
-                <div>
-                  {technique.non_conformity && technique.non_conformity.length > 0 ? (
-                    <>
-                      <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
-                        <CheckCircle className="h-4 w-4 text-orange-600" />
-                        Non-Conformity Standards
-                      </h4>
-                      <ul className="space-y-2">
-                        {technique.non_conformity.map((standard, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <span className="text-orange-600 mt-1 text-sm">•</span>
-                            <div>
-                              <div className="text-sm font-medium text-gray-800">
-                                {standard.chinese}
+                  {/* Non-Conformity Standards Column */}
+                  <div>
+                    {technique.non_conformity && technique.non_conformity.length > 0 ? (
+                      <>
+                        <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                          <CheckCircle className="h-4 w-4 text-orange-600" />
+                          Non-Conformity Standards
+                        </h4>
+                        <ul className="space-y-2">
+                          {technique.non_conformity.map((standard, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <span className="text-orange-600 mt-1 text-sm">•</span>
+                              <div>
+                                <div className="text-sm font-medium text-gray-800">
+                                  {standard.chinese}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                  {standard.english}
+                                </div>
                               </div>
-                              <div className="text-sm text-gray-600">
-                                {standard.english}
-                              </div>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  ) : (
-                    <>
-                      <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
-                        <CheckCircle className="h-4 w-4 text-gray-400" />
-                        Non-Conformity Standards
-                      </h4>
-                      <p className="text-sm text-gray-500 italic">No specific standards listed</p>
-                    </>
-                  )}
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : (
+                      <>
+                        <h4 className="text-md font-medium text-gray-700 flex items-center gap-2 mb-3">
+                          <CheckCircle className="h-4 w-4 text-gray-400" />
+                          Non-Conformity Standards
+                        </h4>
+                        <p className="text-sm text-gray-500 italic">No specific standards listed</p>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )
             )}
           </div>
         )}

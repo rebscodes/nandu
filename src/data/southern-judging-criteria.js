@@ -959,19 +959,88 @@ export const judgingCriteria = {
   },
   "execution_standards": {
     "rotation_calculation": {
-      "two_feet_landing": "For jumping techniques with rotation landing on two feet; or landing into stances; the calculation of degree of rotation is based on the angle formed by the line between both feet at the time of takeoff and at the time of landing.",
-      "single_foot_landing": "For jumping techniques with rotation that land on a single foot, the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line at the time of takeoff and that at the time of landing.",
-      "leg_sweeping": "For leg sweeping techniques, the calculation of degree of rotation is based on the degree of rotation performed by the sweeping leg's foot from the start of the rotation to its completion."
+      "chinese": "转体度数的规定",
+      "english": "Standard Requirements for Degree of Rotation",
+      "pinyin": "Zhuǎn Tǐ Dù Shù de Guī Dìng",
+      "code": "转体",
+      "requirements": [
+        {
+          "chinese": "跳跃动作转体两脚下落或跳跃动作转体下落接做步型，均以起跳时两脚之间连线和落地时两脚之间连线的夹角来计算转体度数",
+          "english": "For jumping techniques with rotation landing on two feet; or landing into a stance; the calculation of degree of rotation is based on the angle formed by the line between both feet at the time of takeoff and at the time of landing"
+        },
+        {
+          "chinese": "跳跃动作转体单脚落地，均以该脚起跳时和落地时脚尖与脚跟连线的延长线的夹角来计算转体度数",
+          "english": "For jumping techniques with rotation that land on a single foot, the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line at the time of takeoff and that at the time of landing"
+        },
+        {
+          "chinese": "扫转性腿法的扫转度数，均以扫转腿的脚的起止转动度数来计算扫转度数",
+          "english": "For leg sweeping techniques, the calculation of degree of rotation is based on the degree of rotation performed by the sweeping leg's foot from the start of the rotation to its completion"
+        }
+      ]
     },
     "run_up_rules": {
-      "counting": "Prior to the execution of a jumping technique, each time a foot is planted on the ground while running in a single direction (including in an arc), it will be counted as a run-up step.",
-      "connections": "For jumping techniques, the number of connection steps between two techniques shall be counted from the first step taken after landing on a single foot or with both feet from the previous jumping technique."
+      "chinese": "助跑步数的规定",
+      "english": "Standard Requirements for Run-up Steps",
+      "pinyin": "Zhù Pǎo Bù Shù de Guī Dìng",
+      "code": "助跑",
+      "requirements": [
+        {
+          "chinese": "跳跃动作起跳前朝一个方向（包括弧线）助跑，从任何一脚上步开始计算，一脚落地即为一步",
+          "english": "Prior to the execution of a jumping technique, each time a foot is planted on the ground while running in a single direction (including in an arc), it will be counted as a run-up step"
+        },
+        {
+          "chinese": "跳跃动作之间的连接步数，均以前一个跳跃动作一脚或两脚落地后的任何一脚上步开始计算",
+          "english": "For jumping techniques, the number of connection steps between two techniques shall be counted from the first step taken after landing on a single foot or with both feet from the previous jumping technique"
+        },
+        {
+          "chinese": "在跳跃动作之间，表10-3-8中没有注明连接步数的均为前一个跳跃动作两脚同时落地后直接起跳",
+          "english": "For jumping techniques, if the number of the connection steps are not indicated in Table 10-3-8, it means that the second jumping technique must be executed immediately after landing with both feet from the previous jumping technique"
+        }
+      ]
     },
-    "general_rules": {
-      "difficulty_failure": "Should a Degree of Difficulty technique be unsuccessfully executed, then its preceding or the following Degree of Difficulty connection may not be confirmed.",
-      "form_change": "Should an executed Degree of Difficulty connection differ from what was registered, then both the Degree of Difficulty technique and its connections may not be confirmed.",
-      "weapon_support": "The Degree of Difficulty for a balance will not be confirmed as successful if the technique was completed with the use of a weapon for additional support.",
-      "technique_requirement": "Upon completing a Dynamic + Static Degree of Difficulty connection technique, one must complete two or more technical movements prior to another set of Degree of Difficulty technique."
+    "connection_rules": {
+      "chinese": "连接动作的规定",
+      "english": "Standard Requirements for Degree of Difficulty Connections",
+      "pinyin": "Lián Jiē Dòng Zuò de Guī Dìng",
+      "code": "连接",
+      "requirements": [
+        {
+          "chinese": "连接动作必须是表10-3-8中规定的内容",
+          "english": "The connections movements must be the compulsory content described in Table 10-3-8"
+        },
+        {
+          "chinese": "动静连接的连接动作完成时必须呈静止状态，且手法或器械方法清晰（在南拳类主要动作中选择）",
+          "english": "The connections movements between Dynamic + Static movements must be exibit a motionless state when fully completed. The hand techniques or weapon techniques must be clear and correct (They should be selected from the main techniques of Nanquan category)"
+        }
+      ]
+    },
+    "evaluation_standards": {
+      "chinese": "评判的规定",
+      "english": "Evaluation Standards",
+      "pinyin": "Píng Pàn de Guī Dìng",
+      "code": "评判",
+      "requirements": [
+        {
+          "chinese": "动作难度未完成，其之前和之后的连接难度均不予确认",
+          "english": "Should a Degree of Difficulty technique be unsuccessfully executed, its preceding or the following Degree of Difficulty connection may not be confirmed"
+        },
+        {
+          "chinese": "连接动作形式被改变，动作难度和连接难度均不予确认",
+          "english": "Should an executed Degree of Difficulty connection differ from what was registered, then both the Degree of Difficulty technique and its connections may not be confirmed"
+        },
+        {
+          "chinese": "单脚落地时，击响（踢起）脚和落地脚应为同一脚",
+          "english": "For difficulty movements of connections landing on a single foot, the foot landed on should be the same foot that is kicked and slapped"
+        },
+        {
+          "chinese": "324A、324B、324C可以不击响",
+          "english": "The Degree of Difficulty techniques 324A, 324B, and 324C do not require the foot to be slapped"
+        },
+        {
+          "chinese": "在完成一组动静连接难度后，必须完成两个或两个以上完整的技术动作才可接下一组难度动作",
+          "english": "Upon completing a Dynamic + Static Degree of Difficulty connection technique, one must complete two or more technical movements prior to another set of Degree of Difficulty technique"
+        }
+      ]
     }
   }
 };
