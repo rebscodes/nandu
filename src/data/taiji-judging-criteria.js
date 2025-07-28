@@ -989,25 +989,94 @@ export const judgingCriteria = {
       ]
     }
   },
-  "rotation_calculation": {
-    "jumping_to_split": "For Degree of Difficulty jumping techniques with rotation followed by the difficulty connection Diē Chà (Hurdler's Split Position), the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line of the jumping foot (the foot that is on the same side of the body as the direction in which it is rotating) at the time of takeoff and the angle formed by the extended line of the extended leg at the time of landing.",
-    "single_foot_landing": "For jumping techniques with rotation that land on a single foot, the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line of the landing foot at the time of takeoff and that at the time of landing.",
-    "static_static_connections": "For Static + Static Connections, to calculate the degree of rotation, it is based on the angle formed by the extended toe-to-heel line of the supporting foot before the rotation and the angle formed after the rotation."
-  },
-  "run_up_standards": {
-    "immediate_execution": "For the combinations 312A+324B, 312A+324C, the second jumping technique must be executed directly after landing with both feet from the previous jumping technique.",
-    "static_connections": "No steps may be taken during the execution of a static + static connection."
-  },
-  "connection_requirements": {
-    "split_position": "For the combination 312A+324B (or 324C), the landing connection must be Diē Chà (Hurdler's Split Position) with the left leg extended forward.",
-    "split_limitation": "The Degree of Difficulty connection Diē Chà (Hurdler's Split Position) may at most be selected once per routine.",
-    "weapon_techniques": "When completing the Dynamic + Static Connection of taijiquan category weapon routines, the weapon techniques should be clear and correct (They should be selected from the main techniques of Taijiquan category)."
-  },
-  "evaluation_standards": {
-    "incomplete_difficulty": "Should a Degree of Difficulty technique be unsuccessfully executed, its preceding or the following Degree of Difficulty connection may not be confirmed.",
-    "modified_connection": "Should an executed Degree of Difficulty connection differ from what was registered, then both the Degree of Difficulty technique and its connections may not be confirmed.",
-    "single_foot_landing": "For difficulty movements of connections landing on a single foot, the foot landed on should be the same foot that is kicked and slapped.",
-    "balance_requirement": "The balance techniques and connection between dynamic and static techniques must be executed in a motionless state.",
-    "technical_movements": "Upon completing a Dynamic + Static Degree of Difficulty connection technique, one must complete two or more technical movements prior to executing another set of Degree of Difficulty technique."
+  "execution_standards": {
+    "rotation_calculation": {
+      "chinese": "转体度数的规定",
+      "english": "Standard Requirements for Degree of Rotation",
+      "pinyin": "Zhuǎn Tǐ Dù Shù de Guī Dìng",
+      "code": "转体",
+      "requirements": [
+        {
+          "chinese": "跳跃动作转体下落接做跌叉，均以起跳时击响腿脚尖与脚跟连线的延长线和落地时摆动腿轴线的延长线的夹角来计算转体度数",
+          "english": "For Degree of Difficulty jumping techniques with rotation followed by the difficulty connection Diē Chā (Hurdler's Split Position), the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line of the jumping foot (the foot that is on the same side of the body as the direction in which it is rotating) at the time of takeoff and the angle formed by the extended line of the extended leg at the time of landing. The extended leg when landing must be the opposite leg to the one slapped during the previous jumping technique"
+        },
+        {
+          "chinese": "跳跃动作转体单脚落地，均以该脚起跳时和落地时脚尖与脚跟连线的延长线的夹角来计算转体度数",
+          "english": "For jumping techniques with rotation that land on a single foot, the calculation of degree of rotation is based on the angle formed by the extended toe-to-heel line of the landing foot at the time of takeoff and that at the time of landing"
+        },
+        {
+          "chinese": "静静连接，均以支撑脚转体前和转体后脚尖与脚跟连线的延长线的夹角来计算转体度数",
+          "english": "For Static + Static Connections, to calculate the degree of rotation, it is based on the angle formed by the extended toe-to-heel line of the supporting foot before the rotation and the angle formed after the rotation"
+        }
+      ]
+    },
+    "run_up_rules": {
+      "chinese": "助跑步数的规定",
+      "english": "Standard Requirements for Run-Up Steps",
+      "pinyin": "Zhù Pǎo Bù Shù de Guī Dìng",
+      "code": "助跑",
+      "requirements": [
+        {
+          "chinese": "312A+324B、312A+324C必须在前一个跳跃动作两脚同时落地后直接起跳",
+          "english": "For the combinations 312A+324B, 312A+324C, the second jumping technique must be executed directly after landing with both feet from the previous jumping technique"
+        },
+        {
+          "chinese": "静静连接不能上步",
+          "english": "No steps may be taken during the execution of a static + static connection"
+        }
+      ]
+    },
+    "connection_rules": {
+      "chinese": "连接动作的规定",
+      "english": "Standard Requirements for Degree of Difficulty Connections",
+      "pinyin": "Lián Jiē Dòng Zuò de Guī Dìng",
+      "code": "连接",
+      "requirements": [
+        {
+          "chinese": "连接动作必须是表10-3-9中规定的内容",
+          "english": "The connections movements must be the compulsory content described in Table 10-3-9"
+        },
+        {
+          "chinese": "312A+324B（或324C）下落必须连接跌叉（左腿在前）",
+          "english": "For the combination 312A+324B (or 324C), the landing connection must be Diē Chà (Hurdler's Split Position) with the left leg extended forward"
+        },
+        {
+          "chinese": "连接跌叉只能选做一次",
+          "english": "The Degree of Difficulty connection Diē Chà (Hurdler's Split Position) may at most be selected once per routine"
+        },
+        {
+          "chinese": "太极器械套路动静连接的连接动作完成时器械方法必须清晰（在太极拳类主要动作中选择）",
+          "english": "When completing the Dynamic + Static Connection of taijiquan category weapon routines, the weapon techniques should be clear and correct (They should be selected from the main techniques of Taijiquan category)"
+        }
+      ]
+    },
+    "evaluation_standards": {
+      "chinese": "评判的规定",
+      "english": "Evaluation Standards",
+      "pinyin": "Píng Pàn de Guī Dìng",
+      "code": "评判",
+      "requirements": [
+        {
+          "chinese": "动作难度未完成，其之前和之后的连接难度均不予确认",
+          "english": "Should a Degree of Difficulty technique be unsuccessfully executed, its preceding or the following Degree of Difficulty connection may not be confirmed"
+        },
+        {
+          "chinese": "连接动作形式被改变，动作难度和连接难度均不予确认",
+          "english": "Should an executed Degree of Difficulty connection differ from what was registered, then both the Degree of Difficulty technique and its connections may not be confirmed"
+        },
+        {
+          "chinese": "单脚落地时，击响（踢起）脚和落地脚应为同一脚",
+          "english": "For difficulty movements of connections landing on a single foot, the foot landed on should be the same foot that is kicked and slapped"
+        },
+        {
+          "chinese": "平衡动作和动静连接的连接动作完成时必须呈静止状态",
+          "english": "The balance techniques and connection between dynamic and static techniques must be executed in a motionless state"
+        },
+        {
+          "chinese": "在完成一组动静连接难度后，必须完成两个或两个以上完整的技术动作才可接下一组难度动作",
+          "english": "Upon completing a Dynamic + Static Degree of Difficulty connection technique, one must complete two or more technical movements prior to executing another set of Degree of Difficulty technique"
+        }
+      ]
+    }
   }
 };
