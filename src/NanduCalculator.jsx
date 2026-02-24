@@ -6,7 +6,7 @@ import { taijiMovements, taijiConnections } from './data/taiji-nandu-codes.js';
 import { STYLE_CATEGORIES, SCORING_LIMITS } from './data/constants.js';
 import BottomSheet from './BottomSheet.jsx';
 import { getComboScore, getTotalScore } from './utils/scoring.js';
-import { generateComboPrintout } from './utils/combo-printout.js';
+import { generateComboPrintout, parseComboCode } from './utils/combo-printout.js';
 
 const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [combos, setCombos] = useState(sharedCombos);
@@ -25,6 +25,7 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
     if (setSharedCombos) {
       setSharedCombos(combos);
     }
+    setCodeText(generateComboPrintout(combos));
   }, [combos, setSharedCombos]);
 
   // Initialize from shared state when component mounts
@@ -37,6 +38,8 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   const [draggedMovement, setDraggedMovement] = useState(null);
   const [dragOverCombo, setDragOverCombo] = useState(null);
   const [hasCreatedThrowCatchCombos, setHasCreatedThrowCatchCombos] = useState(false);
+  const [codeText, setCodeText] = useState('');
+  const [codeError, setCodeError] = useState(null);
   const [showBottomSheet, setShowBottomSheet] = useState(false);
   const [targetComboId, setTargetComboId] = useState(null);
   const [mobileSearchTerm, setMobileSearchTerm] = useState('');
@@ -364,11 +367,26 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
   };
 
 
+  const handleReload = () => {
+    if (!codeText.trim()) return;
+    setCodeError(null);
+    const { combos: parsed, errors } = parseComboCode(codeText, currentMovements, currentConnections);
+    if (parsed.length === 0 && errors.length > 0) {
+      setCodeError(errors.join(' · '));
+      return;
+    }
+    setCombos(parsed);
+    if (errors.length > 0) {
+      // Use setTimeout so this runs after the useEffect that syncs codeText
+      setTimeout(() => setCodeError('Loaded with issues: ' + errors.join(' · ')), 0);
+    }
+  };
+
   // Check for duplicate movements across all combos
   // Copy codes to clipboard
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(generateComboPrintout(combos));
+      await navigator.clipboard.writeText(codeText);
       // Could add a toast notification here if desired
     } catch (err) {
       console.error('Failed to copy: ', err);
@@ -1165,11 +1183,17 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
             )}
           </div>
 
-          {/* Combo Printout - For competition registration */}
-          {combos.length > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 sm:p-4 mt-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className="text-blue-600 font-medium text-sm">📝 Your Nandu Codes</div>
+          {/* Nandu Codes - export and import in one field */}
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 sm:p-4 mt-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-blue-600 font-medium text-sm">📝 Nandu Codes</div>
+              <div className="flex gap-1">
+                <button
+                  onClick={handleReload}
+                  className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Reload
+                </button>
                 <button
                   onClick={copyToClipboard}
                   className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
@@ -1178,15 +1202,19 @@ const WushuNanduCalculator = ({ sharedCombos = [], setSharedCombos }) => {
                   Copy
                 </button>
               </div>
-              <textarea
-                value={generateComboPrintout(combos)}
-                readOnly
-                className="w-full p-2 text-sm bg-white border border-blue-200 rounded-lg font-mono resize-none"
-                rows="1"
-                onClick={(e) => e.target.select()}
-              />
             </div>
-          )}
+            <textarea
+              value={codeText}
+              onChange={(e) => { setCodeText(e.target.value); setCodeError(null); }}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleReload())}
+              placeholder="e.g. 312A+6, 324A+335A, 445A+9"
+              className="w-full p-2 text-sm bg-white border border-blue-200 rounded-lg font-mono resize-none"
+              rows="1"
+            />
+            {codeError && (
+              <p className="text-red-500 text-xs mt-2">{codeError}</p>
+            )}
+          </div>
         </div>
       </div>
 
