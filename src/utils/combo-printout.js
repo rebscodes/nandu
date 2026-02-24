@@ -19,7 +19,7 @@ export const parseComboCode = (codeString, currentMovements, currentConnections)
   const chains = codeString.split(',').map(s => s.trim()).filter(s => s.length > 0);
 
   for (const chain of chains) {
-    const ids = chain.split('+').map(s => s.trim());
+    const ids = chain.split('+').map(s => s.trim().toUpperCase());
 
     // Throw/catch combo: last token is '9'
     if (ids[ids.length - 1] === '9') {
