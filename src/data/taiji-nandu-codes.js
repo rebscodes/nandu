@@ -39,7 +39,7 @@ export const taijiConnections = [
   { from: '143B', to: '212A', points: 0.15, grade: 'B', description: 'Low Balance with Leg Crossed Behind + Heel Kick/Parting Kick' },
   { from: '312A', to: '324C', points: 0.15, grade: 'B', description: 'Jumping Front Slap Kick + Jumping Lotus Kick 450°(F)/540°' },
   { from: '312B', to: '8', points: 0.15, grade: 'B', description: 'Jumping Front Straight Kick + Landing on takeoff foot' },
-  { from: '324B', to: '5', points: 0.2, grade: 'C', description: "Jumping Lotus Kick 360° + Hurdler's Split Position" },
+  { from: '324B', to: '5', points: 0.15, grade: 'B', description: "Jumping Lotus Kick 360° + Hurdler's Split Position" },
   
   // C Grade Connections (0.2 points)
   { from: '323B', to: '3', points: 0.2, grade: 'C', description: 'Tornado Kick 360° + Single Raised-Knee Stance' },
